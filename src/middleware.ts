@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
     const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+    // script-src 'self' 'strict-dynamic' 'nonce-${nonce}';
+    // style-src 'self' 'nonce-${nonce}';
 
     let cspHeader = ''
     if (process.env.NODE_ENV === 'production') {
         cspHeader = `
         default-src 'self';
-        script-src 'self' 'strict-dynamic' 'nonce-${nonce}';
-        style-src 'self' 'nonce-${nonce}';
+        style-src 'https://fargo-sterile-services.vercel.app/';
+        script-src 'https://fargo-sterile-services.vercel.app/';
         img-src 'self' blob: data:;
         font-src 'self';
         object-src 'none';
