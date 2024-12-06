@@ -8,7 +8,7 @@ interface Props {
 
 export default function NumberInputLabelEl({ handleStateChange, userText, autofocus = false, characterLimit, labelText }: Props) {
     return (
-        <div className="flex flex-col w-fit mx-auto mt-2 w-full">
+        <div className="flex flex-col w-fit mx-auto w-full">
 
             {labelText &&
                 <div className="flex justify-between mx-1">
@@ -23,12 +23,12 @@ export default function NumberInputLabelEl({ handleStateChange, userText, autofo
             }
 
             <input
-                type='text'
+                type='number'
                 id={labelText}
                 autoFocus={autofocus}
                 maxLength={characterLimit ?? undefined}
                 onChange={(e) => handleStateChange(e.target.value)}
-                className="input-browser-reset border-2 border-[var(--brown-300)] mx-auto block px-2 py-[2px] w-full"
+                className="input-browser-reset border border-[var(--brown-300)] mx-auto block px-2 py-[1px] w-full"
             />
         </div>
     )

@@ -5,6 +5,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --company-red: rgb(212, 70, 55);
+  --company-gray: rgb(156, 158, 159);
+  --off-black: rgb(14, 13, 13);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,7 +40,7 @@ body {
   appearance: none;
   border-radius: 5px;
   box-sizing: border-box;
-  color: var(--off-white);
+  color: white;
   cursor: pointer;
   font-weight: 500;
   padding: 4px 13px;
@@ -68,7 +71,8 @@ body {
 
 /* Input Styles */
 .input-browser-reset {
-  border-radius: 4px;
+  border-radius: 2px;
+  border-color: var(--company-gray);
   outline: none;
   box-shadow: none;
   -webkit-appearance: none;
@@ -78,8 +82,8 @@ body {
 }
 
 .input-browser-reset:focus {
-  -webkit-border-color: var(--brown-500);
-  border-color: var(--brown-500);
+  -webkit-border-color: var(--off-black);
+  border-color: var(--off-black)
 }
 
 .input-browser-reset::placeholder {

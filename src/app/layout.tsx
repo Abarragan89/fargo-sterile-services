@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { headers } from 'next/headers'
 import Header from "./components/Header";
 
 const geistSans = localFont({
@@ -25,9 +24,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const nonce = (await headers()).get('x-nonce')
-  if (!nonce) return
 
   return (
     <html lang="en">
