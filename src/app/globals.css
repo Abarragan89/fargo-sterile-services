@@ -9,8 +9,11 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* --background: #0a0a0a;
+    --foreground: #ededed; */
+
+    --background: #ffffff;
+    --foreground: #171717;
   }
 }
 
@@ -18,10 +21,71 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.custom-low-lifted-shadow {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 2px 2px rgba(0, 0, 0, 0.15),
+    0 4px 4px rgba(0, 0, 0, 0.15), 0 8px 8px rgba(0, 0, 0, 0.15);
+}
+
+.custom-inset-shadow {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.45) inset;
+}
+
+.custom-small-btn {
+  appearance: none;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: var(--off-white);
+  cursor: pointer;
+  font-weight: 500;
+  padding: 4px 13px;
+  width: fit-content;
+  font-size: 0.875rem;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: 0.1s;
+}
+
+.custom-small-btn:disabled {
+  pointer-events: none;
+}
+
+.custom-small-btn:hover {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 2px 2px rgba(0, 0, 0, 0.15),
+    0 4px 4px rgba(0, 0, 0, 0.15), 0 8px 8px rgba(0, 0, 0, 0.15);
+  transform: scale(1.005) translateY(-1px);
+}
+
+.custom-small-btn:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
+
+/* Input Styles */
+.input-browser-reset {
+  border-radius: 4px;
+  outline: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  resize: none;
+}
+
+.input-browser-reset:focus {
+  -webkit-border-color: var(--brown-500);
+  border-color: var(--brown-500);
+}
+
+.input-browser-reset::placeholder {
+  color: var(--brown-300);
+  opacity: 1;
+  font-style: italic;
+  font-weight: 300;
 }
