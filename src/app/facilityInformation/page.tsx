@@ -127,10 +127,6 @@ export default function Home() {
                 </div>
             </div>
 
-            
-
-
-
             <h1 className="mt-10 text-center text-center text-[1.25rem] mb-2 tracking-wider font-bold text-[var(--company-gray)]">Documents</h1>
             <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
                 <h3 className="text-[1.2rem]">File Uploads</h3>

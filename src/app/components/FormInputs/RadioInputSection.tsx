@@ -1,6 +1,5 @@
 import { GiCheckMark } from "react-icons/gi";
 
-
 interface Props {
     category: string;
     setCategories: React.Dispatch<React.SetStateAction<string>>;
@@ -11,12 +10,6 @@ interface Props {
 
 export default function RadioInputSection({ category, setCategories, radioOptions, labelText }: Props) {
 
-
-    function handleSelectionToggle(inputName: string, isChecked: boolean, displayName: string) {
-        setCategories(inputName)
-    }
-
-    console.log(category)
     return (
         <fieldset className="w-full">
             {labelText && <label className=" text-[.9rem] block">{labelText}</label>}
@@ -39,7 +32,7 @@ export default function RadioInputSection({ category, setCategories, radioOption
                                 name={input.id}
                                 checked={category === input.id}
                                 hidden
-                                onChange={(e) => handleSelectionToggle(e.target.name, e.target.checked, input.label)}
+                                onChange={(e) => setCategories(e.target.name)}
                             />
                             <span className="ml-1">{input.label}</span>
                         </label>
