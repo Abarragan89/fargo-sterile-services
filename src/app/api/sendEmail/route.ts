@@ -6,12 +6,6 @@ const OAuth2 = google.auth.OAuth2;
 const OAuth2_client = new OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET)
 OAuth2_client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
-export const config = {
-    api: {
-        bodyParser: false, // Disable Next.js body parser to allow formidable to handle the form data
-    },
-};
-
 export async function POST(request: NextRequest) {
     // Gather data
     const { pdfData } = await request.json();
