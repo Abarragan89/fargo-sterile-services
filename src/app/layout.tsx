@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { headers } from 'next/headers';
 import Header from "./components/Header";
 
 const geistSans = localFont({
@@ -25,9 +26,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
+  const headersList = headers();
+  const nonce = headersList.get('x-nonce');
+  if (!nonce) return
+
   return (
     <html lang="en">
       <body
+        nonce={nonce}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
