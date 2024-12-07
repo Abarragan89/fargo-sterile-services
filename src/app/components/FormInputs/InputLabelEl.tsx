@@ -44,6 +44,7 @@ export default function InputLabelEl({
                 type={inputType}
                 id={labelText.toLowerCase().replace(' ', '')}
                 required={required}
+                value={userText}
                 autoFocus={autofocus}
                 placeholder={placeholderText}
                 maxLength={characterLimit ?? undefined}

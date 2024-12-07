@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import InputLabelEl from "../components/FormInputs/InputLabelEl";
 import { PDFFile } from "../../../types/pdf";
@@ -7,8 +7,11 @@ import RadioInputSection from "../components/FormInputs/RadioInputSection";
 import FormBlockHeading from "../components/Headings/FormBlockHeading";
 import DropDown from "../components/FormInputs/DropDown";
 import TextareaLabel from "../components/FormInputs/TextareaLabel";
+import { accountTypeOptions, facilityTypeOptions } from "../../../data";
+import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
 
 export default function Home() {
+
 
     const [firstName, setFirstName] = useState<string>('');
     const [pdfFile, setPdfFile] = useState<PDFFile | null>(null);
@@ -28,11 +31,41 @@ export default function Home() {
         zipcode: '',
     });
 
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const savedData = await getFormData(); // Fetch saved data from IndexedDB or any source
+            console.log('saved data ', savedData)
+            if (savedData) {
+                console.log('in here', savedData.facilityName)
+                setFirstName(savedData.firstName || '');
+                setPdfFile(savedData.pdfFile || null);
+                setAccountType(savedData.accountType || '');
+                setFacilityType(savedData.facilityType || '');
+                setFacilityName(savedData.facilityName || '');
+                setFacilityPhoneNumber(savedData.facilityPhoneNumber || '');
+                setNumberOfBeds(savedData.numberOfBeds || '');
+                setAlternativeSchedule(savedData.alternativeSchedule || '');
+                setFedExUpsNumber(savedData.fedExUpsNumber || '');
+                setAddress(savedData.address || {
+                    street: '',
+                    suite: '',
+                    attn: '',
+                    city: '',
+                    state: '',
+                    zipcode: '',
+                });
+            }
+        };
+        fetchData();
+    }, [])
+
     function handleAddressStateChange(inputText: string, addressPart: string | undefined) {
         if (!addressPart) return;
         setAddress(prev => ({ ...prev, [addressPart]: inputText }))
     }
-    console.log('addresss state ', address)
+
     async function sendMail() {
         try {
             await axios.post('/api/sendEmail', {
@@ -73,19 +106,11 @@ export default function Home() {
         }
     };
 
-    const accountTypeOptions = [
-        { id: 'new-account', name: 'accountType', label: 'New Account' },
-        { id: 'update', name: 'accountType', label: 'Update' },
-    ];
 
-    const facilityTypeOptions = [
-        { id: 'clinic-physician-office', name: 'facilityType', label: 'Clinic/Physician Office' },
-        { id: 'dialysis-clinic', name: 'facilityType', label: 'Dialysis Clinic' },
-        { id: 'hospital', name: 'facilityType', label: 'Hospital' },
-        { id: 'surgery-center', name: 'facilityType', label: 'Surgery Center' },
-    ]
 
     const listItemStyles = 'list-disc text-[.875rem] text-gray-500 py-1'
+
+    console.log(facilityName)
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
@@ -246,7 +271,7 @@ export default function Home() {
             <div className="flex justify-between w-[300px] mx-auto mt-8 pb-[100px]">
                 <button
                     className="custom-small-btn bg-[var(--company-gray)] block mx-auto mt-4"
-                    onClick={sendMail}
+                    onClick={() => saveFormData({ address, facilityName, facilityPhoneNumber, facilityType })}
                 >
                     Save
                 </button>
