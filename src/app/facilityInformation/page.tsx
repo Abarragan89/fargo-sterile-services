@@ -214,7 +214,7 @@ export default function Home() {
                                     handleStateChange={setAlternativeSchedule}
                                 />
                                 <li className={listItemStyles}>All orders are shipped via UPS or FedEx.</li>
-                                <li className={listItemStyles}>If shipping per customer's FedEx or UPS account is preferred, enter account number here:</li>
+                                <li className={listItemStyles}>If shipping per customer&apos;s FedEx or UPS account is preferred, enter account number here:</li>
                                 <div className="">
                                     <InputLabelEl
                                         userText={fedExUpsNumber}
