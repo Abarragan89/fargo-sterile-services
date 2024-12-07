@@ -4,6 +4,9 @@ import axios from "axios";
 import InputLabelEl from "../components/FormInputs/InputLabelEl";
 import { PDFFile } from "../../../types/pdf";
 import RadioInputSection from "../components/FormInputs/RadioInputSection";
+import FormBlockHeading from "../components/Headings/FormBlockHeading";
+import DropDown from "../components/FormInputs/DropDown";
+import TextareaLabel from "../components/FormInputs/TextareaLabel";
 
 export default function Home() {
 
@@ -14,7 +17,22 @@ export default function Home() {
     const [facilityName, setFacilityName] = useState<string>('')
     const [facilityPhoneNumber, setFacilityPhoneNumber] = useState<string>('')
     const [numberOfBeds, setNumberOfBeds] = useState<string>('')
+    const [alternativeSchedule, setAlternativeSchedule] = useState<string>('')
+    const [fedExUpsNumber, setFedExUpsNumber] = useState<string>('')
+    const [address, setAddress] = useState({
+        street: '',
+        suite: '',
+        attn: '',
+        city: '',
+        state: '',
+        zipcode: '',
+    });
 
+    function handleAddressStateChange(inputText: string, addressPart: string | undefined) {
+        if (!addressPart) return;
+        setAddress(prev => ({ ...prev, [addressPart]: inputText }))
+    }
+    console.log('addresss state ', address)
     async function sendMail() {
         try {
             await axios.post('/api/sendEmail', {
@@ -56,78 +74,164 @@ export default function Home() {
     };
 
     const accountTypeOptions = [
-        { id: 'new-account', label: 'New Account' },
-        { id: 'update', label: 'Update' },
+        { id: 'new-account', name: 'accountType', label: 'New Account' },
+        { id: 'update', name: 'accountType', label: 'Update' },
     ];
 
     const facilityTypeOptions = [
-        { id: 'clinic-physician-office', label: 'Clinic/Physician Office' },
-        { id: 'dialysis-clinic', label: 'Dialysis Clinis' },
-        { id: 'hospital', label: 'Hospital' },
-        { id: 'surgery-center', label: 'Surgery Center' },
+        { id: 'clinic-physician-office', name: 'facilityType', label: 'Clinic/Physician Office' },
+        { id: 'dialysis-clinic', name: 'facilityType', label: 'Dialysis Clinic' },
+        { id: 'hospital', name: 'facilityType', label: 'Hospital' },
+        { id: 'surgery-center', name: 'facilityType', label: 'Surgery Center' },
     ]
 
+    const listItemStyles = 'list-disc text-[.875rem] text-gray-500 py-1'
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
-            {/* Account Type */}
-            <h1 className="mt-7 text-center text-center text-[1.25rem] mb-2 tracking-wider font-bold text-[var(--company-gray)]">Account Information</h1>
-            <div className="flex justify-between items-center border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
-                <RadioInputSection
-                    category={accountType}
-                    setCategories={setAccountType}
-                    radioOptions={accountTypeOptions}
-                />
-
-                <InputLabelEl
-                    labelText="Account Number"
-                    userText={firstName}
-                    handleStateChange={setFirstName}
-                    inline={true}
-                />
-            </div>
-
-            {/* Facility Information */}
-            <h1 className="mt-10 text-center text-center text-[1.25rem] mb-2 tracking-wider font-bold text-[var(--company-gray)]">Facility Information</h1>
-            <div className="flex flex-wrap border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
-                <div className="flex-1 mr-2">
-                    <InputLabelEl
-                        labelText="Facility Name"
-                        userText={facilityName}
-                        handleStateChange={setFacilityName}
-                    />
-                </div>
-                <div className="flex-2 mx-2">
-                    <InputLabelEl
-                        labelText="Phone Number"
-                        placeholderText="(555)-555-5555"
-                        inputType="tel"
-                        userText={facilityPhoneNumber}
-                        handleStateChange={setFacilityPhoneNumber}
-                    />
-                </div>
-                <div className="flex-3 w-[115px]">
-                    <InputLabelEl
-                        labelText="Number of Beds"
-                        inputType="number"
-                        userText={numberOfBeds}
-                        handleStateChange={setNumberOfBeds}
-                    />
-                </div>
-
-                {/* Facility Type */}
-                <div className="mx-2 w-full mt-5">
+            <form>
+                {/* Account Type */}
+                <FormBlockHeading headingText="Account Information" />
+                <div className="flex justify-between items-center border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
                     <RadioInputSection
-                        radioOptions={facilityTypeOptions}
-                        category={facilityType}
-                        setCategories={setFacilityType}
-                        labelText="Facility Type"
-                        
+                        category={accountType}
+                        setCategories={setAccountType}
+                        radioOptions={accountTypeOptions}
+                    />
+
+                    <InputLabelEl
+                        labelText="Account # &nbsp;"
+                        userText={firstName}
+                        handleStateChange={setFirstName}
+                        inline={true}
                     />
                 </div>
-            </div>
 
-            <h1 className="mt-10 text-center text-center text-[1.25rem] mb-2 tracking-wider font-bold text-[var(--company-gray)]">Documents</h1>
+                {/* Facility Information */}
+                <FormBlockHeading headingText="Faculty Information" />
+                <div className="flex flex-wrap border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
+                    <div className="flex-1 mr-2">
+                        <InputLabelEl
+                            labelText="Facility Name"
+                            userText={facilityName}
+                            handleStateChange={setFacilityName}
+                        />
+                    </div>
+                    <div className="flex-2 mx-2">
+                        <InputLabelEl
+                            labelText="Phone Number"
+                            placeholderText="(555)-555-5555"
+                            inputType="tel"
+                            userText={facilityPhoneNumber}
+                            handleStateChange={setFacilityPhoneNumber}
+                        />
+                    </div>
+                    <div className="flex-3 w-[125px]">
+                        <InputLabelEl
+                            labelText="Number of Beds"
+                            inputType="number"
+                            userText={numberOfBeds}
+                            handleStateChange={setNumberOfBeds}
+                        />
+                    </div>
+
+                    {/* Facility Type */}
+                    <div className="w-full mt-6">
+                        <RadioInputSection
+                            radioOptions={facilityTypeOptions}
+                            category={facilityType}
+                            setCategories={setFacilityType}
+                            labelText="Facility Type"
+                        />
+                    </div>
+                    {/* Facility Address */}
+                    <div className="w-full mt-5">
+                        <legend className=" text-[.95rem] block mb-2">
+                            Shipping Address
+                            <span className="text-[.925rem] text-gray-500 italic"
+                            > (submitted licenses <span className="font-bold">must</span> match shipping address)</span>
+                        </legend>
+                        <div className="flex flex-wrap">
+                            <div className="flex-1 mr-5">
+                                <InputLabelEl
+                                    labelText="Street"
+                                    userText={address.street}
+                                    handleStateChange={handleAddressStateChange}
+                                />
+                            </div>
+                            <div className="w-[100px] mr-5">
+                                <InputLabelEl
+                                    labelText="Suite"
+                                    required={false}
+                                    userText={address.suite}
+                                    handleStateChange={handleAddressStateChange}
+                                />
+                            </div>
+                            <div className="w-[100px]">
+                                <InputLabelEl
+                                    labelText="Attn"
+                                    required={false}
+                                    userText={address.attn}
+                                    handleStateChange={handleAddressStateChange}
+                                />
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap mt-5">
+                            <div className="flex-1 mr-5">
+                                <InputLabelEl
+                                    labelText="City"
+                                    userText={address.city}
+                                    handleStateChange={handleAddressStateChange}
+                                />
+                            </div>
+                            <div className="ml-5">
+                                <DropDown
+                                    labelText="State"
+                                    userChoice={address.state}
+                                    handleStateChange={handleAddressStateChange}
+                                />
+                            </div>
+                            <div className="ml-5">
+                                <InputLabelEl
+                                    labelText="Zip Code"
+                                    pattern="[0-9]{5}"
+                                    placeholderText="12345"
+                                    userText={address.zipcode}
+                                    handleStateChange={handleAddressStateChange}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Shipping Address Special Directions */}
+                        <section className="mt-5">
+                            <ul className="pl-4">
+                                <li className={listItemStyles}>Shipping charges for expedited shipping will be applied to the order invoice.</li>
+                                <li className={listItemStyles}>Standard shipments are scheduled for delivery Monday - Friday.</li>
+                                <li className={listItemStyles}>Refrigerated product is only shipped Monday-Wednesday.</li>
+                                <li className={listItemStyles}>If alternative delivery schedule is required, please indicate details here:</li>
+                                <TextareaLabel
+                                    userText={alternativeSchedule}
+                                    handleStateChange={setAlternativeSchedule}
+                                />
+                                <li className={listItemStyles}>All orders are shipped via UPS or FedEx.</li>
+                                <li className={listItemStyles}>If shipping per customer's FedEx or UPS account is preferred, enter account number here:</li>
+                                <div className="">
+                                    <InputLabelEl
+                                        userText={fedExUpsNumber}
+                                        handleStateChange={setFedExUpsNumber}
+                                        labelText=""
+                                        required={false}
+                                    />
+                                </div>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+
+                {/* <button type="submit">Submit</button> */}
+            </form>
+
+            <FormBlockHeading headingText="Documents" />
             <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
                 <h3 className="text-[1.2rem]">File Uploads</h3>
                 <input
@@ -139,7 +243,7 @@ export default function Home() {
             </div>
 
             {/* Save and Continue Btn section */}
-            <div className="flex justify-between w-[300px] mx-auto mt-8">
+            <div className="flex justify-between w-[300px] mx-auto mt-8 pb-[100px]">
                 <button
                     className="custom-small-btn bg-[var(--company-gray)] block mx-auto mt-4"
                     onClick={sendMail}
@@ -152,7 +256,6 @@ export default function Home() {
                 >
                     Save and Continue
                 </button>
-
             </div>
         </main>
     );

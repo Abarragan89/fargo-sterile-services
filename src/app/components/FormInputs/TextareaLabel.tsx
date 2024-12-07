@@ -4,10 +4,11 @@ interface Props {
     autofocus?: boolean;
     characterLimit?: number;
     labelText?: string;
-    placeholderText?: string
+    placeholderText?: string;
+    required?: boolean
 }
 
-export default function TextareaLabel({ handleStateChange, userText, autofocus = false, characterLimit, labelText, placeholderText }: Props) {
+export default function TextareaLabel({ handleStateChange, userText, autofocus = false, characterLimit, labelText, placeholderText, required = true }: Props) {
     return (
         <div className="flex flex-col w-fit mx-auto mt-2 w-full">
             <div className={`flex mx-1 ${labelText ? 'justify-between' : 'justify-end'}`}>
@@ -28,8 +29,9 @@ export default function TextareaLabel({ handleStateChange, userText, autofocus =
                 maxLength={characterLimit ?? undefined}
                 placeholder={placeholderText ?? placeholderText}
                 value={userText}
+                required={required}
                 onChange={(e) => handleStateChange(e.target.value)}
-                className="input-browser-reset border-2 text-[.95rem] border-[var(--gray-300)] block p-2 w-full"
+                className="input-browser-reset border text-[.95rem] border-[var(--company-gray)] block p-2 w-full"
                 rows={3}
                 cols={30}
             />

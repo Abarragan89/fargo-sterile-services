@@ -1,12 +1,14 @@
 interface Props {
     userText: string | number;
-    handleStateChange: (textInput: string) => void;
+    handleStateChange: (textInput: string, inputName?: string | undefined) => void;
     autofocus?: boolean;
     characterLimit?: number;
     labelText: string;
     inline?: boolean
     inputType?: string;
     placeholderText?: string;
+    required?: boolean
+    pattern?:string
 }
 
 export default function InputLabelEl({
@@ -17,17 +19,19 @@ export default function InputLabelEl({
     labelText,
     inline = false,
     inputType = 'text',
-    placeholderText
+    placeholderText,
+    required = true,
+    pattern
 }: Props) {
 
     return (
         <div className={`${inline ? 'flex items-center' : 'flex flex-col'} mx-auto w-full justify-end`}>
             {labelText &&
                 <div
-                    className={'flex mx-1'}
+                    className={'flex'}
                 >
                     <label
-                        className="text-[.875rem] w-fit"
+                        className="text-[.95rem] w-fit"
                         htmlFor={labelText}
                     >{labelText}</label>
                     {characterLimit && (typeof userText === 'string') &&
@@ -38,11 +42,13 @@ export default function InputLabelEl({
 
             <input
                 type={inputType}
-                id={labelText.toLowerCase().replace(' ', '-')}
+                id={labelText.toLowerCase().replace(' ', '')}
+                required={required}
                 autoFocus={autofocus}
                 placeholder={placeholderText}
                 maxLength={characterLimit ?? undefined}
-                onChange={(e) => handleStateChange(e.target.value)}
+                pattern={pattern ?? undefined}
+                onChange={(e) => handleStateChange(e.target.value, e.target.id)}
                 className="input-browser-reset border border-[var(--brown-300)] block px-2 py-[1px]"
             />
         </div>

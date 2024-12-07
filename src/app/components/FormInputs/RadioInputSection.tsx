@@ -12,15 +12,15 @@ export default function RadioInputSection({ category, setCategories, radioOption
 
     return (
         <fieldset className="w-full">
-            {labelText && <label className=" text-[.9rem] block">{labelText}</label>}
+            {labelText && <legend className="text-[.95rem] block">{labelText}</legend>}
             <div className="flex flex-wrap mx-auto bg-white rounded-sm">
                 {radioOptions.map(input => {
                     return (
-                        <label htmlFor={input.id} className="flex items-center cursor-pointer w-[120px] text-[.9rem] w-fit mr-8 my-2" key={input.id}>
-                            <div className="w-[20px] h-[20px] bg-white border border-[var(--gray-500)] rounded-sm relative">
+                        <label htmlFor={input.id} className="relative flex items-center cursor-pointer w-[120px] text-[.95rem] w-fit mr-8 my-2" key={input.id}>
+                            <div className="w-[20px] h-[20px] bg-white border border-[var(--gray-500)] rounded-sm">
                                 {category === input.id ?
                                     <GiCheckMark
-                                        className={`absolute top-[1px] left-[2px] scale-125 text-[var(--brown-500)]"`}
+                                        className={`absolute top-[2px] left-[3px] scale-125 text-[var(--brown-500)]"`}
                                     />
                                     :
                                     <span>&nbsp;</span>
@@ -28,11 +28,14 @@ export default function RadioInputSection({ category, setCategories, radioOption
                             </div>
                             <input
                                 type="radio"
-                                id={input.id}
-                                name={input.id}
+                                required
+                                id={input.id.toLowerCase().replace(' ', '-')}
+                                name={input.name}
                                 checked={category === input.id}
-                                hidden
-                                onChange={(e) => setCategories(e.target.name)}
+                                onChange={(e) => setCategories(e.target.id)}
+                                className="opacity-0 absolute top-[1px] left-[2px]"
+                                aria-label={`Select ${input.label}`}
+                                aria-describedby={labelText}
                             />
                             <span className="ml-1">{input.label}</span>
                         </label>

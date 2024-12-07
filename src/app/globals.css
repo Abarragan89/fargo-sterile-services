@@ -76,6 +76,7 @@ body {
   outline: none;
   box-shadow: none;
   -webkit-appearance: none;
+  font-size: 0.95rem;
   -moz-appearance: none;
   appearance: none;
   resize: none;
@@ -83,12 +84,29 @@ body {
 
 .input-browser-reset:focus {
   -webkit-border-color: var(--off-black);
-  border-color: var(--off-black)
+  border-color: var(--off-black);
 }
 
 .input-browser-reset::placeholder {
-  color: var(--brown-300);
+  color: var(--company-gray);
   opacity: 1;
   font-style: italic;
   font-weight: 300;
+}
+
+.custom-drop-down-reset {
+  border-radius: 2px;
+  border-color: var(--company-gray);
+  outline: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  font-size: 0.95rem;
+  -moz-appearance: none;
+  appearance: none;
+  resize: none;
+}
+
+.custom-drop-down-reset:focus {
+  -webkit-border-color: var(--off-black);
+  border-color: var(--off-black);
 }
