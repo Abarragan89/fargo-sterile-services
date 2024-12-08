@@ -1,43 +1,38 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { GiCheckMark } from "react-icons/gi";
-
+import { SelectItem } from "../../../../types/formInputs";
 
 interface Props {
-    blogCategories: { [key: string]: string }[];
-    setBlogCategories: React.Dispatch<React.SetStateAction<{ [key: string]: string }[]>>;
-    toggleSavable: React.Dispatch<React.SetStateAction<boolean>>;
+    chosenSelectionOptionsArr: SelectItem[];
+    setChosenSelectionOptionsArr: React.Dispatch<React.SetStateAction<SelectItem[]>>;
+    toggleSavable?: React.Dispatch<React.SetStateAction<boolean>>;
+    totalSelectionOptionsArr: SelectItem[]
 }
 
-export default function SelectAreaEl({ blogCategories, setBlogCategories, toggleSavable }: Props) {
-
-    const checkboxesArr = [
-        { id: 'philosophy', label: 'Philosophy' },
-        { id: 'religion', label: 'Religion' },
-        { id: 'education', label: 'Education' },
-        { id: 'technology', label: 'Technology' },
-    ];
 
 
-    function handleSelectionToggle(inputName: string, isChecked: boolean, displayName: string) {
-        toggleSavable(true)
+export default function SelectAreaEl({ chosenSelectionOptionsArr, setChosenSelectionOptionsArr, toggleSavable, totalSelectionOptionsArr }: Props) {
+
+
+    function handleSelectionToggle(inputId: string, isChecked: boolean, label: string) {
+        // toggleSavable(true)
         // remove item from array
         if (!isChecked) {
-            setBlogCategories(prev => [...prev.filter(name => name.name !== inputName)])
+            setChosenSelectionOptionsArr(prev => [...prev.filter(option => option.id !== inputId)])
             // add to array
         } else {
-            setBlogCategories(prev => [...prev, { name: inputName, displayName }])
+            setChosenSelectionOptionsArr(prev => [...prev, { id: inputId, label }])
         }
     }
 
     return (
         <fieldset className="w-full">
-            <legend className="text-[.95rem] ml-1">Categories</legend>
-            <div className="flex justify-between flex-wrap mx-auto bg-white border-2 border-[var(--gray-300)] rounded-md">
-                {checkboxesArr.map(input => {
+            <div className="flex justify-between flex-wrap mx-auto">
+                {totalSelectionOptionsArr.map((input: SelectItem) => {
                     return (
-                        <label htmlFor={input.id} className="flex items-center cursor-pointer mx-2 my-4 w-[120px] text-[.9rem]" key={input.id}>
-                            <div className="w-[20px] h-[20px] bg-white border border-[var(--gray-500)] rounded-[50px] relative">
-                                {blogCategories.some((category) => category.name === input.id) ?
+                        <label htmlFor={input.id} className="flex items-center cursor-pointer my-4 w-full text-[.9rem]" key={input.id}>
+                            <div className="w-[20px] h-[20px] bg-white border border-gray-500 rounded-sm relative">
+                                {chosenSelectionOptionsArr.some((category) => category.id === input.id) ?
                                     <GiCheckMark
                                         className={`absolute top-[1px] left-[2px] scale-125 text-[var(--brown-500)]"`}
                                     />
@@ -49,11 +44,11 @@ export default function SelectAreaEl({ blogCategories, setBlogCategories, toggle
                                 type="checkbox"
                                 id={input.id}
                                 name={input.id}
-                                checked={blogCategories.some((category) => category.name === input.id)}
+                                checked={chosenSelectionOptionsArr.some((category) => category.id === input.id)}
                                 hidden
-                                onChange={(e) => handleSelectionToggle(e.target.name, e.target.checked, input.label)}
+                                onChange={(e) => handleSelectionToggle(e.target.id, e.target.checked, input.label)}
                             />
-                            <span className="ml-1">{input.label}</span>
+                            <span className="ml-2 text-[.9rem]">{input.label}</span>
                         </label>
                     )
                 })}

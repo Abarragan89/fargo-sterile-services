@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import axios from "axios";
 import InputLabelEl from "../components/FormInputs/InputLabelEl";
 import { PDFFile } from "../../../types/pdf";
@@ -7,22 +7,32 @@ import RadioInputSection from "../components/FormInputs/RadioInputSection";
 import FormBlockHeading from "../components/Headings/FormBlockHeading";
 import DropDown from "../components/FormInputs/DropDown";
 import TextareaLabel from "../components/FormInputs/TextareaLabel";
+import { useRouter } from "next/navigation";
 import { accountTypeOptions, facilityTypeOptions } from "../../../data";
 import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
+import { BarLoader } from "react-spinners";
 
 export default function Home() {
 
+    const router = useRouter();
 
-    const [firstName, setFirstName] = useState<string>('');
     const [pdfFile, setPdfFile] = useState<PDFFile | null>(null);
     const [accountType, setAccountType] = useState<string>('')
-    const [facilityType, setFacilityType] = useState<string>('')
-    const [facilityName, setFacilityName] = useState<string>('')
-    const [facilityPhoneNumber, setFacilityPhoneNumber] = useState<string>('')
-    const [numberOfBeds, setNumberOfBeds] = useState<string>('')
+    const [accountNumber, setAccountNumber] = useState<string>('')
     const [alternativeSchedule, setAlternativeSchedule] = useState<string>('')
     const [fedExUpsNumber, setFedExUpsNumber] = useState<string>('')
-    const [address, setAddress] = useState({
+    const [primaryGOPName, setPrimaryGPOName] = useState<string>('')
+    const [IDNGroup, setIDNGroup] = useState<string>('');
+    const [isSaving, setIsSaving] = useState<boolean>(false)
+
+    const [facilityInfomation, setFacilityInformation] = useState({
+        facilityname: '',
+        phonenumber: '',
+        numberofbeds: '',
+        facilitytype: '',
+    });
+
+    const [facilityAddress, setFacilityAddress] = useState({
         street: '',
         suite: '',
         attn: '',
@@ -31,24 +41,25 @@ export default function Home() {
         zipcode: '',
     });
 
-
-
     useEffect(() => {
         const fetchData = async () => {
             const savedData = await getFormData(); // Fetch saved data from IndexedDB or any source
-            console.log('saved data ', savedData)
             if (savedData) {
-                console.log('in here', savedData.facilityName)
-                setFirstName(savedData.firstName || '');
                 setPdfFile(savedData.pdfFile || null);
                 setAccountType(savedData.accountType || '');
-                setFacilityType(savedData.facilityType || '');
-                setFacilityName(savedData.facilityName || '');
-                setFacilityPhoneNumber(savedData.facilityPhoneNumber || '');
-                setNumberOfBeds(savedData.numberOfBeds || '');
+                setAccountNumber(savedData.accountNumber || '');
                 setAlternativeSchedule(savedData.alternativeSchedule || '');
                 setFedExUpsNumber(savedData.fedExUpsNumber || '');
-                setAddress(savedData.address || {
+                setPdfFile(savedData.pdfFile || '')
+                setPrimaryGPOName(savedData.primaryGOPName || '');
+                setIDNGroup(savedData.IDNGroup || '');
+                setFacilityInformation(savedData.facilityInfomation || {
+                    facilityname: '',
+                    phonenumber: '',
+                    numberofbeds: '',
+                    facilitytype: '',
+                });
+                setFacilityAddress(savedData.facilityAddress || {
                     street: '',
                     suite: '',
                     attn: '',
@@ -63,14 +74,18 @@ export default function Home() {
 
     function handleAddressStateChange(inputText: string, addressPart: string | undefined) {
         if (!addressPart) return;
-        setAddress(prev => ({ ...prev, [addressPart]: inputText }))
+        setFacilityAddress(prev => ({ ...prev, [addressPart]: inputText }))
+    }
+
+    function handleFacilityInfoChange(inputText: string, addressPart: string | undefined) {
+        if (!addressPart) return;
+        setFacilityInformation(prev => ({ ...prev, [addressPart]: inputText }))
     }
 
     async function sendMail() {
         try {
             await axios.post('/api/sendEmail', {
                 pdfData: JSON.stringify({ pdfFile }),
-                firstName: firstName
             }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,15 +121,29 @@ export default function Home() {
         }
     };
 
-
+    async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setIsSaving(true)
+        await saveFormData({
+            facilityAddress,
+            facilityInfomation,
+            accountType,
+            accountNumber,
+            fedExUpsNumber,
+            alternativeSchedule,
+            pdfFile,
+            IDNGroup,
+            primaryGOPName
+        })
+        setIsSaving(false)
+        router.push('/termsAndConditions')
+    }
 
     const listItemStyles = 'list-disc text-[.875rem] text-gray-500 py-1'
 
-    console.log(facilityName)
-
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
-            <form>
+            <form onSubmit={(e) => handleFormSubmit(e)}>
                 {/* Account Type */}
                 <FormBlockHeading headingText="Account Information" />
                 <div className="flex justify-between items-center border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
@@ -123,11 +152,10 @@ export default function Home() {
                         setCategories={setAccountType}
                         radioOptions={accountTypeOptions}
                     />
-
                     <InputLabelEl
                         labelText="Account # &nbsp;"
-                        userText={firstName}
-                        handleStateChange={setFirstName}
+                        userText={accountNumber}
+                        handleStateChange={setAccountNumber}
                         inline={true}
                     />
                 </div>
@@ -138,8 +166,8 @@ export default function Home() {
                     <div className="flex-1 mr-2">
                         <InputLabelEl
                             labelText="Facility Name"
-                            userText={facilityName}
-                            handleStateChange={setFacilityName}
+                            userText={facilityInfomation.facilityname}
+                            handleStateChange={handleFacilityInfoChange}
                         />
                     </div>
                     <div className="flex-2 mx-2">
@@ -147,16 +175,16 @@ export default function Home() {
                             labelText="Phone Number"
                             placeholderText="(555)-555-5555"
                             inputType="tel"
-                            userText={facilityPhoneNumber}
-                            handleStateChange={setFacilityPhoneNumber}
+                            userText={facilityInfomation.phonenumber}
+                            handleStateChange={handleFacilityInfoChange}
                         />
                     </div>
                     <div className="flex-3 w-[125px]">
                         <InputLabelEl
                             labelText="Number of Beds"
                             inputType="number"
-                            userText={numberOfBeds}
-                            handleStateChange={setNumberOfBeds}
+                            userText={facilityInfomation.numberofbeds}
+                            handleStateChange={handleFacilityInfoChange}
                         />
                     </div>
 
@@ -164,8 +192,8 @@ export default function Home() {
                     <div className="w-full mt-6">
                         <RadioInputSection
                             radioOptions={facilityTypeOptions}
-                            category={facilityType}
-                            setCategories={setFacilityType}
+                            category={facilityInfomation.facilitytype}
+                            setCategories={handleFacilityInfoChange}
                             labelText="Facility Type"
                         />
                     </div>
@@ -180,7 +208,7 @@ export default function Home() {
                             <div className="flex-1 mr-5">
                                 <InputLabelEl
                                     labelText="Street"
-                                    userText={address.street}
+                                    userText={facilityAddress.street}
                                     handleStateChange={handleAddressStateChange}
                                 />
                             </div>
@@ -188,7 +216,7 @@ export default function Home() {
                                 <InputLabelEl
                                     labelText="Suite"
                                     required={false}
-                                    userText={address.suite}
+                                    userText={facilityAddress.suite}
                                     handleStateChange={handleAddressStateChange}
                                 />
                             </div>
@@ -196,7 +224,7 @@ export default function Home() {
                                 <InputLabelEl
                                     labelText="Attn"
                                     required={false}
-                                    userText={address.attn}
+                                    userText={facilityAddress.attn}
                                     handleStateChange={handleAddressStateChange}
                                 />
                             </div>
@@ -205,14 +233,14 @@ export default function Home() {
                             <div className="flex-1 mr-5">
                                 <InputLabelEl
                                     labelText="City"
-                                    userText={address.city}
+                                    userText={facilityAddress.city}
                                     handleStateChange={handleAddressStateChange}
                                 />
                             </div>
                             <div className="ml-5">
                                 <DropDown
                                     labelText="State"
-                                    userChoice={address.state}
+                                    userChoice={facilityAddress.state}
                                     handleStateChange={handleAddressStateChange}
                                 />
                             </div>
@@ -221,7 +249,7 @@ export default function Home() {
                                     labelText="Zip Code"
                                     pattern="[0-9]{5}"
                                     placeholderText="12345"
-                                    userText={address.zipcode}
+                                    userText={facilityAddress.zipcode}
                                     handleStateChange={handleAddressStateChange}
                                 />
                             </div>
@@ -237,6 +265,7 @@ export default function Home() {
                                 <TextareaLabel
                                     userText={alternativeSchedule}
                                     handleStateChange={setAlternativeSchedule}
+                                    required={false}
                                 />
                                 <li className={listItemStyles}>All orders are shipped via UPS or FedEx.</li>
                                 <li className={listItemStyles}>If shipping per customer&apos;s FedEx or UPS account is preferred, enter account number here:</li>
@@ -250,38 +279,85 @@ export default function Home() {
                                 </div>
                             </ul>
                         </section>
+                        {/* GOP and IDN Group */}
+                        <div className="flex w-full mt-5">
+                            <div className="w-full mr-5">
+                                <InputLabelEl
+                                    labelText="Primary GPO Name"
+                                    userText={primaryGOPName}
+                                    handleStateChange={setPrimaryGPOName}
+                                />
+                            </div>
+                            <div className="w-full ml-5">
+                                <InputLabelEl
+                                    labelText="IDN Group"
+                                    userText={IDNGroup}
+                                    handleStateChange={setIDNGroup}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {/* Save and Continue Btn section */}
+                <div className="flex justify-between w-[300px] mx-auto mt-8 pb-[100px]">
+                    <button
+                        type="button"
+                        className="custom-small-btn bg-[var(--off-black)] block mx-auto mt-4"
+                        onClick={async () => {
+                            setIsSaving(true)
+                            await saveFormData(
+                                {
+                                    facilityAddress,
+                                    facilityInfomation,
+                                    accountType,
+                                    accountNumber,
+                                    fedExUpsNumber,
+                                    alternativeSchedule,
+                                    pdfFile,
+                                    IDNGroup,
+                                    primaryGOPName
+                                }
+                            )
+                            setIsSaving(false)
+                        }}
+                    >
+                        {isSaving ?
+                            <BarLoader
+                                color={'white'}
+                                width={30}
+                                height={2}
+                                loading={isSaving}
+                                aria-label="Loading Spinner"
+                                data-testid="loader"
+                                className="mb-1"
+                            />
+                            :
 
-                {/* <button type="submit">Submit</button> */}
+                            'Save'}
+                    </button>
+                    <button
+                        type="submit"
+                        className="custom-small-btn bg-[var(--company-red)] block mx-auto mt-4"
+                    >
+                        Save and Continue
+                    </button>
+                </div>
             </form>
 
-            <FormBlockHeading headingText="Documents" />
+
+            {/* <FormBlockHeading headingText="Documents" />
             <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
-                <h3 className="text-[1.2rem]">File Uploads</h3>
+                <legend className=" text-[1.05rem] block mb-2">
+                    File Uploads
+                </legend>
                 <input
                     type="file"
                     accept=".pdf"
                     className="mt-5"
                     onChange={(e) => handleFileChange(e)}
                 />
-            </div>
-
-            {/* Save and Continue Btn section */}
-            <div className="flex justify-between w-[300px] mx-auto mt-8 pb-[100px]">
-                <button
-                    className="custom-small-btn bg-[var(--company-gray)] block mx-auto mt-4"
-                    onClick={() => saveFormData({ address, facilityName, facilityPhoneNumber, facilityType })}
-                >
-                    Save
-                </button>
-                <button
-                    className="custom-small-btn bg-[var(--company-red)] block mx-auto mt-4"
-                    onClick={sendMail}
-                >
-                    Save and Continue
-                </button>
-            </div>
+                {pdfFile?.name && <p>{pdfFile.name}</p>}
+            </div> */}
         </main>
     );
 }

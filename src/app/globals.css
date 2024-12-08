@@ -7,7 +7,7 @@
   --foreground: #171717;
   --company-red: rgb(212, 70, 55);
   --company-gray: rgb(156, 158, 159);
-  --off-black: rgb(14, 13, 13);
+  --off-black: rgb(48, 47, 47);
 }
 
 @media (prefers-color-scheme: dark) {

@@ -24,7 +24,16 @@ export const saveFormData = async (data) => {
     const db = await openIndexedDB();
     const tx = db.transaction('formData', 'readwrite');
     const store = tx.objectStore('formData');
-    await store.put({...data, id: 0});
+
+    // Retrieve existing data with the same key
+    const existingData = await store.get(0);
+
+    // Merge the existing data with the new data (always id 0)
+    const mergedData = { ...existingData, ...data, id: 0 };
+
+    // Save the merged data back to the database
+    await store.put(mergedData);
+
     await tx.done;
 };
 
