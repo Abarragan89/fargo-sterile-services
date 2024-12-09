@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { accountTypeOptions, facilityTypeOptions } from "../../../data";
 import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
 import { BarLoader } from "react-spinners";
+import ScrollToTop from "../components/ScrollToTop";
 
 export default function Home() {
 
@@ -82,19 +83,6 @@ export default function Home() {
         setFacilityInformation(prev => ({ ...prev, [addressPart]: inputText }))
     }
 
-    async function sendMail() {
-        try {
-            await axios.post('/api/sendEmail', {
-                pdfData: JSON.stringify({ pdfFile }),
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-        } catch (error) {
-            console.log('errror ', error)
-        }
-    }
 
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,17 +124,18 @@ export default function Home() {
             primaryGOPName
         })
         setIsSaving(false)
-        router.push('/termsAndConditions')
+        router.push('/termsAndConditions', { scroll: true })
     }
 
     const listItemStyles = 'list-disc text-[.875rem] text-gray-500 py-1'
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
+            <ScrollToTop />
             <form onSubmit={(e) => handleFormSubmit(e)}>
                 {/* Account Type */}
                 <FormBlockHeading headingText="Account Information" />
-                <div className="flex justify-between items-center border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
+                <div className="flex flex-warp justify-between items-center border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
                     <RadioInputSection
                         category={accountType}
                         setCategories={setAccountType}
@@ -237,14 +226,14 @@ export default function Home() {
                                     handleStateChange={handleAddressStateChange}
                                 />
                             </div>
-                            <div className="ml-5">
+                            <div className="mx-5">
                                 <DropDown
                                     labelText="State"
                                     userChoice={facilityAddress.state}
                                     handleStateChange={handleAddressStateChange}
                                 />
                             </div>
-                            <div className="ml-5">
+                            <div className="">
                                 <InputLabelEl
                                     labelText="Zip Code"
                                     pattern="[0-9]{5}"
@@ -298,6 +287,20 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
+                {/* Documents */}
+                <FormBlockHeading headingText="Documents" />
+                <div className=" flex flex-wrap border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
+                    <legend className=" text-[1.05rem] block mb-2">
+                        File Uploads
+                        <input
+                            type="file"
+                            accept=".pdf"
+                            className="mt-5"
+                            onChange={(e) => handleFileChange(e)}
+                        />
+                    </legend>
+                    {/* {pdfFile?.name && <p>{pdfFile.name}</p>} */}
+                </div>
                 {/* Save and Continue Btn section */}
                 <div className="flex justify-between w-[300px] mx-auto mt-8 pb-[100px]">
                     <button
@@ -344,20 +347,6 @@ export default function Home() {
                 </div>
             </form>
 
-
-            {/* <FormBlockHeading headingText="Documents" />
-            <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
-                <legend className=" text-[1.05rem] block mb-2">
-                    File Uploads
-                </legend>
-                <input
-                    type="file"
-                    accept=".pdf"
-                    className="mt-5"
-                    onChange={(e) => handleFileChange(e)}
-                />
-                {pdfFile?.name && <p>{pdfFile.name}</p>}
-            </div> */}
         </main>
     );
 }

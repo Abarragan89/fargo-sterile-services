@@ -6,9 +6,12 @@ import SelectAreaEl from "../components/FormInputs/SelectAreaEl";
 import { SelectItem } from "../../../types/formInputs";
 import SubmitButton from "../components/Buttons/SubmitButton";
 import { getFormData, saveFormData } from "../../../utils/indexedDBActions";
+import ScrollToTop from "../components/ScrollToTop";
+import { useRouter } from "next/navigation";
 
 export default function page() {
 
+    const router = useRouter();
     const selectionArr = [{ id: 'agreeToTerms', label: 'By clicking here, you agree to the Terms and Conditions above.' }]
 
     const [chosenSelectionArr, setChosenSelectionArr] = useState<SelectItem[]>([])
@@ -39,6 +42,7 @@ export default function page() {
         setIsLoading(true)
         await saveFormData({ termsAndConditionsInformation })
         setIsLoading(false)
+        router.push('/reviewInformation')
     }
     function handleTermsAndConditions(inputText: string, addressPart: string | undefined) {
         if (!addressPart) return;
@@ -48,6 +52,7 @@ export default function page() {
     const orderedListItem = "list-decimal ml-2 pl-2 py-2 text-[.95rem]";
     return (
         <main className="h-[100vh] max-w-[700px] mx-auto">
+            <ScrollToTop />
             <FormBlockHeading headingText="Terms and Conditions" />
             <div className=" border-2 border-[var(--company-gray)] rounded-[3px] p-8 mx-5 max-h-[500px] overflow-y-scroll">
                 <p className="mb-2 text-[.95rem]">The person signing this section warrants on behalf of Customer that the above information is complete and accurate and
@@ -61,7 +66,7 @@ export default function page() {
                         for higher limits. Completion of separate credit application is mandatory for account set up.
                     </li>
                     <li className={orderedListItem}>
-                        All orders are considered final when product has left the Seller’s facility. No refunds or returns after shipment.
+                        All orders are considered final when product has left the Seller&apos;s facility. No refunds or returns after shipment.
                     </li>
                     <li className={orderedListItem}>
                         Customer agrees to immediately notify Seller of any change in ownership, form or business name of the entity.

@@ -28,7 +28,7 @@ export default function InputLabelEl({
 }: Props) {
 
     return (
-        <div className={`${inline ? 'flex items-center' : 'flex flex-col'} mx-auto w-full justify-end`}>
+        <div className={`${inline ? 'flex items-center' : 'flex flex-col'} mx-auto w-full justify-end mt-3`}>
             {labelText &&
                 <div
                     className={'flex'}

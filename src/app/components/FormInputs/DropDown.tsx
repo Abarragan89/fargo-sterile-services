@@ -20,8 +20,8 @@ export default function DropDown({ userChoice, handleStateChange, labelText }: P
     ];
 
     return (
-        <div>
-            <label htmlFor="states" className="text-[.95rem] block">
+        <>
+            <label htmlFor="states" className="text-[.95rem] block mt-3">
                 {labelText}
             </label>
             <select
@@ -42,6 +42,6 @@ export default function DropDown({ userChoice, handleStateChange, labelText }: P
                     </option>
                 ))}
             </select>
-        </div>
+        </>
     )
 }
