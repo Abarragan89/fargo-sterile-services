@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     const message = {
         from: process.env.GOOGLE_USER,
-        to: 'anthony.bar.89@gmail.com',
+        to: 'Justin.Feagin@fagronsterile.com',
         subject: 'Math Fact Missions - Activate Account',
         html: `
                 <h3>Hello Anthony,</h3>
