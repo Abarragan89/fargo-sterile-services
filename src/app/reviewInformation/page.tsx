@@ -89,7 +89,7 @@ export default function Page() {
 
     }
 
-    async function sendMail() {
+    async function sendMail(e: React.FormEvent<HTMLFormElement>) {
         try {
             if (clientInfo)
                 await axios.post('/api/sendEmail', {
@@ -121,7 +121,7 @@ export default function Page() {
                             <p>Review the Information below</p>
                         </section>
                     }
-                    <form onSubmit={sendMail}
+                    <form onSubmit={(e) => sendMail(e)}
                         className="flex justify-center mt-4"
                     >
 
