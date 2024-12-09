@@ -9,7 +9,7 @@ import { getFormData, saveFormData } from "../../../utils/indexedDBActions";
 import ScrollToTop from "../components/ScrollToTop";
 import { useRouter } from "next/navigation";
 
-export default function page() {
+export default function Page() {
 
     const router = useRouter();
     const selectionArr = [{ id: 'agreeToTerms', label: 'By clicking here, you agree to the Terms and Conditions above.' }]

@@ -9,7 +9,7 @@ import Image from "next/image";
 import { PDFDocument, rgb } from "pdf-lib";
 import axios from "axios";
 
-export default function page() {
+export default function Page() {
 
     const [clientInfo, setClientInfo] = useState()
     const [showThankYou, setShowThankYou] = useState<boolean>(false)
