@@ -90,6 +90,7 @@ export default function Page() {
     }
 
     async function sendMail(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
         try {
             if (clientInfo)
                 await axios.post('/api/sendEmail', {
