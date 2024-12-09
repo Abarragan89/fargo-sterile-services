@@ -12,7 +12,8 @@ import axios from "axios";
 export default function Page() {
 
     const [clientInfo, setClientInfo] = useState()
-    const [showThankYou, setShowThankYou] = useState<boolean>(false)
+    const [showThankYou, setShowThankYou] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     // const doc = new jsPDF();
 
     // doc.text("Hello world!", 10, 10);
@@ -91,6 +92,7 @@ export default function Page() {
 
     async function sendMail(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        setIsLoading(true)
         try {
             if (clientInfo)
                 await axios.post('/api/sendEmail', {
@@ -104,6 +106,8 @@ export default function Page() {
             setShowThankYou(true)
         } catch (error) {
             console.log('errror ', error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -127,7 +131,7 @@ export default function Page() {
                     >
 
                         <SubmitButton
-                            isLoading={false}
+                            isLoading={isLoading}
                             isSubmittable={true}
                             color="red"
                         >
