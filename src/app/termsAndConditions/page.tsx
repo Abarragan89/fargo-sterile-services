@@ -62,7 +62,7 @@ export default function Page() {
                         Standard payment terms are Net 30 from invoice date.
                     </li>
                     <li className={orderedListItem}>
-                        $7500 credit limit upon completion of Fagron's credit application; additional information may be required
+                        $7500 credit limit upon completion of Fagron&apos;s credit application; additional information may be required
                         for higher limits. Completion of separate credit application is mandatory for account set up.
                     </li>
                     <li className={orderedListItem}>
