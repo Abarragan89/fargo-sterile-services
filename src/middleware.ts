@@ -12,8 +12,9 @@ export function middleware(request: NextRequest) {
         img-src 'self' blob: data:;
         font-src 'self';
         frame-src 'self' data:;
-        object-src 'none' data:;
+        object-src data:;
         base-uri 'self';
+        connect-src 'self' data:;
         form-action 'self';
         frame-ancestors 'none';
         upgrade-insecure-requests;
@@ -26,8 +27,9 @@ export function middleware(request: NextRequest) {
         style-src 'self' 'unsafe-inline';
         img-src 'self' blob: data: http://localhost:3000;
         font-src 'self';
-        object-src 'none' data:;
+        object-src data:;
         base-uri 'self';
+        connect-src 'self' data:;
         form-action 'self';
         frame-ancestors 'none';
         upgrade-insecure-requests;
