@@ -191,7 +191,7 @@ const FirstPDF = ({ data }) => (
                     1. Standard payment terms are Net 30 from invoice date.
                 </Text>
                 <Text style={styles.numberedPoints}>
-                    2. $7500 credit limit upon completion of Fagron's credit application; additional information may be required
+                    2. $7500 credit limit upon completion of Fagron&apos;s credit application; additional information may be required
                     for higher limits. Completion of separate credit application is mandatory for account set up.
                 </Text>
                 <Text style={styles.numberedPoints}>
