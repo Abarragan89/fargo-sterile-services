@@ -50,37 +50,24 @@ export default function ReviewPage() {
     const handleGenerateAndSend = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // Generate the PDF as a Blob
-        const pdfBlob = await pdf(<FirstPDF data={clientInfo} />).toBlob();
+        const { data: pdf1 } = await axios.post('/api/generatePDF', {
+            clientInfo
+        })
 
-        // Convert Blob to Base64 and prepare the data structure
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-            const base64data = reader.result?.toString().split(',')[1]; // Get Base64 string without metadata
+        console.log('pdf #1 in the front end', pdf1)
+        try {
+            // Send the structured PDF data to the backend
+            await axios.post(
+                '/api/sendEmail',
+                { pdfData: JSON.stringify({ pdfFile: pdf1 }) }, // Pass the PDF object
+                { headers: { 'Content-Type': 'application/json' } }
+            );
 
-            if (base64data) {
-                const pdfFile = {
-                    name: 'GeneratedPDF.pdf', // File name
-                    data: base64data,         // Base64-encoded string
-                    type: 'application/pdf',  // MIME type
-                };
+            console.log('PDF sent successfully!');
+        } catch (error) {
+            console.error('Error sending PDF:', error);
+        }
 
-                try {
-                    // Send the structured PDF data to the backend
-                    await axios.post(
-                        '/api/sendEmail',
-                        { pdfData: JSON.stringify({ pdfFile: pdfFile }) }, // Pass the PDF object
-                        { headers: { 'Content-Type': 'application/json' } }
-                    );
-
-                    console.log('PDF sent successfully!');
-                } catch (error) {
-                    console.error('Error sending PDF:', error);
-                }
-            }
-        };
-
-        reader.readAsDataURL(pdfBlob); // Read the Blob as a Data URL
     };
 
     return (
