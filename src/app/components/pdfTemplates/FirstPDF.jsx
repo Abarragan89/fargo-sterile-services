@@ -20,7 +20,7 @@ const FirstPDF = ({ data }) => (
         <Page size="A4" style={styles.page}>
             <View style={styles.section}>
                 <Text>{data.accountNumber}</Text>
-                <Text>Flex warp hjhuihiuh{data.accountType}</Text>
+                <Text>Flex warp This is the new stuff{data.accountType}</Text>
             </View>
             <View style={styles.section}>
                 <Text>Section #2</Text>
