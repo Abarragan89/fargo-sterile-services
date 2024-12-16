@@ -100,11 +100,12 @@ export default function ReviewPage() {
                 </>
             }
             <div className="w-fit mx-auto">
-                {/* <PDFViewer
-                    children={<FirstPDF data={clientInfo} />}
+                <PDFViewer
                     width={700}
                     height={700}
-                /> */}
+                >
+                    <FirstPDF data={clientInfo} />
+                </PDFViewer>
             </div>
         </main>
     )

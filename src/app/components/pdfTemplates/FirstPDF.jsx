@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         border: '1px solid gray',
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
         paddingVertical: 10
     },
     signatureLine: {
@@ -224,9 +224,9 @@ const FirstPDF = ({ data }) => (
 
 
             <View style={styles.signatureSection}>
-                <Text>Agreed to by: <Tspan style={styles.clientInfo}>Michael Johnson</Tspan></Text>
-                <Text>Job Title: <Tspan style={styles.clientInfo}>CEO</Tspan></Text>
-                <Text>Date: <Tspan style={styles.clientInfo}>12/22/24</Tspan></Text>
+                <Text>Agreed to by: <Tspan style={styles.clientInfo}>{data?.termsAndConditionsInformation?.name}</Tspan></Text>
+                <Text>Job Title: <Tspan style={styles.clientInfo}>{data?.termsAndConditionsInformation?.jobtitle}</Tspan></Text>
+                <Text>Date: <Tspan style={styles.clientInfo}>{data?.termsAndConditionsInformation?.date}</Tspan></Text>
             </View>
         </Page>
     </Document>
