@@ -6,7 +6,7 @@ import FormBlockHeading from "@/app/components/Headings/FormBlockHeading"
 import SubmitButton from "../components/Buttons/SubmitButton";
 import axios from "axios";
 import { pdf } from '@react-pdf/renderer';
-import FirstPDF from '@/app/components/pdfTemplates/firstPDF';
+import FirstPDF from '@/app/components/pdfTemplates/FirstPDF';
 
 export default function ReviewPage() {
 
