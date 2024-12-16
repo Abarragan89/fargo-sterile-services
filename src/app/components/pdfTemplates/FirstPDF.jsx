@@ -195,7 +195,7 @@ const FirstPDF = ({ data }) => (
                     for higher limits. Completion of separate credit application is mandatory for account set up.
                 </Text>
                 <Text style={styles.numberedPoints}>
-                    3. All orders are considered final when product has left the Seller’s facility. No refunds or returns after shipment.
+                    3. All orders are considered final when product has left the Seller&apos;s facility. No refunds or returns after shipment.
                 </Text>
                 <Text style={styles.numberedPoints}>
                     4. Customer agrees to immediately notify Seller of any change in ownership, form or business name of the entity.
