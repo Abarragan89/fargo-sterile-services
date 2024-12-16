@@ -26,7 +26,7 @@ export default function Home() {
     const [IDNGroup, setIDNGroup] = useState<string>('');
     const [isSaving, setIsSaving] = useState<boolean>(false)
 
-    const [facilityInfomation, setFacilityInformation] = useState({
+    const [facilityInformation, setFacilityInformation] = useState({
         facilityname: '',
         phonenumber: '',
         numberofbeds: '',
@@ -54,7 +54,7 @@ export default function Home() {
                 setPdfFile(savedData.pdfFile || '')
                 setPrimaryGPOName(savedData.primaryGOPName || '');
                 setIDNGroup(savedData.IDNGroup || '');
-                setFacilityInformation(savedData.facilityInfomation || {
+                setFacilityInformation(savedData.facilityInformation || {
                     facilityname: '',
                     phonenumber: '',
                     numberofbeds: '',
@@ -114,7 +114,7 @@ export default function Home() {
         setIsSaving(true)
         await saveFormData({
             facilityAddress,
-            facilityInfomation,
+            facilityInformation,
             accountType,
             accountNumber,
             fedExUpsNumber,
@@ -155,7 +155,7 @@ export default function Home() {
                     <div className="flex-1 mr-2">
                         <InputLabelEl
                             labelText="Facility Name"
-                            userText={facilityInfomation.facilityname}
+                            userText={facilityInformation.facilityname}
                             handleStateChange={handleFacilityInfoChange}
                         />
                     </div>
@@ -164,7 +164,7 @@ export default function Home() {
                             labelText="Phone Number"
                             placeholderText="(555)-555-5555"
                             inputType="tel"
-                            userText={facilityInfomation.phonenumber}
+                            userText={facilityInformation.phonenumber}
                             handleStateChange={handleFacilityInfoChange}
                         />
                     </div>
@@ -172,7 +172,7 @@ export default function Home() {
                         <InputLabelEl
                             labelText="Number of Beds"
                             inputType="number"
-                            userText={facilityInfomation.numberofbeds}
+                            userText={facilityInformation.numberofbeds}
                             handleStateChange={handleFacilityInfoChange}
                         />
                     </div>
@@ -181,7 +181,7 @@ export default function Home() {
                     <div className="w-full mt-6">
                         <RadioInputSection
                             radioOptions={facilityTypeOptions}
-                            category={facilityInfomation.facilitytype}
+                            category={facilityInformation.facilitytype}
                             setCategories={handleFacilityInfoChange}
                             labelText="Facility Type"
                         />
@@ -311,7 +311,7 @@ export default function Home() {
                             await saveFormData(
                                 {
                                     facilityAddress,
-                                    facilityInfomation,
+                                    facilityInformation,
                                     accountType,
                                     accountNumber,
                                     fedExUpsNumber,

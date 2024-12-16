@@ -108,7 +108,7 @@ export default function Page() {
                     <div className="flex flex-wrap">
                         <div className="mr-3 flex-1">
                             <InputLabelEl
-                                labelText="Name"
+                                labelText="Full Name"
                                 autocomplete={false}
                                 userText={termsAndConditionsInformation.name}
                                 handleStateChange={handleTermsAndConditions}

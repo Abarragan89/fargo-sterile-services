@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { getFormData } from "../../../utils/indexedDBActions";
 import ScrollToTop from "../components/ScrollToTop";
 import FormBlockHeading from "@/app/components/Headings/FormBlockHeading"
 import SubmitButton from "../components/Buttons/SubmitButton";
 import axios from "axios";
-import { pdf } from '@react-pdf/renderer';
-import FirstPDF from '@/app/components/pdfTemplates/FirstPDF';
+import { PDFViewer } from "@react-pdf/renderer";
+import FirstPDF from "../components/pdfTemplates/FirstPDF";
 
 export default function ReviewPage() {
 
@@ -69,7 +69,7 @@ export default function ReviewPage() {
         }
 
     };
-
+    console.log('client info in ', clientInfo)
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
@@ -99,7 +99,13 @@ export default function ReviewPage() {
                     </form>
                 </>
             }
-
+            <div className="w-fit mx-auto">
+                <PDFViewer
+                    children={<FirstPDF data={clientInfo} />}
+                    width={700}
+                    height={700}
+                />
+            </div>
         </main>
     )
 }
