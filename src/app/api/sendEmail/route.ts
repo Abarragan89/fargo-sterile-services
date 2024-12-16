@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     const message: MailDataRequired = {
         from: process.env.GOOGLE_USER as string,
-        to: 'anthony.bar.89@gmail.com',
+        to: 'Justin.Feagin@fagronsterile.com',
         subject: 'Math Fact Missions - Activate Account',
         html: `
             <h3>Hello Anthony,</h3>
