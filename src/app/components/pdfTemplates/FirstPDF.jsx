@@ -174,7 +174,7 @@ const FirstPDF = ({ data }) => (
                         </View>
                         <Text style={styles.bulletPoint}>• All orders are shipped via UPS or FedEx.</Text>
                         <Text style={styles.bulletPoint}>
-                            • If shipping per customer's FedEx or UPS account is preferred, enter account number here:
+                            • If shipping per customer&apos;s FedEx or UPS account is preferred, enter account number here:
                         </Text>
                         <View style={styles.inputBox}>
                             <Text style={styles.clientInfo}>{data?.fedExUpsNumber || 'N/A'}</Text>
