@@ -11,7 +11,8 @@ export function middleware(request: NextRequest) {
         style-src 'self' 'unsafe-inline';
         img-src 'self' blob: data:;
         font-src 'self';
-        object-src 'none';
+        frame-src 'self' data:;
+        object-src 'none' data:;
         base-uri 'self';
         form-action 'self';
         frame-ancestors 'none';
@@ -21,11 +22,11 @@ export function middleware(request: NextRequest) {
     else if (process.env.NODE_ENV === 'development') {
         cspHeader = `
         default-src 'self';
-        script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:3000;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:3000 data:; 
         style-src 'self' 'unsafe-inline';
         img-src 'self' blob: data: http://localhost:3000;
         font-src 'self';
-        object-src 'none';
+        object-src 'none' data:;
         base-uri 'self';
         form-action 'self';
         frame-ancestors 'none';
