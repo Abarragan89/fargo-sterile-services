@@ -6,7 +6,6 @@ import { Buffer } from 'buffer';
 export async function POST(request: NextRequest) {
     const { clientInfo } = await request.json();
 
-    console.log('clientInfo', clientInfo.accountType)
     try {
         // Generate the PDF as a Blob
         const pdfBlob = await pdf(<FirstPDF data={clientInfo} />).toBlob();

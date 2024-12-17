@@ -18,7 +18,7 @@ export default function Page() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const [termsAndConditionsInformation, setTermsAndConditionInformation] = useState({
-        name: '',
+        fullname: '',
         jobtitle: '',
         date: ''
     })
@@ -28,7 +28,7 @@ export default function Page() {
             const { termsAndConditionsInformation } = await getFormData(); // Fetch saved data from IndexedDB or any source
             if (termsAndConditionsInformation) {
                 setTermsAndConditionInformation(termsAndConditionsInformation.facilityAddress || {
-                    name: termsAndConditionsInformation?.name || '',
+                    fullname: termsAndConditionsInformation?.fullname || '',
                     jobtitle: termsAndConditionsInformation?.jobtitle || '',
                     date: termsAndConditionsInformation?.date || ''
                 });
@@ -110,7 +110,7 @@ export default function Page() {
                             <InputLabelEl
                                 labelText="Full Name"
                                 autocomplete={false}
-                                userText={termsAndConditionsInformation.name}
+                                userText={termsAndConditionsInformation.fullname}
                                 handleStateChange={handleTermsAndConditions}
                             />
                         </div>
@@ -139,7 +139,7 @@ export default function Page() {
                                     chosenSelectionArr.length > 0 &&
                                     termsAndConditionsInformation.date !== '' &&
                                     termsAndConditionsInformation.jobtitle !== '' &&
-                                    termsAndConditionsInformation.name !== ''
+                                    termsAndConditionsInformation.fullname !== ''
                                 }
                             >
                                 Agree to Terms

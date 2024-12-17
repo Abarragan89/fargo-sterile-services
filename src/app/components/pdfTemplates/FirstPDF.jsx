@@ -97,8 +97,8 @@ const FirstPDF = ({ data }) => (
     <Document>
         <Page size="A4" style={styles.page}>
             <Image style={styles.companyLogo}
-                src="https://unfinished-pages.s3.us-east-2.amazonaws.com/companyLogo.png" 
-                // src='/images/companyLogo.png'
+                // src="https://unfinished-pages.s3.us-east-2.amazonaws.com/companyLogo.png" 
+                src='/images/companyLogo.png'
             />
             <View style={[styles.section, styles.accountType]}>
                 <View style={styles.checkBoxLabel}>
@@ -224,7 +224,7 @@ const FirstPDF = ({ data }) => (
 
 
             <View style={styles.signatureSection}>
-                <Text>Agreed to by: <Tspan style={styles.clientInfo}>{data?.termsAndConditionsInformation?.name}</Tspan></Text>
+                <Text>Agreed to by: <Tspan style={styles.clientInfo}>{data?.termsAndConditionsInformation?.fullname}</Tspan></Text>
                 <Text>Job Title: <Tspan style={styles.clientInfo}>{data?.termsAndConditionsInformation?.jobtitle}</Tspan></Text>
                 <Text>Date: <Tspan style={styles.clientInfo}>{data?.termsAndConditionsInformation?.date}</Tspan></Text>
             </View>

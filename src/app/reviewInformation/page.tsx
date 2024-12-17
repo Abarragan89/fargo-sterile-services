@@ -53,8 +53,6 @@ export default function ReviewPage() {
         const { data: pdf1 } = await axios.post('/api/generatePDF', {
             clientInfo
         })
-
-        console.log('pdf #1 in the front end', pdf1)
         try {
             // Send the structured PDF data to the backend
             await axios.post(
@@ -62,7 +60,6 @@ export default function ReviewPage() {
                 { pdfData: JSON.stringify({ pdfFile: pdf1 }) }, // Pass the PDF object
                 { headers: { 'Content-Type': 'application/json' } }
             );
-
             console.log('PDF sent successfully!');
         } catch (error) {
             console.error('Error sending PDF:', error);
