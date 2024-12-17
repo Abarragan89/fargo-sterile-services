@@ -96,14 +96,14 @@ export default function ReviewPage() {
                     </form>
                 </>
             }
-            <div className="w-fit mx-auto">
+            {/* <div className="w-fit mx-auto">
                 <PDFViewer
                     width={700}
                     height={700}
                 >
                     <FirstPDF data={clientInfo} />
                 </PDFViewer>
-            </div>
+            </div> */}
         </main>
     )
 }
