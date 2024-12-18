@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { pdf } from '@react-pdf/renderer';
-import FirstPDF from '@/app/components/pdfTemplates/FirstPDF';
+import FinalCompletePDF from '@/app/components/pdfTemplates/FinalCompletePDF'
 import { Buffer } from 'buffer';
 
 export async function POST(request: NextRequest) {
@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
     try {
         // Generate the PDF as a Blob
-        const pdfBlob = await pdf(<FirstPDF data={clientInfo} />).toBlob();
+        const pdfBlob = await pdf(<FinalCompletePDF data={clientInfo} />).toBlob();
 
         // Convert Blob to Buffer
         const arrayBuffer = await pdfBlob.arrayBuffer();

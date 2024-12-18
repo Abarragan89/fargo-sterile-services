@@ -2,7 +2,6 @@
 import { useState, useEffect, FormEvent } from "react";
 import axios from "axios";
 import InputLabelEl from "../components/FormInputs/InputLabelEl";
-import { PDFFile } from "../../../types/pdf";
 import RadioInputSection from "../components/FormInputs/RadioInputSection";
 import FormBlockHeading from "../components/Headings/FormBlockHeading";
 import DropDown from "../components/FormInputs/DropDown";
@@ -10,14 +9,13 @@ import TextareaLabel from "../components/FormInputs/TextareaLabel";
 import { useRouter } from "next/navigation";
 import { accountTypeOptions, facilityTypeOptions } from "../../../data";
 import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
-import { BarLoader } from "react-spinners";
+// import { BarLoader } from "react-spinners";
 import ScrollToTop from "../components/ScrollToTop";
+import SaveAndContinueBtns from "../components/Buttons/SaveAndContinueBtns";
 
 export default function Home() {
 
     const router = useRouter();
-
-    const [pdfFile, setPdfFile] = useState<PDFFile | null>(null);
     const [accountType, setAccountType] = useState<string>('')
     const [accountNumber, setAccountNumber] = useState<string>('')
     const [alternativeSchedule, setAlternativeSchedule] = useState<string>('')
@@ -46,12 +44,10 @@ export default function Home() {
         const fetchData = async () => {
             const savedData = await getFormData(); // Fetch saved data from IndexedDB or any source
             if (savedData) {
-                setPdfFile(savedData.pdfFile || null);
                 setAccountType(savedData.accountType || '');
                 setAccountNumber(savedData.accountNumber || '');
                 setAlternativeSchedule(savedData.alternativeSchedule || '');
                 setFedExUpsNumber(savedData.fedExUpsNumber || '');
-                setPdfFile(savedData.pdfFile || '')
                 setPrimaryGPOName(savedData.primaryGOPName || '');
                 setIDNGroup(savedData.IDNGroup || '');
                 setFacilityInformation(savedData.facilityInformation || {
@@ -83,32 +79,6 @@ export default function Home() {
         setFacilityInformation(prev => ({ ...prev, [addressPart]: inputText }))
     }
 
-
-
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!event.target.files) {
-            throw new Error('add a file')
-        }
-
-        const file = event.target.files[0];
-        if (!file) {
-            return
-        }
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                // @ts-expect-error: error getting 
-                const fileData = event.target.result.split(',')[1];
-                setPdfFile({
-                    name: file.name,
-                    type: file.type,
-                    data: fileData,
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
     async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setIsSaving(true)
@@ -119,12 +89,26 @@ export default function Home() {
             accountNumber,
             fedExUpsNumber,
             alternativeSchedule,
-            pdfFile,
             IDNGroup,
             primaryGOPName
         })
         setIsSaving(false)
         router.push('/termsAndConditions', { scroll: true })
+    }
+
+    async function handleSaveData() {
+        setIsSaving(true)
+        await saveFormData({
+            facilityAddress,
+            facilityInformation,
+            accountType,
+            accountNumber,
+            fedExUpsNumber,
+            alternativeSchedule,
+            IDNGroup,
+            primaryGOPName
+        })
+        setIsSaving(false)
     }
 
     const listItemStyles = 'list-disc text-[.875rem] text-gray-500 py-1'
@@ -287,64 +271,11 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                {/* Documents */}
-                <FormBlockHeading headingText="Documents" />
-                <div className=" flex flex-wrap border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
-                    <legend className=" text-[1.05rem] block mb-2">
-                        File Uploads
-                        <input
-                            type="file"
-                            accept=".pdf"
-                            className="mt-5"
-                            onChange={(e) => handleFileChange(e)}
-                        />
-                    </legend>
-                    {/* {pdfFile?.name && <p>{pdfFile.name}</p>} */}
-                </div>
                 {/* Save and Continue Btn section */}
-                <div className="flex justify-between w-[300px] mx-auto mt-8 pb-[100px]">
-                    <button
-                        type="button"
-                        className="custom-small-btn bg-[var(--off-black)] block mx-auto mt-4"
-                        onClick={async () => {
-                            setIsSaving(true)
-                            await saveFormData(
-                                {
-                                    facilityAddress,
-                                    facilityInformation,
-                                    accountType,
-                                    accountNumber,
-                                    fedExUpsNumber,
-                                    alternativeSchedule,
-                                    pdfFile,
-                                    IDNGroup,
-                                    primaryGOPName
-                                }
-                            )
-                            setIsSaving(false)
-                        }}
-                    >
-                        {isSaving ?
-                            <BarLoader
-                                color={'white'}
-                                width={30}
-                                height={2}
-                                loading={isSaving}
-                                aria-label="Loading Spinner"
-                                data-testid="loader"
-                                className="mb-1"
-                            />
-                            :
-
-                            'Save'}
-                    </button>
-                    <button
-                        type="submit"
-                        className="custom-small-btn bg-[var(--company-red)] block mx-auto mt-4"
-                    >
-                        Save and Continue
-                    </button>
-                </div>
+                <SaveAndContinueBtns
+                    isSaving={isSaving}
+                    submitHandler={handleSaveData}
+                />
             </form>
 
         </main>

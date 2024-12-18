@@ -30,8 +30,7 @@ export async function POST(request: NextRequest) {
     };
 
     try {
-        const response = await sgMail.send(message);
-        console.log('Email sent successfully:', response);
+        await sgMail.send(message);
     } catch (error) {
         console.error('Failed to send email', error);
     }

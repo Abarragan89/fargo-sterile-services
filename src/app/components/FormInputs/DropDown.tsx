@@ -21,7 +21,7 @@ export default function DropDown({ userChoice, handleStateChange, labelText }: P
 
     return (
         <>
-            <label htmlFor="states" className="text-[.95rem] block mt-3">
+            <label htmlFor="states" className="text-[.95rem] block">
                 {labelText}
             </label>
             <select

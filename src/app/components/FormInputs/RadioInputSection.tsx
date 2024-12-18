@@ -12,8 +12,6 @@ interface Props {
 
 export default function RadioInputSection({ category, setCategories, radioOptions, labelText }: Props) {
 
-    console.log('category ', category)
-
     return (
         <fieldset className="w-full">
             {labelText && <legend className="text-[.95rem] block">{labelText}</legend>}

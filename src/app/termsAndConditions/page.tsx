@@ -42,7 +42,7 @@ export default function Page() {
         setIsLoading(true)
         await saveFormData({ termsAndConditionsInformation })
         setIsLoading(false)
-        router.push('/reviewInformation')
+        router.push('/documentUploads')
     }
     function handleTermsAndConditions(inputText: string, addressPart: string | undefined) {
         if (!addressPart) return;
