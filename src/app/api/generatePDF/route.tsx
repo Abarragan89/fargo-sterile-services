@@ -3,14 +3,6 @@ import { pdf } from '@react-pdf/renderer';
 import FinalCompletePDF from '@/app/components/pdfTemplates/FinalCompletePDF'
 import { Buffer } from 'buffer';
 
-export const config = {
-    api: {
-        bodyParser: {
-            sizeLimit: '10mb', // Adjust the size as needed (e.g., '1mb', '10mb', '100mb')
-        },
-    },
-};
-
 export async function POST(request: NextRequest) {
     const { clientInfo } = await request.json();
 
