@@ -13,6 +13,8 @@ export default function ReviewPage() {
     const [clientInfo, setClientInfo] = useState()
     const [showThankYou, setShowThankYou] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [pdfOne, setPdfOne] = useState<string | null>(null)
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,9 +48,8 @@ export default function ReviewPage() {
         }
     }
 
-    const [pdfOne, setPdfOne] = useState<string | null>(null)
-    const handleGenerateAndSend = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const generatePdfForViewers = async () => {
+        // e.preventDefault();
 
         const { data: pdf1 } = await axios.post('/api/generatePDF', {
             clientInfo
@@ -66,6 +67,8 @@ export default function ReviewPage() {
 
         setPdfOne(pdfUrl)
         console.log('pdf one ', pdf1)
+
+        // Sending to email logic
         // try {
         //     // Send the structured PDF data to the backend
         //     await axios.post(
@@ -77,50 +80,53 @@ export default function ReviewPage() {
         // } catch (error) {
         //     console.error('Error sending PDF:', error);
         // }
-
     };
+
+
     console.log('client info in ', clientInfo)
+
+    useEffect(() => {
+        // need to wati to get data from local indexdb
+        if (clientInfo) generatePdfForViewers();
+    }, [clientInfo])
+
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
-            {showThankYou ?
-                <div className="h-[70vh] flex justify-center items-center mx-[20px] max-w-[600px] mx-auto">
-                    <p className="text-center"> Thank you, your application has been recieved. An email will be sent with a summary of your responses and your sales representative will be in touch.</p>
+            <FormBlockHeading headingText="Review Information"/>
+            {/* Conditionally render when user pdfs are made */}
+            {pdfOne ?
+                <div className="w-fit mx-auto">
+
+                    <p>Review your Client Information document and sign below</p>
+                    <div style={{ height: '700px', width: '700px' }}>
+                        <iframe src={pdfOne as string} width="100%" height="100%" />
+                    </div>
+
+                    {/* show submit button or thank you */}
+                    {showThankYou ?
+                        <div className="h-[70vh] flex justify-center items-center mx-[20px] max-w-[600px] mx-auto">
+                            <p className="text-center"> Thank you, your application has been recieved. An email will be sent with a summary of your responses and your sales representative will be in touch.</p>
+                        </div>
+                        :
+                        <>
+                            <form onSubmit={sendMail}
+                                className="flex justify-center mt-4"
+                            >
+
+                                <SubmitButton
+                                    isLoading={isLoading}
+                                    isSubmittable={true}
+                                    color="red"
+                                >
+                                    Complete
+                                </SubmitButton>
+                            </form>
+                        </>
+                    }
                 </div>
                 :
-                <>
-                    {clientInfo &&
-                        <section className="text-center">
-                            <FormBlockHeading headingText="Review Information" />
-                            <p>Review the Information below</p>
-                        </section>
-                    }
-                    <form onSubmit={(e) => handleGenerateAndSend(e)}
-                        className="flex justify-center mt-4"
-                    >
-
-                        <SubmitButton
-                            isLoading={isLoading}
-                            isSubmittable={true}
-                            color="red"
-                        >
-                            Complete
-                        </SubmitButton>
-                    </form>
-                </>
-            }
-            <div className="w-fit mx-auto">
-                {/* <PDFViewer
-                    width={700}
-                    height={700}
-                >
-                    <FirstPDF data={clientInfo} />
-                </PDFViewer> */}
-
-                <div style={{ height: '700px', width: '700px' }}>
-                    <iframe src={pdfOne as string} width="100%" height="100%" />
-                </div>
-            </div>
+                <p className="text-center">loading...</p>}
         </main>
     )
 }
