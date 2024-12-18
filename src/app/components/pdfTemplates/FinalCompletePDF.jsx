@@ -238,6 +238,15 @@ const FinalCompletePDF = ({ data }) => {
                     />
                 </Page>
             }
+            {data?.deaLicense &&
+                <Page size="A4" style={styles.page}>
+                    <Text>Licenses:</Text>
+                    <Image
+                        style={styles.additionalPdfImage}
+                        src={`data:${data.deaLicense.type};base64,${data.deaLicense.data}`}
+                    />
+                </Page>
+            }
         </Document>
     )
 };

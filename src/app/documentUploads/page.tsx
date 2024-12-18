@@ -12,7 +12,7 @@ export default function page() {
     const router = useRouter();
     const [stateLicense, setStateLicense] = useState<PDFFile | null>(null);
     const [deaLicense, setDeaLicense] = useState<PDFFile | null>(null);
-    const [otherLicense, setOtherLicense] = useState<PDFFile | null>(null)
+    const [otherLicense, setOtherLicense] = useState<PDFFile | null>(null);
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [isUpLoading, setIsUploading] = useState<boolean>(false)
 
@@ -20,40 +20,56 @@ export default function page() {
         const fetchData = async () => {
             const savedData = await getFormData(); // Fetch saved data from IndexedDB or any source
             if (savedData) {
-                setStateLicense(savedData.stateLicense)
+                setStateLicense(savedData?.stateLicense || '')
+                setDeaLicense(savedData?.deaLicense || '')
             }
         };
         fetchData();
     }, [])
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!event.target.files) {
-            throw new Error('add a file')
-        }
-        const file = event.target.files[0];
+        const file = event.target.files?.[0];
         if (!file) {
-            return
+            throw new Error('Please add a file');
         }
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                // @ts-expect-error: error getting 
-                const fileData = event.target.result.split(',')[1];
-                setStateLicense({
-                    name: file.name,
-                    type: file.type,
-                    data: fileData,
-                });
-            };
-            reader.readAsDataURL(file);
-        }
+
+        const reader = new FileReader();
+        reader.onload = (readerEvent) => {
+            // @ts-expect-error: error getting 
+            const fileData = readerEvent.target.result.split(',')[1];
+            switch (event.target.id) {
+                case 'state-license':
+                    setStateLicense({
+                        name: file.name,
+                        type: file.type,
+                        data: fileData,
+                    });
+                    break;
+                case 'dea-license':
+                    setDeaLicense({
+                        name: file.name,
+                        type: file.type,
+                        data: fileData,
+                    });
+                    break;
+                case 'state-license':
+                    setOtherLicense({
+                        name: file.name,
+                        type: file.type,
+                        data: fileData,
+                    });
+                    break;
+            }
+        };
+        reader.readAsDataURL(file);
     };
 
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setIsSaving(true)
         await saveFormData({
-            stateLicense
+            stateLicense,
+            deaLicense
         })
         setIsSaving(false)
         router.push('/reviewInformation', { scroll: true })
@@ -62,7 +78,8 @@ export default function page() {
     async function handleSaveData() {
         setIsSaving(true)
         await saveFormData({
-            stateLicense
+            stateLicense,
+            deaLicense
         })
         setIsSaving(false)
     }
