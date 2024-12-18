@@ -10,7 +10,9 @@ export function middleware(request: NextRequest) {
         script-src 'self' 'nonce-${nonce}';
         style-src 'self' 'unsafe-inline';
         img-src 'self' blob: data:;
+        img-src 'self' blob: data: http://localhost:3000;
         font-src 'self';
+        frame-src 'self' blob:;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
