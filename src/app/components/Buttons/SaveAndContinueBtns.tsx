@@ -2,7 +2,7 @@ import { BarLoader } from "react-spinners"
 
 interface Props {
     isSaving: boolean;
-    submitHandler: () => {}
+    submitHandler: () => void;
 }
 
 export default function SaveAndContinueBtns({submitHandler, isSaving} : Props) {
