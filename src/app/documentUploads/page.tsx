@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import SaveAndContinueBtns from '../components/Buttons/SaveAndContinueBtns';
 import { PulseLoader } from 'react-spinners';
 
-export default function page() {
+export default function Page() {
 
     const router = useRouter();
     const [stateLicense, setStateLicense] = useState<PDFFile | null>(null);
