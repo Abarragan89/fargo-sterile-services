@@ -46,24 +46,37 @@ export default function ReviewPage() {
         }
     }
 
-
+    const [pdfOne, setPdfOne] = useState<string | null>(null)
     const handleGenerateAndSend = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const { data: pdf1 } = await axios.post('/api/generatePDF', {
             clientInfo
         })
-        try {
-            // Send the structured PDF data to the backend
-            await axios.post(
-                '/api/sendEmail',
-                { pdfData: JSON.stringify({ pdfFile: pdf1 }) }, // Pass the PDF object
-                { headers: { 'Content-Type': 'application/json' } }
-            );
-            console.log('PDF sent successfully!');
-        } catch (error) {
-            console.error('Error sending PDF:', error);
-        }
+
+        const base64Pdf = pdf1.data;
+
+        // Decode Base64 into a Blob
+        const pdfBlob = new Blob([Uint8Array.from(atob(base64Pdf), (char) => char.charCodeAt(0))], {
+            type: 'application/pdf',
+        });
+
+        // Create an Object URL for the Blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        setPdfOne(pdfUrl)
+        console.log('pdf one ', pdf1)
+        // try {
+        //     // Send the structured PDF data to the backend
+        //     await axios.post(
+        //         '/api/sendEmail',
+        //         { pdfData: JSON.stringify({ pdfFile: pdf1 }) }, // Pass the PDF object
+        //         { headers: { 'Content-Type': 'application/json' } }
+        //     );
+        //     console.log('PDF sent successfully!');
+        // } catch (error) {
+        //     console.error('Error sending PDF:', error);
+        // }
 
     };
     console.log('client info in ', clientInfo)
@@ -97,12 +110,16 @@ export default function ReviewPage() {
                 </>
             }
             <div className="w-fit mx-auto">
-                <PDFViewer
+                {/* <PDFViewer
                     width={700}
                     height={700}
                 >
                     <FirstPDF data={clientInfo} />
-                </PDFViewer>
+                </PDFViewer> */}
+
+                <div style={{ height: '700px', width: '700px' }}>
+                    <iframe src={pdfOne as string} width="100%" height="100%" />
+                </div>
             </div>
         </main>
     )
