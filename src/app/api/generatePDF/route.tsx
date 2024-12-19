@@ -23,8 +23,7 @@ export async function POST(request: NextRequest) {
             type: 'application/pdf',   // MIME type
         };
 
-        // return NextResponse.json(pdfFile);
-        return NextResponse.json({ message: 'complete' });
+        return NextResponse.json(pdfFile);
     } catch (error) {
         console.error('Error generating PDF:', error);
         return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });

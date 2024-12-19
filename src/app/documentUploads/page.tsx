@@ -6,7 +6,7 @@ import { PDFFile } from '../../../types/pdf';
 import { useRouter } from 'next/navigation';
 import SaveAndContinueBtns from '../components/Buttons/SaveAndContinueBtns';
 import { PulseLoader } from 'react-spinners';
-
+import imageCompression from 'browser-image-compression';
 export default function Page() {
 
     const router = useRouter();
@@ -27,11 +27,21 @@ export default function Page() {
         fetchData();
     }, [])
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) {
             throw new Error('Please add a file');
         }
+
+        const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+        }
+        // compress the file
+        const compressedFile = await imageCompression(file, options);
+        console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+        console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`)
 
         const reader = new FileReader();
         reader.onload = (readerEvent) => {
@@ -40,22 +50,22 @@ export default function Page() {
             switch (event.target.id) {
                 case 'state-license':
                     setStateLicense({
-                        name: file.name,
-                        type: file.type,
+                        name: compressedFile.name,
+                        type: compressedFile.type,
                         data: fileData,
                     });
                     break;
                 case 'dea-license':
                     setDeaLicense({
-                        name: file.name,
-                        type: file.type,
+                        name: compressedFile.name,
+                        type: compressedFile.type,
                         data: fileData,
                     });
                     break;
                 case 'state-license':
                     setOtherLicense({
-                        name: file.name,
-                        type: file.type,
+                        name: compressedFile.name,
+                        type: compressedFile.type,
                         data: fileData,
                     });
                     break;
