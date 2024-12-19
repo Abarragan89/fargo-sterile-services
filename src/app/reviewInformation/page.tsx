@@ -32,11 +32,11 @@ export default function ReviewPage() {
         fetchData();
     }, []);
 
-    // Generate the PDF based on IndexedDB
-    useEffect(() => {
-        // need to wati to get data from local indexdb
-        if (clientInfo) generatePdfForViewers();
-    }, [clientInfo])
+    // // Generate the PDF based on IndexedDB
+    // useEffect(() => {
+    //     // need to wati to get data from local indexdb
+    //     if (clientInfo) generatePdfForViewers();
+    // }, [clientInfo])
 
     async function sendMail(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -44,8 +44,7 @@ export default function ReviewPage() {
         try {
             if (clientInfo)
                 await axios.post('/api/sendEmail', {
-
-                    pdfData: JSON.stringify({ pdfFile: completePDFToSend }),
+                    clientInfo
                 }, {
                     headers: {
                         'Content-Type': 'application/json',
@@ -59,21 +58,21 @@ export default function ReviewPage() {
         }
     }
 
-    const generatePdfForViewers = async () => {
-        const { data: pdf1 } = await axios.post('/api/generatePDF', {
-            clientInfo
-        })
-        setCompletePDFToSend(pdf1)
-        const base64Pdf = pdf1.data;
-        // Decode Base64 into a Blob
-        const pdfBlob = new Blob([Uint8Array.from(atob(base64Pdf), (char) => char.charCodeAt(0))], {
-            type: 'application/pdf',
-        });
-        // Create an Object URL for the Blob
-        const pdfUrl = URL.createObjectURL(pdfBlob);
+    // const generatePdfForViewers = async () => {
+    //     const { data: pdf1 } = await axios.post('/api/generatePDF', {
+    //         clientInfo
+    //     })
+    //     setCompletePDFToSend(pdf1)
+    //     const base64Pdf = pdf1.data;
+    //     // Decode Base64 into a Blob
+    //     const pdfBlob = new Blob([Uint8Array.from(atob(base64Pdf), (char) => char.charCodeAt(0))], {
+    //         type: 'application/pdf',
+    //     });
+    //     // Create an Object URL for the Blob
+    //     const pdfUrl = URL.createObjectURL(pdfBlob);
 
-        setPdfOne(pdfUrl)
-    };
+    //     setPdfOne(pdfUrl)
+    // };
 
     return (
         <main className="h-[100vh] max-w-[1200px] mx-auto">
@@ -81,14 +80,14 @@ export default function ReviewPage() {
             <FormBlockHeading headingText="Review Information" />
 
             {/* Conditionally render when user pdfs are made */}
-            {pdfOne ?
+            {/* {pdfOne ? */}
                 <div className="w-full mx-auto pb-[100px]">
                     <p className="text-center font-bold my-5">Confirm the following information is correct and confirm to complete.</p>
 
                     {/* Complete PDF */}
-                    <div className="h-[600px] w-full max-w-[700px] mx-auto border-4 border-black">
+                    {/* <div className="h-[600px] w-full max-w-[700px] mx-auto border-4 border-black">
                         <iframe src={pdfOne as string} width="100%" height="100%" />
-                    </div>
+                    </div> */}
 
                     {/* Submit Button */}
                     <form onSubmit={sendMail}
@@ -110,9 +109,9 @@ export default function ReviewPage() {
                         </SubmitButton>
                     </form>
                 </div>
-                :
-                <p className="text-center">loading...</p>
-            }
+                {/* : */}
+                {/* <p className="text-center">loading...</p> */}
+            {/* } */}
         </main>
     )
 }
