@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect } from "react";
 import InputLabelEl from "../components/FormInputs/InputLabelEl";
 import RadioInputSection from "../components/FormInputs/RadioInputSection";
 import FormBlockHeading from "../components/Headings/FormBlockHeading";
@@ -11,6 +11,7 @@ import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
 import ScrollToTop from "../components/ScrollToTop";
 import SaveAndContinueBtns from "../components/Buttons/SaveAndContinueBtns";
 import FormProgressBar from "../components/FormProgressBar";
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Home() {
 
@@ -78,43 +79,70 @@ export default function Home() {
         setFacilityInformation(prev => ({ ...prev, [addressPart]: inputText }))
     }
 
-    async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
+    async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setIsSaving(true)
-        await saveFormData({
-            facilityAddress,
-            facilityInformation,
-            accountType,
-            accountNumber,
-            fedExUpsNumber,
-            alternativeSchedule,
-            IDNGroup,
-            primaryGOPName
-        })
-        setIsSaving(false)
-        router.push('/termsAndConditions', { scroll: true })
+        try {
+            setIsSaving(true)
+            await saveFormData({
+                facilityAddress,
+                facilityInformation,
+                accountType,
+                accountNumber,
+                fedExUpsNumber,
+                alternativeSchedule,
+                IDNGroup,
+                primaryGOPName
+            })
+            router.push('/termsAndConditions')
+        } catch (error) {
+            console.log('error submitting form', error)
+        } finally {
+            setIsSaving(false)
+        }
     }
 
     async function handleSaveData() {
-        setIsSaving(true)
-        await saveFormData({
-            facilityAddress,
-            facilityInformation,
-            accountType,
-            accountNumber,
-            fedExUpsNumber,
-            alternativeSchedule,
-            IDNGroup,
-            primaryGOPName
-        })
-        setIsSaving(false)
+        try {
+            setIsSaving(true)
+            await saveFormData({
+                facilityAddress,
+                facilityInformation,
+                accountType,
+                accountNumber,
+                fedExUpsNumber,
+                alternativeSchedule,
+                IDNGroup,
+                primaryGOPName
+            })
+            notify();
+        } catch (error) {
+            console.log('error saving data', error)
+        } finally {
+            setIsSaving(false)
+        }
     }
+
+
+
+    const notify = () => toast("Data Saved!");
 
     const listItemStyles = 'list-disc text-[.875rem] text-gray-500 py-1'
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
+            <ToastContainer
+                position="top-right"
+                autoClose={1500}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
             <FormProgressBar progress={5} position={1} />
             <form onSubmit={(e) => handleFormSubmit(e)}>
                 {/* Account Type */}
@@ -173,9 +201,9 @@ export default function Home() {
                     {/* Facility Address */}
                     <div className="w-full mt-5">
                         <legend className=" text-[.95rem] block mb-2">
-                            Shipping Address
-                            <span className="text-[.925rem] text-gray-500 italic"
-                            > (submitted licenses <span className="font-bold">must</span> match shipping address)</span>
+                            Shipping Address &nbsp;
+                            <span className="text-[.925rem] text-gray-500 italic underline"
+                            >(submitted licenses <span className="font-bold">must</span> match shipping address)</span>
                         </legend>
                         <div className="flex flex-wrap">
                             <div className="flex-1 mr-5">

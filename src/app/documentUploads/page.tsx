@@ -9,6 +9,8 @@ import { PulseLoader } from 'react-spinners';
 import imageCompression from 'browser-image-compression';
 import { IoMdCloseCircle } from "react-icons/io";
 import FormProgressBar from '../components/FormProgressBar';
+import { ToastContainer, toast } from 'react-toastify';
+import ScrollToTop from '../components/ScrollToTop';
 
 export default function Page() {
 
@@ -20,6 +22,8 @@ export default function Page() {
     const [otherLicense3, setOtherLicense3] = useState<PDFFile | null>(null);
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [isUpLoading, setIsUploading] = useState<boolean>(false)
+    const notify = () => toast("Data Saved!");
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -101,14 +105,8 @@ export default function Page() {
     };
 
 
-
-
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (!stateLicense || !deaLicense) {
-            alert('File in required files')
-            return
-        }
         try {
             setIsSaving(true)
             await saveFormData({
@@ -118,23 +116,30 @@ export default function Page() {
                 otherLicense2,
                 otherLicense3
             })
-            setIsSaving(false)
-            router.push('/reviewInformation', { scroll: true })
+            router.push('/reviewInformation')
         } catch (error) {
-            console.log('error submitiung form in document ', error)
+            console.log('error submitting form', error)
+        } finally {
+            setIsSaving(false)
         }
-    };
+    }
 
     async function handleSaveData() {
-        setIsSaving(true)
-        await saveFormData({
-            stateLicense,
-            deaLicense,
-            otherLicense1,
-            otherLicense2,
-            otherLicense3
-        })
-        setIsSaving(false)
+        try {
+            setIsSaving(true)
+            await saveFormData({
+                stateLicense,
+                deaLicense,
+                otherLicense1,
+                otherLicense2,
+                otherLicense3
+            })
+            notify();
+        } catch (error) {
+            console.log('error saving data', error)
+        } finally {
+            setIsSaving(false)
+        }
     }
 
     const possibleImageFiles = [
@@ -173,7 +178,7 @@ export default function Page() {
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             {isUpLoading &&
-                <div className="flex items-center justify-center z-10 absolute top-0 bottom-0 left-0 right-0 pointer-events-auto bg-[rgba(0,0,0,0.9)]">
+                <div className="flex items-center justify-center z-10 fixed top-0 bottom-0 left-0 right-0 pointer-events-auto bg-[rgba(0,0,0,0.9)]">
                     <div className='flex items-baseline justify-center mb-[175px]'>
                         <p className='text-[1.5rem] font-bold text-white mr-2'>Compressing image </p>
                         <PulseLoader
@@ -186,12 +191,25 @@ export default function Page() {
                     </div>
                 </div>
             }
+            <ScrollToTop />
+            <ToastContainer
+                position="top-right"
+                autoClose={1500}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
             <FormProgressBar progress={78} position={5} />
             <FormBlockHeading headingText="Documents" />
             <form onSubmit={handleFormSubmit}>
                 <section className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
                     <p className='text-center text-[.95rem]'> <span className='font-bold mr-1'>Acceptable File Types:</span>.jpeg .jpg or .png. </p>
-                    <p className='text-center text-[.95rem]'>If you need to convert a pdf to one of these types, click <a href='https://www.freeconvert.com/pdf-to-jpg' target='_blank' rel='noopener noreferrer' className='underline text-blue-700'>here</a></p>
+                    <p className='text-center text-[.9rem]'>(If you need to convert a <span className='underline'>pdf</span> to an <span className='underline'>image</span> , click <a href='https://www.freeconvert.com/pdf-to-jpg' target='_blank' rel='noopener noreferrer' className='underline text-blue-700'>here</a>.)</p>
                     {possibleImageFiles.map((fileOption, index) => (
                         <div key={index} className='ml-3 my-5 p-5 border border-gray-300 rounded-[3px] relative'>
 

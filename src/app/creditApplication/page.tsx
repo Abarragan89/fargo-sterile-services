@@ -8,17 +8,18 @@ import SaveAndContinueBtns from '../components/Buttons/SaveAndContinueBtns';
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function Page() {
-
     const router = useRouter();
     const [isSaving, setIsSaving] = useState<boolean>(false)
-    const [paymentContactData, setPaymentContactData] = useState()
+    const [creditApplicationData, setCreditApplicationData] = useState()
+    const notify = () => toast("Data Saved!");
+
 
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         try {
             setIsSaving(true)
-            await saveFormData({ paymentContactData })
-            router.push('/creditApplication')
+            await saveFormData({ creditApplicationData })
+            router.push('/documentUploads')
         } catch (error) {
             console.log('error submitting form', error)
         } finally {
@@ -30,17 +31,15 @@ export default function Page() {
         try {
             setIsSaving(true)
             await saveFormData({
-                paymentContactData
+                creditApplicationData
             })
             notify();
         } catch (error) {
             console.log('error saving data', error)
-        } finally{
+        } finally {
             setIsSaving(false)
         }
     }
-
-    const notify = () => toast("Data Saved!");
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
@@ -57,10 +56,10 @@ export default function Page() {
                 pauseOnHover
                 theme="dark"
             />
-            <FormProgressBar progress={41} position={3} />
-
+            <FormProgressBar progress={58} position={4} />
             <form onSubmit={(e) => handleFormSubmit(e)}>
-                <label>Payment and Contacts</label>
+                <label>Credit Application</label>
+
 
 
                 {/* Save and Continue Btn section */}

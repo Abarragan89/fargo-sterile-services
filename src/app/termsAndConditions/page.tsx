@@ -43,7 +43,7 @@ export default function Page() {
         setIsLoading(true)
         await saveFormData({ termsAndConditionsInformation })
         setIsLoading(false)
-        router.push('/documentUploads')
+        router.push('/paymentAndContacts')
     }
     function handleTermsAndConditions(inputText: string, addressPart: string | undefined) {
         if (!addressPart) return;

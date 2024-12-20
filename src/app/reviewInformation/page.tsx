@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import SelectAreaEl from "../components/FormInputs/SelectAreaEl";
 import { SelectItem } from "../../../types/formInputs";
 import FormProgressBar from "../components/FormProgressBar";
+import { GridLoader } from "react-spinners";
 
 export default function ReviewPage() {
 
@@ -79,40 +80,49 @@ export default function ReviewPage() {
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
-            <FormProgressBar progress={96} position={6}/>
-            <FormBlockHeading headingText="Review Information" />
+            <FormProgressBar progress={96} position={6} />
             {/* Conditionally render when user pdfs are made */}
             {pdfOne ?
-                <div className="w-full mx-auto pb-[100px]">
-                    <p className="text-center font-bold mt-[-5px] mb-8">Confirm the following information is correct and complete.</p>
+                <>
+                    <FormBlockHeading headingText="Review Information" />
+                    <div className="w-full mx-auto pb-[100px]">
+                        <p className="text-center font-bold mt-[-5px] mb-3 text-[.95rem]">Confirm the following information is correct and complete.</p>
 
-                    {/* Complete PDF */}
-                    <div className="h-[600px] w-full max-w-[700px] mx-auto border-4 border-black">
-                        <iframe src={pdfOne as string} width="100%" height="100%" />
-                    </div>
-
-                    {/* Submit Button */}
-                    <form onSubmit={sendMail}
-                        className="flex flex-col justify-center items-center mt-5 w-[700px] mx-auto"
-                    >
-                        <div>
-                            <SelectAreaEl
-                                totalSelectionOptionsArr={selectionArr}
-                                chosenSelectionOptionsArr={chosenSelectionArr}
-                                setChosenSelectionOptionsArr={setChosenSelectionArr}
-                            />
+                        {/* Complete PDF */}
+                        <div className="h-[600px] w-full max-w-[700px] mx-auto border-4 border-black">
+                            <iframe src={pdfOne as string} width="100%" height="100%" />
                         </div>
-                        <SubmitButton
-                            isLoading={isLoading}
-                            isSubmittable={chosenSelectionArr.length > 0}
-                            color="red"
+
+                        {/* Submit Button */}
+                        <form onSubmit={sendMail}
+                            className="flex flex-col justify-center items-center mt-5 w-[700px] mx-auto"
                         >
-                            Complete
-                        </SubmitButton>
-                    </form>
-                </div>
+                            <div>
+                                <SelectAreaEl
+                                    totalSelectionOptionsArr={selectionArr}
+                                    chosenSelectionOptionsArr={chosenSelectionArr}
+                                    setChosenSelectionOptionsArr={setChosenSelectionArr}
+                                />
+                            </div>
+                            <SubmitButton
+                                isLoading={isLoading}
+                                isSubmittable={chosenSelectionArr.length > 0}
+                                color="red"
+                            >
+                                Complete
+                            </SubmitButton>
+                        </form>
+                    </div>
+                </>
                 :
-                <p className="text-center">loading...</p>
+                <div className="flex flex-col mb-[175px] justify-center items-center">
+                    <p className="text-center mb-[20px]">Processing your information...</p>
+                    <GridLoader 
+                        size={25}
+                        color="rgb(212, 70, 55)"
+                        className="opacity-80"
+                    />
+                </div>
             }
         </main>
     )

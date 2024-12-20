@@ -8,15 +8,7 @@
   --company-red: rgb(212, 70, 55);
   --company-gray: rgb(156, 158, 159);
   --off-black: rgb(48, 47, 47);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* --background: #0a0a0a;
-    --foreground: #ededed; */
-    --background: #ffffff;
-    --foreground: #171717;
-  }
+  --toastify-color-progress-dark: rgb(212, 70, 55);
 }
 
 body {
