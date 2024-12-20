@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect, FormEvent } from "react";
-import axios from "axios";
 import InputLabelEl from "../components/FormInputs/InputLabelEl";
 import RadioInputSection from "../components/FormInputs/RadioInputSection";
 import FormBlockHeading from "../components/Headings/FormBlockHeading";
@@ -9,9 +8,9 @@ import TextareaLabel from "../components/FormInputs/TextareaLabel";
 import { useRouter } from "next/navigation";
 import { accountTypeOptions, facilityTypeOptions } from "../../../data";
 import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
-// import { BarLoader } from "react-spinners";
 import ScrollToTop from "../components/ScrollToTop";
 import SaveAndContinueBtns from "../components/Buttons/SaveAndContinueBtns";
+import FormProgressBar from "../components/FormProgressBar";
 
 export default function Home() {
 
@@ -116,6 +115,7 @@ export default function Home() {
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
+            <FormProgressBar progress={5} />
             <form onSubmit={(e) => handleFormSubmit(e)}>
                 {/* Account Type */}
                 <FormBlockHeading headingText="Account Information" />

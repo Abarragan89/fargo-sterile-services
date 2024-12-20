@@ -8,6 +8,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import SelectAreaEl from "../components/FormInputs/SelectAreaEl";
 import { SelectItem } from "../../../types/formInputs";
+import FormProgressBar from "../components/FormProgressBar";
 
 export default function ReviewPage() {
 
@@ -31,8 +32,6 @@ export default function ReviewPage() {
         };
         fetchData();
     }, []);
-
-    console.log('all client info  ', clientInfo)
 
     // Generate the PDF based on IndexedDB
     useEffect(() => {
@@ -78,43 +77,43 @@ export default function ReviewPage() {
     };
 
     return (
-        <main className="h-[100vh] max-w-[1200px] mx-auto">
+        <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
+            <FormProgressBar progress={96} />
             <FormBlockHeading headingText="Review Information" />
-
             {/* Conditionally render when user pdfs are made */}
-            {/* {pdfOne ? */}
-            <div className="w-full mx-auto pb-[100px]">
-                <p className="text-center font-bold my-5">Confirm the following information is correct and confirm to complete.</p>
+            {pdfOne ?
+                <div className="w-full mx-auto pb-[100px]">
+                    <p className="text-center font-bold mt-[-5px] mb-8">Confirm the following information is correct and complete.</p>
 
-                {/* Complete PDF */}
-                <div className="h-[600px] w-full max-w-[700px] mx-auto border-4 border-black">
-                    <iframe src={pdfOne as string} width="100%" height="100%" />
-                </div>
-
-                {/* Submit Button */}
-                <form onSubmit={sendMail}
-                    className="flex flex-col justify-center items-center mt-5 w-[700px] mx-auto"
-                >
-                    <div>
-                        <SelectAreaEl
-                            totalSelectionOptionsArr={selectionArr}
-                            chosenSelectionOptionsArr={chosenSelectionArr}
-                            setChosenSelectionOptionsArr={setChosenSelectionArr}
-                        />
+                    {/* Complete PDF */}
+                    <div className="h-[600px] w-full max-w-[700px] mx-auto border-4 border-black">
+                        <iframe src={pdfOne as string} width="100%" height="100%" />
                     </div>
-                    <SubmitButton
-                        isLoading={isLoading}
-                        isSubmittable={chosenSelectionArr.length > 0}
-                        color="red"
+
+                    {/* Submit Button */}
+                    <form onSubmit={sendMail}
+                        className="flex flex-col justify-center items-center mt-5 w-[700px] mx-auto"
                     >
-                        Complete
-                    </SubmitButton>
-                </form>
-            </div>
-            {/* : */}
-            {/* <p className="text-center">loading...</p> */}
-            {/* } */}
+                        <div>
+                            <SelectAreaEl
+                                totalSelectionOptionsArr={selectionArr}
+                                chosenSelectionOptionsArr={chosenSelectionArr}
+                                setChosenSelectionOptionsArr={setChosenSelectionArr}
+                            />
+                        </div>
+                        <SubmitButton
+                            isLoading={isLoading}
+                            isSubmittable={chosenSelectionArr.length > 0}
+                            color="red"
+                        >
+                            Complete
+                        </SubmitButton>
+                    </form>
+                </div>
+                :
+                <p className="text-center">loading...</p>
+            }
         </main>
     )
 }

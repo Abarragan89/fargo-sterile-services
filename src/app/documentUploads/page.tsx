@@ -1,12 +1,14 @@
 'use client';
 import FormBlockHeading from '../components/Headings/FormBlockHeading'
-import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
+import { saveFormData, getFormData, deleteField } from "../../../utils/indexedDBActions";
 import { useState, useEffect } from 'react';
 import { PDFFile } from '../../../types/pdf';
 import { useRouter } from 'next/navigation';
 import SaveAndContinueBtns from '../components/Buttons/SaveAndContinueBtns';
 import { PulseLoader } from 'react-spinners';
 import imageCompression from 'browser-image-compression';
+import { IoMdCloseCircle } from "react-icons/io";
+import FormProgressBar from '../components/FormProgressBar';
 
 export default function Page() {
 
@@ -103,16 +105,24 @@ export default function Page() {
 
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setIsSaving(true)
-        await saveFormData({
-            stateLicense,
-            deaLicense,
-            otherLicense1,
-            otherLicense2,
-            otherLicense3
-        })
-        setIsSaving(false)
-        router.push('/reviewInformation', { scroll: true })
+        if (!stateLicense || !deaLicense) {
+            alert('File in required files')
+            return
+        }
+        try {
+            setIsSaving(true)
+            await saveFormData({
+                stateLicense,
+                deaLicense,
+                otherLicense1,
+                otherLicense2,
+                otherLicense3
+            })
+            setIsSaving(false)
+            router.push('/reviewInformation', { scroll: true })
+        } catch (error) {
+            console.log('error submitiung form in document ', error)
+        }
     };
 
     async function handleSaveData() {
@@ -128,12 +138,37 @@ export default function Page() {
     }
 
     const possibleImageFiles = [
-        { label: 'State License', state: stateLicense },
-        { label: 'DEA License', state: deaLicense },
-        { label: 'Other License 1', state: otherLicense1 },
-        { label: 'Other License 2', state: otherLicense2 },
-        { label: 'Other License 3', state: otherLicense3 },
+        { label: 'State License', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
+        { label: 'DEA License', state: deaLicense, isRequired: true, dbFieldName: 'deaLicense' },
+        { label: 'Other License 1', state: otherLicense1, isRequired: false, dbFieldName: 'otherLicense1' },
+        { label: 'Other License 2', state: otherLicense2, isRequired: false, dbFieldName: 'otherLicense2' },
+        { label: 'Other License 3', state: otherLicense3, isRequired: false, dbFieldName: 'otherLicense3' },
     ];
+
+    async function deleteFileHandler(fieldName: string) {
+        try {
+            await deleteField(fieldName)
+            switch (fieldName) {
+                case 'stateLicense':
+                    setStateLicense(null)
+                    break;
+                case 'deaLicense':
+                    setDeaLicense(null)
+                    break;
+                case 'otherLicense1':
+                    setOtherLicense1(null)
+                    break;
+                case 'otherLicense2':
+                    setOtherLicense2(null)
+                    break;
+                case 'otherLicense3':
+                    setOtherLicense3(null)
+                    break;
+            }
+        } catch (error) {
+
+        }
+    }
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
@@ -151,20 +186,27 @@ export default function Page() {
                     </div>
                 </div>
             }
+            <FormProgressBar progress={78} />
             <FormBlockHeading headingText="Documents" />
             <form onSubmit={handleFormSubmit}>
                 <section className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
                     <p className='text-center text-[.95rem]'> <span className='font-bold mr-1'>Acceptable File Types:</span>.jpeg .jpg or .png. </p>
-                    <p className='mb-4 text-center text-[.95rem]'>If you need to convert a pdf to one of these types, click <a href='https://www.freeconvert.com/pdf-to-jpg' target='_blank' rel='noopener noreferrer' className='underline text-blue-700'>here</a></p>
-
-
+                    <p className='text-center text-[.95rem]'>If you need to convert a pdf to one of these types, click <a href='https://www.freeconvert.com/pdf-to-jpg' target='_blank' rel='noopener noreferrer' className='underline text-blue-700'>here</a></p>
                     {possibleImageFiles.map((fileOption, index) => (
-                        <div key={index}>
-                            <p className='font-bold'>{fileOption.label}: <span className='text-[.95rem] text-[var(--company-red)]'>(required)</span></p>
+                        <div key={index} className='ml-3 my-5 p-5 border border-gray-300 rounded-[3px] relative'>
+
+                            <p className='font-bold'>{fileOption.label}: {fileOption.isRequired && <span className='text-[.95rem] text-[var(--company-red)]'>(required)</span>}</p>
+
                             <div className="flex items-center mb-5">
-                                <p className='mr-5'>File: {fileOption.state?.name ? <span className='italic'>{fileOption.state.name}</span> : <span className='italic'>None Selected</span>}</p>
+                                <p className='mr-5 text-[.95rem]'>File: {fileOption.state?.name ?
+                                    <span>
+                                        <span className='italic'>{fileOption.state.name}</span>
+                                        <span onClick={() => deleteFileHandler(fileOption.dbFieldName)}><IoMdCloseCircle className='inline-block ml-2 text-[1.1rem] text-[var(--company-red)] hover:cursor-pointer hover:text-[var(--off-black)]' /></span>
+                                    </span>
+                                    :
+                                    <span className='italic'>No File Selected</span>}</p>
                                 <label
-                                    className={`w-fit custom-small-btn bg-[var(--off-black)]`}
+                                    className={`w-fit custom-small-btn bg-[var(--off-black)] absolute top-10 right-10`}
                                     htmlFor={fileOption.label.replace(/ /g, '-').toLocaleLowerCase()}
                                 >
                                     {isUpLoading ?

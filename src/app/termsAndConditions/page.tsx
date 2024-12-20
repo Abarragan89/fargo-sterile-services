@@ -8,6 +8,7 @@ import SubmitButton from "../components/Buttons/SubmitButton";
 import { getFormData, saveFormData } from "../../../utils/indexedDBActions";
 import ScrollToTop from "../components/ScrollToTop";
 import { useRouter } from "next/navigation";
+import FormProgressBar from "../components/FormProgressBar";
 
 export default function Page() {
 
@@ -51,8 +52,9 @@ export default function Page() {
 
     const orderedListItem = "list-decimal ml-2 pl-2 py-2 text-[.95rem]";
     return (
-        <main className="h-[100vh] max-w-[700px] mx-auto">
+        <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
+            <FormProgressBar progress={23}/>
             <FormBlockHeading headingText="Terms and Conditions" />
             <div className=" border-2 border-[var(--company-gray)] rounded-[3px] p-8 mx-5 max-h-[500px] overflow-y-scroll">
                 <p className="mb-2 text-[.95rem]">The person signing this section warrants on behalf of Customer that the above information is complete and accurate and

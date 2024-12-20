@@ -44,9 +44,21 @@ export const getFormData = async () => {
     return store.get(0);
 };
 
-// Utility function to get all form data
-// export const getAllFormData = async () => {
-//     const db = await openIndexedDB();
-//     const store = db.transaction('formData').objectStore('formData');
-//     return store.getAll();
-// };
+export const deleteField = async (fieldName: string) => {
+    const db = await openIndexedDB();
+    // const store = db.transaction('formData').objectStore('formData');
+
+    const tx = db.transaction('formData', 'readwrite');
+    const store = tx.objectStore('formData');
+
+    // Get all records (or use a cursor if needed)
+    const firstRecord = await store.get(0);
+    if (firstRecord) {
+        // Set the field to an empty string
+        firstRecord[fieldName] = '';
+        // Update the record
+        await store.put(firstRecord);
+    }
+
+}
+
