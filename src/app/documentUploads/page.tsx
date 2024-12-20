@@ -25,6 +25,9 @@ export default function Page() {
             if (savedData) {
                 setStateLicense(savedData?.stateLicense || '')
                 setDeaLicense(savedData?.deaLicense || '')
+                setOtherLicense1(savedData?.otherLicense1 || '')
+                setOtherLicense2(savedData?.otherLicense2 || '')
+                setOtherLicense3(savedData?.otherLicense3 || '')
             }
         };
         fetchData();
@@ -114,7 +117,6 @@ export default function Page() {
 
     async function handleSaveData() {
         setIsSaving(true)
-        console.log('other license 1 ', otherLicense1)
         await saveFormData({
             stateLicense,
             deaLicense,

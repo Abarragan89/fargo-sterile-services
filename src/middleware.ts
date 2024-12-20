@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
     if (process.env.NODE_ENV === 'production') {
         cspHeader = `
         default-src 'self';
-        script-src 'self' 'nonce-${nonce}';
+        script-src 'self' 'nonce-${nonce}' https://cdn.jsdelivr.net;
         style-src 'self' 'unsafe-inline';
         img-src 'self' blob: data:;
         worker-src 'self' blob:;
