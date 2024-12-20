@@ -117,10 +117,9 @@ export default function ReviewPage() {
                 :
                 <div className="flex flex-col mb-[175px] justify-center items-center">
                     <p className="text-center mb-[20px]">Processing your information...</p>
-                    <GridLoader 
+                    <GridLoader
                         size={25}
                         color="rgb(212, 70, 55)"
-                        className="opacity-80"
                     />
                 </div>
             }
