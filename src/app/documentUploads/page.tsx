@@ -36,17 +36,14 @@ export default function Page() {
             throw new Error('Please add a file');
         }
         try {
-            console.log('event id ', event.target.id)
             setIsUploading(true)
             const options = {
                 maxSizeMB: .5,
-                maxWidthOrHeight: 1920,
+                maxWidthOrHeight: 750,
                 useWebWorker: true,
             }
             // compress the file
             const compressedFile = await imageCompression(file, options);
-            console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-            console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`)
 
             const reader = new FileReader();
             reader.onload = (readerEvent) => {
@@ -97,6 +94,9 @@ export default function Page() {
             setIsUploading(false)
         }
     };
+
+
+
 
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
