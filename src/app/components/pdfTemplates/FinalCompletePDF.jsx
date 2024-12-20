@@ -98,7 +98,6 @@ const FinalCompletePDF = ({ data }) => {
             <Page size="A4" style={styles.page}>
                 <Image style={styles.companyLogo}
                     src="https://unfinished-pages.s3.us-east-2.amazonaws.com/companyLogo.png"
-                // src='/images/companyLogo.png'
                 />
                 <View style={[styles.section, styles.accountType]}>
                     <View style={styles.checkBoxLabel}>
@@ -244,6 +243,33 @@ const FinalCompletePDF = ({ data }) => {
                     <Image
                         style={styles.additionalPdfImage}
                         src={`data:${data.deaLicense.type};base64,${data.deaLicense.data}`}
+                    />
+                </Page>
+            }
+            {data?.otherLicense1 &&
+                <Page size="A4" style={styles.page}>
+                    <Text>Licenses:</Text>
+                    <Image
+                        style={styles.additionalPdfImage}
+                        src={`data:${data.otherLicense1.type};base64,${data.otherLicense1.data}`}
+                    />
+                </Page>
+            }
+            {data?.otherLicense2 &&
+                <Page size="A4" style={styles.page}>
+                    <Text>Licenses:</Text>
+                    <Image
+                        style={styles.additionalPdfImage}
+                        src={`data:${data.otherLicense2.type};base64,${data.otherLicense2.data}`}
+                    />
+                </Page>
+            }
+            {data?.otherLicense3 &&
+                <Page size="A4" style={styles.page}>
+                    <Text>Licenses:</Text>
+                    <Image
+                        style={styles.additionalPdfImage}
+                        src={`data:${data.otherLicense3.type};base64,${data.otherLicense3.data}`}
                     />
                 </Page>
             }
