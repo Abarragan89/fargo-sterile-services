@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const pdfBlobData = (await request.formData()).get('GeneratedPDF.pdf');
 
     // Convert Blob to Buffer
-    const arrayBuffer = await pdfBlobData.arrayBuffer();
+    const arrayBuffer = await (pdfBlobData as Blob).arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
     // Convert Buffer to Base64
