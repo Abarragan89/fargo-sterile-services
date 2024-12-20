@@ -97,8 +97,8 @@ const FinalCompletePDF = ({ data }) => {
         <Document>
             <Page size="A4" style={styles.page}>
                 <Image style={styles.companyLogo}
-                    src="https://unfinished-pages.s3.us-east-2.amazonaws.com/companyLogo.png"
-                // src='/images/companyLogo.png'
+                    // src="https://unfinished-pages.s3.us-east-2.amazonaws.com/companyLogo.png"
+                src='/images/companyLogo.png'
                 />
                 <View style={[styles.section, styles.accountType]}>
                     <View style={styles.checkBoxLabel}>
