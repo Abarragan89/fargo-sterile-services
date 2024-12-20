@@ -42,7 +42,7 @@ export default function Page() {
             setIsUploading(true)
             const options = {
                 maxSizeMB: .5,
-                maxWidthOrHeight: 750,
+                maxWidthOrHeight: 400,
                 useWebWorker: true,
             }
             // compress the file
@@ -127,7 +127,13 @@ export default function Page() {
         setIsSaving(false)
     }
 
-    const possibleImageFiles = ['State License', 'DEA License', 'Other License 1', 'Other License 2', 'Other License 3']
+    const possibleImageFiles = [
+        { label: 'State License', state: stateLicense },
+        { label: 'DEA License', state: deaLicense },
+        { label: 'Other License 1', state: otherLicense1 },
+        { label: 'Other License 2', state: otherLicense2 },
+        { label: 'Other License 3', state: otherLicense3 },
+    ];
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
@@ -154,12 +160,12 @@ export default function Page() {
 
                     {possibleImageFiles.map((fileOption, index) => (
                         <div key={index}>
-                            <p className='font-bold'>{fileOption}: <span className='text-[.95rem] text-[var(--company-red)]'>(required)</span></p>
+                            <p className='font-bold'>{fileOption.label}: <span className='text-[.95rem] text-[var(--company-red)]'>(required)</span></p>
                             <div className="flex items-center mb-5">
-                                <p className='mr-5'>File: {stateLicense?.name ? <span className='italic'>{stateLicense.name}</span> : <span className='italic'>None Selected</span>}</p>
+                                <p className='mr-5'>File: {fileOption.state?.name ? <span className='italic'>{fileOption.state.name}</span> : <span className='italic'>None Selected</span>}</p>
                                 <label
                                     className={`w-fit custom-small-btn bg-[var(--off-black)]`}
-                                    htmlFor={fileOption.replace(/ /g, '-').toLocaleLowerCase()}
+                                    htmlFor={fileOption.label.replace(/ /g, '-').toLocaleLowerCase()}
                                 >
                                     {isUpLoading ?
                                         <PulseLoader
@@ -173,7 +179,7 @@ export default function Page() {
                                         'Upload File'
                                     }
                                     <input
-                                        id={fileOption.replace(/ /g, '-').toLocaleLowerCase()}
+                                        id={fileOption.label.replace(/ /g, '-').toLocaleLowerCase()}
                                         type="file"
                                         accept=".jpeg,.png,.jpg"
                                         className="mt-5"
@@ -184,69 +190,6 @@ export default function Page() {
                             </div>
                         </div>
                     ))}
-
-
-                    {/* <p className='font-bold'>DEA License: <span className='text-[.95rem] text-[var(--company-red)]'>(required)</span></p>
-                    <div className="flex items-center mb-5">
-                        <p className='mr-5'>File: {deaLicense?.name ? <span className='italic'>{deaLicense.name}</span> : <span className='italic'>None Selected</span>}</p>
-                        <label
-                            className={`w-fit custom-small-btn bg-[var(--off-black)]`}
-                            htmlFor="dea-license"
-                        >
-                            {isUpLoading ?
-                                <PulseLoader
-                                    loading={isUpLoading}
-                                    size={7}
-                                    color='white'
-                                    aria-label="Loading Spinner"
-                                    data-testid="loader"
-                                />
-                                :
-                                'Upload File'
-                            }
-                            <input
-                                id="dea-license"
-                                type="file"
-                                accept=".jpeg,.png,.jpg"
-                                className="mt-5"
-                                hidden
-                                onChange={(e) => handleFileChange(e)}
-                            />
-                        </label>
-                    </div>
-
-
-                    <p className='font-bold'>Other License:</p>
-                    <div className="flex items-center mb-5">
-                        <p className='mr-5'>File: {otherLicense?.name ? <span className='italic'>{otherLicense.name}</span> : <span className='italic'>None Selected</span>}</p>
-                        <label
-                            className={`w-fit custom-small-btn bg-[var(--off-black)]`}
-                            htmlFor="other-license"
-                        >
-                            {isUpLoading ?
-                                <PulseLoader
-                                    loading={isUpLoading}
-                                    size={7}
-                                    aria-label="Loading Spinner"
-                                    data-testid="loader"
-                                    color='white'
-                                />
-                                :
-                                'Upload File'
-                            }
-                            <input
-                                id="other-license"
-                                type="file"
-                                accept=".jpeg,.png,.jpg"
-                                className="mt-5"
-                                hidden
-                                onChange={(e) => handleFileChange(e)}
-                            />
-                        </label>
-                    </div> */}
-
-
-
                 </section>
                 <SaveAndContinueBtns
                     isSaving={isSaving}
