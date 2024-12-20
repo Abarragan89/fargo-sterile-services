@@ -186,7 +186,7 @@ export default function Page() {
                     </div>
                 </div>
             }
-            <FormProgressBar progress={78} />
+            <FormProgressBar progress={78} position={5} />
             <FormBlockHeading headingText="Documents" />
             <form onSubmit={handleFormSubmit}>
                 <section className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
