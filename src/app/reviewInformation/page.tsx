@@ -8,8 +8,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import SelectAreaEl from "../components/FormInputs/SelectAreaEl";
 import { SelectItem } from "../../../types/formInputs";
-import FinalCompletePDF from "../components/pdfTemplates/FinalCompletePDF";
-import { pdf } from '@react-pdf/renderer';
 
 export default function ReviewPage() {
 
@@ -20,8 +18,7 @@ export default function ReviewPage() {
     const [clientInfo, setClientInfo] = useState();
     const [chosenSelectionArr, setChosenSelectionArr] = useState<SelectItem[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [generatePDFURL, setGeneratePDFURL] = useState<string | null>(null);
-    const [generatedPDFBlob, setGeneratedPDFBlob] = useState<Blob>()
+    const [pdfOne, setPdfOne] = useState<string | null>(null)
     const [completePDFToSend, setCompletePDFToSend] = useState()
 
     // Get the data from IndexedDB
@@ -35,6 +32,8 @@ export default function ReviewPage() {
         fetchData();
     }, []);
 
+    console.log('all client info  ', clientInfo)
+
     // Generate the PDF based on IndexedDB
     useEffect(() => {
         // need to wati to get data from local indexdb
@@ -43,29 +42,16 @@ export default function ReviewPage() {
 
     async function sendMail(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setIsLoading(true);
+        setIsLoading(true)
         try {
-            const formData = new FormData();
-            formData.append('pdf', generatedPDFBlob as Blob, 'GeneratedPDF.pdf'); // Attach the Blob with a name
-
-            await axios.post('/api/sendEmail', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-            // Working Code 
-            // if (clientInfo)
-            //     await axios.post('/api/sendEmail', {
-            //         clientInfo
-            //     }, {
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         }
-            //     })
-
-
-
+            if (clientInfo)
+                await axios.post('/api/sendEmail', {
+                    clientInfo
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
             router.push('/thankyou')
         } catch (error) {
             console.log('errror ', error)
@@ -74,42 +60,21 @@ export default function ReviewPage() {
         }
     }
 
+
     const generatePdfForViewers = async () => {
-        // const { data: pdf1 } = await axios.post('/api/generatePDF', {
-        //     clientInfo
-        // })
-        const pdfBlob = await pdf(<FinalCompletePDF data={clientInfo} />).toBlob();
+        const { data: pdf1 } = await axios.post('/api/generatePDF', {
+            clientInfo
+        })
+        setCompletePDFToSend(pdf1)
+        const base64Pdf = pdf1.data;
+        // Decode Base64 into a Blob
+        const pdfBlob = new Blob([Uint8Array.from(atob(base64Pdf), (char) => char.charCodeAt(0))], {
+            type: 'application/pdf',
+        });
+        // Create an Object URL for the Blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
 
-        // Set the blob data so I can send it in the sendMail
-        // Create a URL for the Blob
-        const blobUrl = URL.createObjectURL(pdfBlob);
-
-        // Set the URL to the state to render in iframe
-        setGeneratePDFURL(blobUrl);
-        // Convert the Blob to an ArrayBuffer
-        // const arrayBuffer = await pdfBlob.arrayBuffer();
-
-        // // Convert the ArrayBuffer to a Base64 string
-        // const uint8Array = new Uint8Array(arrayBuffer);
-        // // const base64data = btoa(String.fromCharCode(...uint8Array));
-
-        // // Create the PDF object
-        // const pdfFile = {
-        //     name: 'GeneratedPDF.pdf',  // File name
-        //     data: base64data,          // Base64-encoded string
-        //     type: 'application/pdf',   // MIME type
-        // };
-
-        // setCompletePDFToSend(pdfFile)
-        // const base64Pdf = pdfFile.data;
-        // // Decode Base64 into a Blob
-        // const pdfBlob2 = new Blob([Uint8Array.from(atob(base64Pdf), (char) => char.charCodeAt(0))], {
-        //     type: 'application/pdf',
-        // });
-        // // Create an Object URL for the Blob
-        // const pdfUrl = URL.createObjectURL(pdfBlob2);
-
-        // setPdfOne(pdfUrl)
+        setPdfOne(pdfUrl)
     };
 
     return (
@@ -124,7 +89,7 @@ export default function ReviewPage() {
 
                 {/* Complete PDF */}
                 <div className="h-[600px] w-full max-w-[700px] mx-auto border-4 border-black">
-                    <iframe src={generatePDFURL as string} width="100%" height="100%" />
+                    <iframe src={pdfOne as string} width="100%" height="100%" />
                 </div>
 
                 {/* Submit Button */}

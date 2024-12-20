@@ -7,28 +7,14 @@ import sgMail, { MailDataRequired } from '@sendgrid/mail';
 sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
 export async function POST(request: NextRequest) {
-    // const { clientInfo } = await request.json();
-
-    // const pdfBlob = await pdf(<FinalCompletePDF data={clientInfo} />).toBlob();
-
-    // // Convert Blob to Buffer
-    // const arrayBuffer1 = await pdfBlob.arrayBuffer();
-    // const buffer1 = Buffer.from(arrayBuffer1);
-
-    // // Convert Buffer to Base64
-    // const base64data1 = buffer1.toString('base64');
-
-
-
-    const pdfBlobData = (await request.formData()).get('GeneratedPDF.pdf');
-
+    const { clientInfo } = await request.json();
+    const pdfBlob = await pdf(<FinalCompletePDF data={clientInfo} />).toBlob();
     // Convert Blob to Buffer
-    const arrayBuffer = await (pdfBlobData as Blob).arrayBuffer();
+    const arrayBuffer = await pdfBlob.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
     // Convert Buffer to Base64
     const base64data = buffer.toString('base64');
-
 
     const pdfFile = {
         name: 'GeneratedPDF.pdf',  // File name
@@ -59,6 +45,14 @@ export async function POST(request: NextRequest) {
                 disposition: 'attachment',
             },
         ],
+        // attachments: [
+        //     {
+        //         content: pdfBufferData.toString('base64'), // Convert the file content to Base64
+        //         filename: pdfParsed.pdfFile.name, // Name of the PDF file
+        //         type: pdfParsed.pdfFile.type, // MIME type of the PDF file (e.g., 'application/pdf')
+        //         disposition: 'attachment', // Marks it as an attachment
+        //     },
+        // ],
     };
 
     try {

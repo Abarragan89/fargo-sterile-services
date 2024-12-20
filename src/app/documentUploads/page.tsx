@@ -71,7 +71,7 @@ export default function Page() {
                     break;
             }
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(compressedFile);
     };
 
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {

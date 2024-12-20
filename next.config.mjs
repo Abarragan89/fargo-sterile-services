@@ -1,8 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-    api: {
-        responseLimit: '8mb',
-    },
-};
+const nextConfig = {};
 
 export default nextConfig;
