@@ -32,10 +32,12 @@ export async function POST(request: NextRequest) {
     const message: MailDataRequired = {
         from: process.env.GOOGLE_USER as string,
         to: 'anthony.bar.89@gmail.com',
-        subject: 'Math Fact Missions - Activate Account',
+        subject: 'Fargo Sterile Services Confirmation',
         html: `
-            <h3>Hello Anthony,</h3>
-            <p>-Math Fact Missions</p>
+            <h3>Greeting New Client,</h3>
+            <p>Thank your for completing our onboarding!</p>
+            <p>Your sales representative will contact you soon.</p>
+            <p>-Fargo Sterile Services</p>
         `,
         attachments: [
             {
