@@ -17,6 +17,7 @@
     "idb": "^8.0.0",
     "next": "14.2.20",
     "nodemailer": "^6.9.16",
+    "pdf-lib": "^1.17.1",
     "rc-progress": "^4.0.0",
     "react": "^18",
     "react-dom": "^18",

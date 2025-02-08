@@ -7,7 +7,6 @@ import {
     Image,
     Rect,
     Svg,
-    Tspan,
 } from '@react-pdf/renderer';
 
 
@@ -91,6 +90,14 @@ const styles = StyleSheet.create({
     },
 });
 
+const licenses = [
+    { key: "stateLicense", label: "State License" },
+    { key: "deaLicense", label: "DEA License" },
+    { key: "otherLicense1", label: "Other License 1" },
+    { key: "otherLicense2", label: "Other License 2" },
+    { key: "otherLicense3", label: "Other License 3" },
+];
+
 // Define the PDF component
 const FinalCompletePDF = ({ data }) => {
     return (
@@ -130,33 +137,33 @@ const FinalCompletePDF = ({ data }) => {
                         {data?.accountType === 'update' && <Text style={styles.XMark}>X</Text>}
                         <Text style={{ marginLeft: 3 }}>Update</Text>
                     </View>
-                    <Text style={styles.text}>Fagron Account Number: <Tspan style={styles.clientInfo}>{data?.accountNumber}</Tspan></Text>
+                    <Text style={styles.text}>Fagron Account Number: <Text style={styles.clientInfo}>{data?.accountNumber || ''}</Text></Text>
                 </View>
 
                 <View style={styles.section}>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.text}>Facility Name: <Tspan style={styles.clientInfo}>{data?.facilityInformation?.facilityname}</Tspan></Text>
-                        <Text style={styles.text}>Facility Phone Number: <Tspan style={styles.clientInfo}>{data?.facilityInformation?.phonenumber}</Tspan></Text>
+                        <Text style={styles.text}>Facility Name: <Text style={styles.clientInfo}>{data?.facilityInformation?.facilityname || ''}</Text></Text>
+                        <Text style={styles.text}>Facility Phone Number: <Text style={styles.clientInfo}>{data?.facilityInformation?.phonenumber || ''}</Text></Text>
                     </View>
 
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.text}>Facility Type: <Tspan style={styles.clientInfo}>{data?.facilityInformation?.facilitytype}</Tspan></Text>
-                        <Text style={[styles.text, { flex: 2, textAlign: 'right' }]}>Number of Beds: <Tspan style={styles.clientInfo}>{data?.facilityInformation?.numberofbeds}</Tspan></Text>
+                        <Text style={styles.text}>Facility Type: <Text style={styles.clientInfo}>{data?.facilityInformation?.facilitytype || ''}</Text></Text>
+                        <Text style={[styles.text, { flex: 2, textAlign: 'right' }]}>Number of Beds: <Text style={styles.clientInfo}>{data?.facilityInformation?.numberofbeds || ''}</Text></Text>
                     </View>
                 </View>
                 <View style={styles.section}>
-                    <Text style={styles.text}>Facility Shipping Address: <Tspan style={{ fontSize: 11, color: 'gray' }}>(Submitted licenses must match shipping address)</Tspan></Text>
+                    <Text style={styles.text}>Facility Shipping Address: <Text style={{ fontSize: 11, color: 'gray' }}>(Submitted licenses must match shipping address)</Text></Text>
                     <View style={{ marginLeft: 10 }}>
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={styles.text}>Street Address: <Tspan style={styles.clientInfo}>{data?.facilityAddress?.street}</Tspan></Text>
-                            <Text style={styles.text}>Suite: <Tspan style={styles.clientInfo}>{data?.facilityAddress?.suite}</Tspan></Text>
-                            <Text style={styles.text}>Attn: <Tspan style={styles.clientInfo}>{data?.facilityAddress?.attn}</Tspan></Text>
+                            <Text style={styles.text}>Street Address: <Text style={styles.clientInfo}>{data?.facilityAddress?.street || ''}</Text></Text>
+                            <Text style={styles.text}>Suite: <Text style={styles.clientInfo}>{data?.facilityAddress?.suite || ''}</Text></Text>
+                            <Text style={styles.text}>Attn: <Text style={styles.clientInfo}>{data?.facilityAddress?.attn || ''}</Text></Text>
                         </View>
 
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={styles.text}>City: <Tspan style={styles.clientInfo}>{data?.facilityAddress?.city}</Tspan></Text>
-                            <Text style={styles.text}>State: <Tspan style={styles.clientInfo}>{data?.facilityAddress?.state}</Tspan></Text>
-                            <Text style={styles.text}>Zip Code: <Tspan style={styles.clientInfo}>{data?.facilityAddress?.zipcode}</Tspan></Text>
+                            <Text style={styles.text}>City: <Text style={styles.clientInfo}>{data?.facilityAddress?.city || ''}</Text></Text>
+                            <Text style={styles.text}>State: <Text style={styles.clientInfo}>{data?.facilityAddress?.state || ''}</Text></Text>
+                            <Text style={styles.text}>Zip Code: <Text style={styles.clientInfo}>{data?.facilityAddress?.zipcode || ''}</Text></Text>
                         </View>
 
                         <View style={[styles.section, { marginTop: 8 }]}>
@@ -222,22 +229,38 @@ const FinalCompletePDF = ({ data }) => {
                 </View>
 
                 <View style={styles.signatureSection}>
-                    <Text>Agreed to by: <Tspan style={styles.clientInfo}>{data?.termsAndConditionsInformation?.fullname}</Tspan></Text>
-                    <Text>Job Title: <Tspan style={styles.clientInfo}>{data?.termsAndConditionsInformation?.jobtitle}</Tspan></Text>
-                    <Text>Date: <Tspan style={styles.clientInfo}>{data?.termsAndConditionsInformation?.date}</Tspan></Text>
+                    <Text>Agreed to by: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.fullname || ''}</Text></Text>
+                    <Text>Job Title: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.jobtitle || ''}</Text></Text>
+                    <Text>Date: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.date || ''}</Text></Text>
                 </View>
             </Page>
 
-            {data?.stateLicense &&
+            {licenses.map(({ key, label }) =>
+                data?.[key] ? (
+                    <Page key={key} size="A4" style={styles.page}>
+                        <View>
+                            <Text>{label}:</Text>
+                            <Image
+                                style={styles.additionalPdfImage}
+                                src={`data:${data[key].type};base64,${data[key].data}`}
+                            />
+                        </View>
+                    </Page>
+                ) : null
+            )}
+
+            {/* {data?.stateLicense &&
                 <Page size="A4" style={styles.page}>
-                    <Text>Licenses:</Text>
-                    <Image
-                        style={styles.additionalPdfImage}
-                        src={`data:${data.stateLicense.type};base64,${data.stateLicense.data}`}
-                    />
+                    <View>
+                        <Text>Licenses:</Text>
+                        <Image
+                            style={styles.additionalPdfImage}
+                            src={`data:${data.stateLicense.type};base64,${data.stateLicense.data}`}
+                        />
+                    </View>
                 </Page>
-            }
-            {data?.deaLicense &&
+            } */}
+            {/* {data?.deaLicense &&
                 <Page size="A4" style={styles.page}>
                     <Text>Licenses:</Text>
                     <Image
@@ -272,7 +295,7 @@ const FinalCompletePDF = ({ data }) => {
                         src={`data:${data.otherLicense3.type};base64,${data.otherLicense3.data}`}
                     />
                 </Page>
-            }
+            } */}
         </Document>
     )
 };

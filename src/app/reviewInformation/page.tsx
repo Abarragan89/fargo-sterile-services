@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import SelectAreaEl from "../components/FormInputs/SelectAreaEl";
 import { SelectItem } from "../../../types/formInputs";
 import FormProgressBar from "../components/FormProgressBar";
-import { GridLoader } from "react-spinners";
+import NineDotsLoader from "../components/LoaderSpinners/NineDotsLoader";
 
 export default function ReviewPage() {
 
@@ -117,10 +117,7 @@ export default function ReviewPage() {
                 :
                 <div className="flex flex-col mb-[175px] justify-center items-center">
                     <p className="text-center mb-[20px]">Processing your information...</p>
-                    <GridLoader
-                        size={25}
-                        color="rgb(212, 70, 55)"
-                    />
+                    <NineDotsLoader />
                 </div>
             }
         </main>
