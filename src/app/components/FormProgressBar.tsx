@@ -8,6 +8,7 @@ export default function FormProgressBar({ progress, position }: { progress: numb
         { text: "Terms & Conditions", href: "/termsAndConditions" },
         { text: "Payment & Contacts", href: "/paymentAndContacts" },
         { text: "Credit Application", href: "/creditApplication" },
+        { text: "Clinical Difference", href: "/statementOfClinicalDifference" },
         { text: "Document Uploads", href: "/documentUploads" },
         { text: "Review Information", href: "/reviewInformation" },
     ];
@@ -15,7 +16,7 @@ export default function FormProgressBar({ progress, position }: { progress: numb
     function renderLabels(index: number, label: { text: string, href: string }) {
         if (index < position) {
             return (
-                <Link href={label.href} key={index}>
+                <Link href={label.href} key={index} className='mx-3'>
                     <span className="text-[var(--off-black)] hover:text-[var(--company-red)]">
                         {label.text}
                     </span>
@@ -30,7 +31,7 @@ export default function FormProgressBar({ progress, position }: { progress: numb
     }
 
     return (
-        <div className='mt-10 max-w-[900px] mr-5 ml-5'>
+        <div className='mt-10 max-w-[900px] mx-5'>
             <div className="flex justify-between items-end w-[100%] mx-auto text-[.8rem] text-center leading-none mb-1 opacity-85">
                 {labels.map((label, index) => renderLabels(index, label))}
             </div>

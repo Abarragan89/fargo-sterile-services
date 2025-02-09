@@ -122,8 +122,7 @@ export default function Home() {
         }
     }
 
-
-
+    
     const notify = () => toast("Data Saved!");
 
     const listItemStyles = 'list-disc text-[.875rem] text-gray-500 py-1'

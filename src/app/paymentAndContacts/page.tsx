@@ -57,7 +57,7 @@ export default function Page() {
                 pauseOnHover
                 theme="dark"
             />
-            <FormProgressBar progress={41} position={3} />
+            <FormProgressBar progress={36} position={3} />
 
             <form onSubmit={(e) => handleFormSubmit(e)}>
                 <label>Payment and Contacts</label>

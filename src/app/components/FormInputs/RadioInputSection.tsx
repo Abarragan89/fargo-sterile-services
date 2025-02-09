@@ -4,14 +4,11 @@ interface Props {
     category: string;
     // setCategories: React.Dispatch<React.SetStateAction<string>>;
     setCategories: (textInput: string, inputName?: string | undefined) => void;
-
-    toggleSavable?: React.Dispatch<React.SetStateAction<boolean>>;
     radioOptions: { [key: string]: string }[];
     labelText?: string
 }
 
 export default function RadioInputSection({ category, setCategories, radioOptions, labelText }: Props) {
-
     return (
         <fieldset className="w-full">
             {labelText && <legend className="text-[.95rem] block">{labelText}</legend>}
@@ -35,7 +32,7 @@ export default function RadioInputSection({ category, setCategories, radioOption
                                 name={input.name}
                                 value={category}
                                 checked={category === input.id}
-                                onChange={(e) => setCategories(e.target.id, labelText?.toLocaleLowerCase().replace(/ /g, ''))}
+                                onChange={(e) => setCategories(e.target.name, input.id)}
                                 className="opacity-0 absolute top-[1px] left-[2px]"
                                 aria-label={`Select ${input.label}`}
                                 aria-describedby={labelText}

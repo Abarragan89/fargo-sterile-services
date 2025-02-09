@@ -20,6 +20,7 @@ export default function ReviewPage() {
     const [clientInfo, setClientInfo] = useState();
     const [chosenSelectionArr, setChosenSelectionArr] = useState<SelectItem[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    // pdfOne will be in base64
     const [pdfOne, setPdfOne] = useState<string | null>(null)
     const [completePDFToSend, setCompletePDFToSend] = useState()
 
@@ -74,13 +75,14 @@ export default function ReviewPage() {
         // Create an Object URL for the Blob
         const pdfUrl = URL.createObjectURL(pdfBlob);
 
+        // Coming back as a base64 string
         setPdfOne(pdfUrl)
     };
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
-            <FormProgressBar progress={96} position={6} />
+            <FormProgressBar progress={94} position={6} />
             {/* Conditionally render when user pdfs are made */}
             {pdfOne ?
                 <>

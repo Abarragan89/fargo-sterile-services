@@ -19,7 +19,7 @@ export default function Page() {
         try {
             setIsSaving(true)
             await saveFormData({ creditApplicationData })
-            router.push('/documentUploads')
+            router.push('/statementOfClinicalDifference')
         } catch (error) {
             console.log('error submitting form', error)
         } finally {
@@ -56,7 +56,7 @@ export default function Page() {
                 pauseOnHover
                 theme="dark"
             />
-            <FormProgressBar progress={58} position={4} />
+            <FormProgressBar progress={50} position={4} />
             <form onSubmit={(e) => handleFormSubmit(e)}>
                 <label>Credit Application</label>
 

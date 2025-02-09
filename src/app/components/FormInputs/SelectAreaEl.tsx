@@ -10,12 +10,9 @@ interface Props {
 }
 
 
-
-export default function SelectAreaEl({ chosenSelectionOptionsArr, setChosenSelectionOptionsArr, toggleSavable, totalSelectionOptionsArr }: Props) {
-
+export default function SelectAreaEl({ chosenSelectionOptionsArr, setChosenSelectionOptionsArr, totalSelectionOptionsArr }: Props) {
 
     function handleSelectionToggle(inputId: string, isChecked: boolean, label: string) {
-        // toggleSavable(true)
         // remove item from array
         if (!isChecked) {
             setChosenSelectionOptionsArr(prev => [...prev.filter(option => option.id !== inputId)])
