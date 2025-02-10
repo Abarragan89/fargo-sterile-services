@@ -11,12 +11,12 @@ interface Props {
 export default function RadioInputSection({ category, setCategories, radioOptions, labelText }: Props) {
     return (
         <fieldset className="w-full">
-            {labelText && <legend className="text-[.95rem] block">{labelText}</legend>}
+            {/* {labelText && <legend className="text-[.95rem] block">{labelText}</legend>} */}
             <div className="flex flex-wrap mx-auto bg-white rounded-sm">
                 {radioOptions.map(input => {
                     return (
-                        <label htmlFor={input.id} className="relative flex items-center cursor-pointer w-[120px] text-[.95rem] w-fit mr-8 my-2" key={input.id}>
-                            <div className="w-[20px] h-[20px] bg-white border border-gray-500 rounded-sm">
+                        <label htmlFor={input.id} className="relative flex cursor-pointer w-[120px] text-[.95rem] w-fit mr-8 my-2" key={input.id}>
+                            <div className="min-w-[20px] h-[20px] bg-white border border-gray-500 rounded-sm">
                                 {category === input.id ?
                                     <GiCheckMark
                                         className={`absolute top-[2px] left-[3px] scale-125 text-[var(--brown-500)]"`}
@@ -33,7 +33,7 @@ export default function RadioInputSection({ category, setCategories, radioOption
                                 value={input.value}
                                 checked={category === input.value}
                                 onChange={(e) => setCategories(e.target.name, input.value)}
-                                className="opacity-0 absolute top-[1px] left-[2px]"
+                                className="opacity-0 relative top-[1px] left-[2px]"
                                 aria-label={`Select ${input.label}`}
                                 aria-describedby={labelText}
                             />

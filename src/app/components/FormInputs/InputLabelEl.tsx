@@ -1,3 +1,5 @@
+import { cursiveFont } from "@/app/font";
+
 interface Props {
     userText: string | number;
     nameAndId: string
@@ -12,6 +14,8 @@ interface Props {
     autocomplete?: boolean;
     required?: boolean;
     pattern?: string;
+    isSignature?: boolean
+    isDisabled?: boolean
 }
 
 export default function InputLabelEl({
@@ -26,32 +30,34 @@ export default function InputLabelEl({
     placeholderText,
     required = true,
     pattern,
-    autocomplete = true
+    autocomplete = true,
+    isSignature = false,
+    isDisabled = false
 }: Props) {
 
     return (
-        <div className={`${inline ? 'flex items-center' : 'flex flex-col'} mx-auto w-full justify-end`}>
-            {labelText &&
-                <div
-                    className={'flex'}
-                >
+        <div className={`grid ${inline ? 'grid-cols-[auto,1fr] items-center' : 'grid-cols-1'} mx-auto w-full`}>
+            {labelText && (
+                <>
                     <label
-                        className="text-[.95rem] w-fit"
+                        className="text-[.95rem] mr-1"
                         htmlFor={nameAndId}
-                    >{labelText}</label>
+                    >
+                        {labelText}
+                    </label>
 
-                    {/* Conditionally add characterLimit */}
-                    {characterLimit && (typeof userText === 'string') &&
-                        <p className="text-[.85rem]">{userText.length}/{characterLimit}</p>
-                    }
-                </div>
-            }
+                    {characterLimit && typeof userText === 'string' && (
+                        <p className="text-[.85rem] text-right">{userText.length}/{characterLimit}</p>
+                    )}
+                </>
+            )}
 
             <input
                 type={inputType}
                 id={nameAndId}
                 name={nameAndId}
                 required={required}
+                disabled={isDisabled}
                 value={userText}
                 autoFocus={autofocus}
                 autoComplete={autocomplete ? 'on' : 'off'}
@@ -59,8 +65,15 @@ export default function InputLabelEl({
                 maxLength={characterLimit ?? undefined}
                 pattern={pattern ?? undefined}
                 onChange={(e) => handleStateChange(nameAndId, e.target.value)}
-                className="input-browser-reset border border-gray-500 block px-2 py-[1px]"
+                className={
+                    `${isSignature ?
+                        `${cursiveFont.className} text-[1.05rem] border-b border-gray-500 rounded-none`
+                        :
+                        'border border-gray-500 block py-[1px]'
+                        } 
+                    input-browser-reset px-2 w-full`
+                }
             />
         </div>
-    )
+    );
 }

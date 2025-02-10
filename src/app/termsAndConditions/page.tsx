@@ -51,7 +51,7 @@ export default function Page() {
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
-            <FormProgressBar progress={21} position={2}/>
+            <FormProgressBar progress={21} position={2} />
             <FormBlockHeading headingText="Terms and Conditions" />
             <div className=" border-2 border-[var(--company-gray)] rounded-[3px] p-8 mx-5 max-h-[500px] overflow-y-scroll">
                 <p className="mb-2 text-[.95rem]">The person signing this section warrants on behalf of Customer that the above information is complete and accurate and
@@ -104,7 +104,7 @@ export default function Page() {
                         />
                     </div>
 
-                    <div className="flex flex-wrap">
+                    <div className="flex mt-3">
                         <div className="mr-3 flex-1">
                             <InputLabelEl
                                 labelText="Full Name"
@@ -114,7 +114,6 @@ export default function Page() {
                                 handleStateChange={handleTermsAndConditions}
                             />
                         </div>
-
                         <div className="ml-3 flex-1">
                             <InputLabelEl
                                 labelText="Job Title"
@@ -123,34 +122,46 @@ export default function Page() {
                                 handleStateChange={handleTermsAndConditions}
                             />
                         </div>
-                        <div>
-                            <div className="ml-3 w-[130px]">
-                                <InputLabelEl
-                                    labelText="Date"
-                                    inputType="date"
-                                    nameAndId="date"
-                                    userText={termsAndConditionsInformation.date}
-                                    handleStateChange={handleTermsAndConditions}
-                                />
-                            </div>
+                    </div>
+
+                    <div className="flex justify-between mt-7">
+                        <div className="mr-3 flex-1">
+                            <InputLabelEl
+                                userText={termsAndConditionsInformation.fullName}
+                                nameAndId='signature'
+                                handleStateChange={handleTermsAndConditions}
+                                labelText='Signature'
+                                isSignature={true}
+                                isDisabled={true}
+                            />
                         </div>
-                        <div className="flex justify-center w-full mt-6">
-                            <SubmitButton
-                                isLoading={isLoading}
-                                isSubmittable={
-                                    chosenSelectionArr.length > 0 &&
-                                    termsAndConditionsInformation.date !== '' &&
-                                    termsAndConditionsInformation.jobTitle !== '' &&
-                                    termsAndConditionsInformation.fullName !== ''
-                                }
-                            >
-                                Agree to Terms
-                            </SubmitButton>
+                        <div className="ml-3 flex-1 w-[130px]">
+                            <InputLabelEl
+                                labelText="Date"
+                                inputType="date"
+                                nameAndId="date"
+                                userText={termsAndConditionsInformation.date}
+                                handleStateChange={handleTermsAndConditions}
+                            />
                         </div>
                     </div>
 
+
+                    <div className="flex justify-center w-full mt-6">
+                        <SubmitButton
+                            isLoading={isLoading}
+                            isSubmittable={
+                                chosenSelectionArr.length > 0 &&
+                                termsAndConditionsInformation.date !== '' &&
+                                termsAndConditionsInformation.jobTitle !== '' &&
+                                termsAndConditionsInformation.fullName !== ''
+                            }
+                        >
+                            Agree to Terms
+                        </SubmitButton>
+                    </div>
                 </form>
-            </div>
-        </main>
+            </div >
+        </main >
     )
 }

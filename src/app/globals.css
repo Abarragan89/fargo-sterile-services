@@ -68,7 +68,7 @@ body {
   outline: none;
   box-shadow: none;
   -webkit-appearance: none;
-  font-size: 0.95rem;
+  /* font-size: 0.95rem; */
   -moz-appearance: none;
   appearance: none;
   resize: none;
