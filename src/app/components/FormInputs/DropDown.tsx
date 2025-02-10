@@ -3,9 +3,10 @@ interface Props {
     userChoice: string | number;
     handleStateChange: (textInput: string, inputName?: string | undefined) => void;
     labelText: string;
+    nameAndId: string
 }
 
-export default function DropDown({ userChoice, handleStateChange, labelText }: Props) {
+export default function DropDown({ userChoice, handleStateChange, labelText, nameAndId }: Props) {
     const states = [
         "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
         "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
@@ -25,11 +26,11 @@ export default function DropDown({ userChoice, handleStateChange, labelText }: P
                 {labelText}
             </label>
             <select
-                id="state"
-                name="state"
+                id={nameAndId}
+                name={nameAndId}
                 required
                 value={userChoice}
-                onChange={(e) => handleStateChange(e.target.value, e.target.id)}
+                onChange={(e) => handleStateChange(nameAndId, e.target.value)}
                 className="border border-[var(--company-gray)] text-[.95rem] rounded-sm py-[3px] px-2"
             >
                 <option value="" disabled>

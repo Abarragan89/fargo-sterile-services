@@ -24,14 +24,14 @@ export default function FormProgressBar({ progress, position }: { progress: numb
             );
         }
         return (
-            <p key={index} className="text-gray-400">
+            <p key={index} className="text-gray-400 mx-3">
                 {label.text}
             </p>
         );
     }
 
     return (
-        <div className='mt-10 max-w-[900px] mx-5'>
+        <div className='mt-10 max-w-[900px] min-w-[600px] mx-5'>
             <div className="flex justify-between items-end w-[100%] mx-auto text-[.8rem] text-center leading-none mb-1 opacity-85">
                 {labels.map((label, index) => renderLabels(index, label))}
             </div>

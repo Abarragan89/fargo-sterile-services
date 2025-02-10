@@ -1,5 +1,6 @@
 interface Props {
     userText: string | number;
+    nameAndId: string
     // This is either set state or a handler to handler to handle a state object
     handleStateChange: (textInput: string, inputName?: string | undefined) => void;
     autofocus?: boolean;
@@ -16,6 +17,7 @@ interface Props {
 export default function InputLabelEl({
     handleStateChange,
     userText,
+    nameAndId,
     autofocus = false,
     characterLimit,
     labelText,
@@ -35,8 +37,10 @@ export default function InputLabelEl({
                 >
                     <label
                         className="text-[.95rem] w-fit"
-                        htmlFor={labelText.toLowerCase().replace(/ /g, '')}
+                        htmlFor={nameAndId}
                     >{labelText}</label>
+
+                    {/* Conditionally add characterLimit */}
                     {characterLimit && (typeof userText === 'string') &&
                         <p className="text-[.85rem]">{userText.length}/{characterLimit}</p>
                     }
@@ -45,7 +49,8 @@ export default function InputLabelEl({
 
             <input
                 type={inputType}
-                id={labelText.toLowerCase().replace(/ /g, '')}
+                id={nameAndId}
+                name={nameAndId}
                 required={required}
                 value={userText}
                 autoFocus={autofocus}
@@ -53,7 +58,7 @@ export default function InputLabelEl({
                 placeholder={placeholderText}
                 maxLength={characterLimit ?? undefined}
                 pattern={pattern ?? undefined}
-                onChange={(e) => handleStateChange(e.target.value, e.target.id)}
+                onChange={(e) => handleStateChange(nameAndId, e.target.value)}
                 className="input-browser-reset border border-gray-500 block px-2 py-[1px]"
             />
         </div>

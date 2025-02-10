@@ -18,21 +18,19 @@ export default function Page() {
     const [chosenSelectionArr, setChosenSelectionArr] = useState<SelectItem[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [termsAndConditionsInformation, setTermsAndConditionInformation] = useState({
-        fullname: '',
-        jobtitle: '',
+    const originalFormState = {
+        fullName: '',
+        jobTitle: '',
         date: ''
-    })
+    }
+
+    const [termsAndConditionsInformation, setTermsAndConditionInformation] = useState(originalFormState)
 
     useEffect(() => {
         const fetchData = async () => {
             const { termsAndConditionsInformation } = await getFormData(); // Fetch saved data from IndexedDB or any source
             if (termsAndConditionsInformation) {
-                setTermsAndConditionInformation(termsAndConditionsInformation.facilityAddress || {
-                    fullname: termsAndConditionsInformation?.fullname || '',
-                    jobtitle: termsAndConditionsInformation?.jobtitle || '',
-                    date: termsAndConditionsInformation?.date || ''
-                });
+                setTermsAndConditionInformation(termsAndConditionsInformation || originalFormState);
             }
         };
         fetchData();
@@ -45,9 +43,9 @@ export default function Page() {
         setIsLoading(false)
         router.push('/paymentAndContacts')
     }
-    function handleTermsAndConditions(inputText: string, addressPart: string | undefined) {
-        if (!addressPart) return;
-        setTermsAndConditionInformation(prev => ({ ...prev, [addressPart]: inputText }))
+    function handleTermsAndConditions(inputName: string, inputValue: string | undefined) {
+        if (!inputValue) return;
+        setTermsAndConditionInformation(prev => ({ ...prev, [inputName]: inputValue }))
     }
 
     const orderedListItem = "list-decimal ml-2 pl-2 py-2 text-[.95rem]";
@@ -112,7 +110,8 @@ export default function Page() {
                             <InputLabelEl
                                 labelText="Full Name"
                                 autocomplete={false}
-                                userText={termsAndConditionsInformation.fullname}
+                                nameAndId="fullName"
+                                userText={termsAndConditionsInformation.fullName}
                                 handleStateChange={handleTermsAndConditions}
                             />
                         </div>
@@ -120,7 +119,8 @@ export default function Page() {
                         <div className="ml-3 flex-1">
                             <InputLabelEl
                                 labelText="Job Title"
-                                userText={termsAndConditionsInformation.jobtitle}
+                                nameAndId="jobTitle"
+                                userText={termsAndConditionsInformation.jobTitle}
                                 handleStateChange={handleTermsAndConditions}
                             />
                         </div>
@@ -129,6 +129,7 @@ export default function Page() {
                                 <InputLabelEl
                                     labelText="Date"
                                     inputType="date"
+                                    nameAndId="date"
                                     userText={termsAndConditionsInformation.date}
                                     handleStateChange={handleTermsAndConditions}
                                 />
@@ -140,8 +141,8 @@ export default function Page() {
                                 isSubmittable={
                                     chosenSelectionArr.length > 0 &&
                                     termsAndConditionsInformation.date !== '' &&
-                                    termsAndConditionsInformation.jobtitle !== '' &&
-                                    termsAndConditionsInformation.fullname !== ''
+                                    termsAndConditionsInformation.jobTitle !== '' &&
+                                    termsAndConditionsInformation.fullName !== ''
                                 }
                             >
                                 Agree to Terms

@@ -119,7 +119,7 @@ const FinalCompletePDF = ({ data }) => {
                                 stroke='black'
                             />
                         </Svg>
-                        {data?.accountType === 'new-account' && <Text style={styles.XMark}>X</Text>}
+                        {data?.facilityInformation?.accountType === 'new-account' && <Text style={styles.XMark}>X</Text>}
                         <Text style={{ marginLeft: 3 }}>New Account</Text>
                     </View>
                     <View style={styles.checkBoxLabel}>
@@ -134,36 +134,36 @@ const FinalCompletePDF = ({ data }) => {
                                 stroke='black'
                             />
                         </Svg>
-                        {data?.accountType === 'update' && <Text style={styles.XMark}>X</Text>}
+                        {data?.facilityInformation?.accountType === 'update' && <Text style={styles.XMark}>X</Text>}
                         <Text style={{ marginLeft: 3 }}>Update</Text>
                     </View>
-                    <Text style={styles.text}>Fagron Account Number: <Text style={styles.clientInfo}>{data?.accountNumber || ''}</Text></Text>
+                    <Text style={styles.text}>Fagron Account Number: <Text style={styles.clientInfo}>{data?.facilityInformation?.accountNumber || ''}</Text></Text>
                 </View>
 
                 <View style={styles.section}>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.text}>Facility Name: <Text style={styles.clientInfo}>{data?.facilityInformation?.facilityname || ''}</Text></Text>
-                        <Text style={styles.text}>Facility Phone Number: <Text style={styles.clientInfo}>{data?.facilityInformation?.phonenumber || ''}</Text></Text>
+                        <Text style={styles.text}>Facility Name: <Text style={styles.clientInfo}>{data?.facilityInformation?.facilityName || ''}</Text></Text>
+                        <Text style={styles.text}>Facility Phone Number: <Text style={styles.clientInfo}>{data?.facilityInformation?.phoneNumber || ''}</Text></Text>
                     </View>
 
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.text}>Facility Type: <Text style={styles.clientInfo}>{data?.facilityInformation?.facilitytype || ''}</Text></Text>
-                        <Text style={[styles.text, { flex: 2, textAlign: 'right' }]}>Number of Beds: <Text style={styles.clientInfo}>{data?.facilityInformation?.numberofbeds || ''}</Text></Text>
+                        <Text style={styles.text}>Facility Type: <Text style={styles.clientInfo}>{data?.facilityInformation?.facilityType || ''}</Text></Text>
+                        <Text style={[styles.text, { flex: 2, textAlign: 'right' }]}>Number of Beds: <Text style={styles.clientInfo}>{data?.facilityInformation?.numberOfBeds || ''}</Text></Text>
                     </View>
                 </View>
                 <View style={styles.section}>
                     <Text style={styles.text}>Facility Shipping Address: <Text style={{ fontSize: 11, color: 'gray' }}>(Submitted licenses must match shipping address)</Text></Text>
                     <View style={{ marginLeft: 10 }}>
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={styles.text}>Street Address: <Text style={styles.clientInfo}>{data?.facilityAddress?.street || ''}</Text></Text>
-                            <Text style={styles.text}>Suite: <Text style={styles.clientInfo}>{data?.facilityAddress?.suite || ''}</Text></Text>
-                            <Text style={styles.text}>Attn: <Text style={styles.clientInfo}>{data?.facilityAddress?.attn || ''}</Text></Text>
+                            <Text style={styles.text}>Street Address: <Text style={styles.clientInfo}>{data?.facilityInformation?.street || ''}</Text></Text>
+                            <Text style={styles.text}>Suite: <Text style={styles.clientInfo}>{data?.facilityInformation?.suite || ''}</Text></Text>
+                            <Text style={styles.text}>Attn: <Text style={styles.clientInfo}>{data?.facilityInformation?.attn || ''}</Text></Text>
                         </View>
 
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={styles.text}>City: <Text style={styles.clientInfo}>{data?.facilityAddress?.city || ''}</Text></Text>
-                            <Text style={styles.text}>State: <Text style={styles.clientInfo}>{data?.facilityAddress?.state || ''}</Text></Text>
-                            <Text style={styles.text}>Zip Code: <Text style={styles.clientInfo}>{data?.facilityAddress?.zipcode || ''}</Text></Text>
+                            <Text style={styles.text}>City: <Text style={styles.clientInfo}>{data?.facilityInformation?.city || ''}</Text></Text>
+                            <Text style={styles.text}>State: <Text style={styles.clientInfo}>{data?.facilityInformation?.state || ''}</Text></Text>
+                            <Text style={styles.text}>Zip Code: <Text style={styles.clientInfo}>{data?.facilityInformation?.zipCode || ''}</Text></Text>
                         </View>
 
                         <View style={[styles.section, { marginTop: 8 }]}>
@@ -176,14 +176,14 @@ const FinalCompletePDF = ({ data }) => {
                                 • If alternative delivery schedule is required, please indicate details here:
                             </Text>
                             <View style={styles.inputBox}>
-                                <Text style={styles.clientInfo}>{data?.alternativeSchedule || 'N/A'}</Text>
+                                <Text style={styles.clientInfo}>{data?.facilityInformation?.alternativeSchedule || 'N/A'}</Text>
                             </View>
                             <Text style={styles.bulletPoint}>• All orders are shipped via UPS or FedEx.</Text>
                             <Text style={styles.bulletPoint}>
                                 • If shipping per customer&apos;s FedEx or UPS account is preferred, enter account number here:
                             </Text>
                             <View style={styles.inputBox}>
-                                <Text style={styles.clientInfo}>{data?.fedExUpsNumber || 'N/A'}</Text>
+                                <Text style={styles.clientInfo}>{data?.facilityInformation?.fedExUpsNumber || 'N/A'}</Text>
                             </View>
                         </View>
 
@@ -229,8 +229,8 @@ const FinalCompletePDF = ({ data }) => {
                 </View>
 
                 <View style={styles.signatureSection}>
-                    <Text>Agreed to by: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.fullname || ''}</Text></Text>
-                    <Text>Job Title: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.jobtitle || ''}</Text></Text>
+                    <Text>Agreed to by: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.fullName || ''}</Text></Text>
+                    <Text>Job Title: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.jobTitle || ''}</Text></Text>
                     <Text>Date: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.date || ''}</Text></Text>
                 </View>
             </Page>
@@ -248,54 +248,6 @@ const FinalCompletePDF = ({ data }) => {
                     </Page>
                 ) : null
             )}
-
-            {/* {data?.stateLicense &&
-                <Page size="A4" style={styles.page}>
-                    <View>
-                        <Text>Licenses:</Text>
-                        <Image
-                            style={styles.additionalPdfImage}
-                            src={`data:${data.stateLicense.type};base64,${data.stateLicense.data}`}
-                        />
-                    </View>
-                </Page>
-            } */}
-            {/* {data?.deaLicense &&
-                <Page size="A4" style={styles.page}>
-                    <Text>Licenses:</Text>
-                    <Image
-                        style={styles.additionalPdfImage}
-                        src={`data:${data.deaLicense.type};base64,${data.deaLicense.data}`}
-                    />
-                </Page>
-            }
-            {data?.otherLicense1 &&
-                <Page size="A4" style={styles.page}>
-                    <Text>Licenses:</Text>
-                    <Image
-                        style={styles.additionalPdfImage}
-                        src={`data:${data.otherLicense1.type};base64,${data.otherLicense1.data}`}
-                    />
-                </Page>
-            }
-            {data?.otherLicense2 &&
-                <Page size="A4" style={styles.page}>
-                    <Text>Licenses:</Text>
-                    <Image
-                        style={styles.additionalPdfImage}
-                        src={`data:${data.otherLicense2.type};base64,${data.otherLicense2.data}`}
-                    />
-                </Page>
-            }
-            {data?.otherLicense3 &&
-                <Page size="A4" style={styles.page}>
-                    <Text>Licenses:</Text>
-                    <Image
-                        style={styles.additionalPdfImage}
-                        src={`data:${data.otherLicense3.type};base64,${data.otherLicense3.data}`}
-                    />
-                </Page>
-            } */}
         </Document>
     )
 };
