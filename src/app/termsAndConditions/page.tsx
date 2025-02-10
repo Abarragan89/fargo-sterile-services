@@ -44,7 +44,6 @@ export default function Page() {
         router.push('/paymentAndContacts')
     }
     function handleTermsAndConditions(inputName: string, inputValue: string | undefined) {
-        if (!inputValue) return;
         setTermsAndConditionInformation(prev => ({ ...prev, [inputName]: inputValue }))
     }
 

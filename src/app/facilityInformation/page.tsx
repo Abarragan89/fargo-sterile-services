@@ -16,12 +16,6 @@ import { ToastContainer, toast } from 'react-toastify';
 export default function Home() {
 
     const router = useRouter();
-    // const [accountType, setAccountType] = useState<string>('')
-    // const [accountNumber, setAccountNumber] = useState<string>('')
-    // const [alternativeSchedule, setAlternativeSchedule] = useState<string>('')
-    // const [fedExUpsNumber, setFedExUpsNumber] = useState<string>('')
-    // const [primaryGOPName, setPrimaryGPOName] = useState<string>('')
-    // const [IDNGroup, setIDNGroup] = useState<string>('');
     const [isSaving, setIsSaving] = useState<boolean>(false)
 
     const originalFacilityInfoState = {
@@ -43,7 +37,6 @@ export default function Home() {
         alternativeSchedule: ''
     }
 
-
     const [facilityInformation, setFacilityInformation] = useState(originalFacilityInfoState);
 
     useEffect(() => {
@@ -56,15 +49,8 @@ export default function Home() {
         fetchData();
     }, [])
 
-    // function handleAddressStateChange(inputName: string, inputValue: string | undefined) {
-    //     console.log('input text ', inputName)
-    //     console.log('address part ', inputValue)
-    //     if (!inputValue) return;
-    //     setFacilityAddress(prev => ({ ...prev, [inputName]: inputValue }))
-    // }
 
     function handleFacilityInfoChange(inputName: string, inputValue: string | undefined) {
-        if (!inputValue) return;
         setFacilityInformation(prev => ({ ...prev, [inputName]: inputValue }))
     }
 
@@ -73,10 +59,7 @@ export default function Home() {
         try {
             setIsSaving(true)
             await saveFormData({
-                // facilityAddress,
                 facilityInformation,
-                // fedExUpsNumber,
-                // alternativeSchedule,
             })
             router.push('/termsAndConditions')
         } catch (error) {
@@ -90,10 +73,7 @@ export default function Home() {
         try {
             setIsSaving(true)
             await saveFormData({
-                // facilityAddress,
                 facilityInformation,
-                // fedExUpsNumber,
-                // alternativeSchedule,
             })
             notify();
         } catch (error) {
@@ -103,12 +83,8 @@ export default function Home() {
         }
     }
 
-    
     const notify = () => toast("Data Saved!");
-
     const listItemStyles = 'list-disc text-[.875rem] text-gray-500 py-1'
-
-    console.log('moving ', facilityInformation)
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
