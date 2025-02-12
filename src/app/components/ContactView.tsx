@@ -9,7 +9,7 @@ interface Props {
 
 export default function ContactView({ contact, deleteHandler }: Props) {
     return (
-        <section className="w-[370px]  border border-[var(--company-gray)] rounded-sm m-2">
+        <section className="w-[340px] border border-[var(--company-gray)] rounded-sm mb-7 mx-2">
             <div className="flex flex-col justify-between items-center mb-2">
                 <div className="py-1 px-2 bg-[var(--off-white)] w-full">
                     <div className="flex flex-wrap justify-between">
@@ -19,10 +19,10 @@ export default function ContactView({ contact, deleteHandler }: Props) {
                         onClick={() => deleteHandler(contact)}
                         >Delete</p>
                     </div>
-                    <div className="flex flex-wrap justify-between">
+                    {/* <div className="flex flex-wrap justify-between"> */}
                         <p className="text-[.875rem] text-gray-500">{contact.email}</p>
-                        {contact?.phone && <p className="text-[.875rem] text-gray-500">{contact.phone}</p>}
-                    </div>
+                        {contact?.phone ? <p className="text-[.85rem] text-gray-500">{contact.phone}</p> : <p className="text-[.85rem] text-gray-500 italic">(No Phone)</p>}
+                    {/* </div> */}
                 </div>
             </div>
             {/* Contact type lists */}

@@ -82,8 +82,18 @@ export default function Page() {
         setPaymentMethod(prev => ({ ...prev, [inputName]: inputValue }))
     }
 
-    async function handleSaveContact(e: React.FormEvent<HTMLFormElement>, newContact: Contact, contactType: SelectItem[]) {
+    async function handleSaveContact(
+        e: React.FormEvent<HTMLFormElement>,
+        newContact: Contact,
+        contactType: SelectItem[],
+        clearFormHandler: () => void
+    ) {
         e.preventDefault();
+
+        if (contactType.length === 0) {
+            notify('Missing Contact Type')
+            return
+        }
 
         // Add the contact type to the contact object
         newContact.type = contactType
@@ -98,6 +108,7 @@ export default function Page() {
             setIsSaving(true)
             await saveFormData({ contactInfo: updatedContactInfo })
             notify("Contact Added!");
+            clearFormHandler();
         } catch (error) {
             console.log('error saving data', error)
         } finally {
@@ -155,7 +166,7 @@ export default function Page() {
 
                     {/* Contact Section */}
                     <FormBlockHeading headingText="Contacts" />
-                    <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-10 pt-0 mx-8">
+                    <div className="border-2 border-[var(--company-gray)] rounded-[3px] pt-0 px-5 mx-5">
 
                         <div className="flex flex-wrap justify-center">
                             {/* Contact Requirements */}
@@ -168,7 +179,7 @@ export default function Page() {
                         </div>
                         {/* Current Contacts */}
                         <h3
-                            className="text-center text-[1.05rem] font-bold text-[var(--company-gray)] mx-5 mb-2 mt-[45px] pt-4 border-t border-[var(--company-gray)]"
+                            className="text-center text-[1.05rem] font-bold text-[var(--company-gray)] mx-5 mb-4 mt-[45px] pt-3 border-t border-[var(--company-gray)]"
                         >My Contacts</h3>
                         <div className='flex flex-wrap justify-center'>
                             {contactInfo?.length > 0 ? contactInfo?.map((contact, index) =>
