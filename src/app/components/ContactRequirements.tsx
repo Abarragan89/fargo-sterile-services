@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react"
 import { Contact } from "@/types/Contact"
 
-export default function ContactRequirements({ contactInfo }: { contactInfo: Contact[] }) {
+export default function ContactRequirements(
+    { 
+        contactInfo,
+        setAllRequirementsMet 
+    }
+    : { 
+        contactInfo: Contact[] 
+        setAllRequirementsMet: React.Dispatch<React.SetStateAction<boolean>>
+    }
+) {
 
     const requirementsMetInitialState = {
         businessContact: false,
@@ -51,6 +60,10 @@ export default function ContactRequirements({ contactInfo }: { contactInfo: Cont
         // Check if all contacts have been met
         const isAllContactsMet = Object.values(requirementsMet).every(value => value === true)
         setIsAllContactsProvided(isAllContactsMet)
+        if (isAllContactsProvided && isTwoEmails) {
+            setAllRequirementsMet(true)
+        }
+
     }, [requirementsMet])
 
     // useEffect to check for requirements
@@ -64,7 +77,7 @@ export default function ContactRequirements({ contactInfo }: { contactInfo: Cont
         }
     }, [contactInfo])
 
-    const listItemsStyles = 'ml-5 my-1'
+    const listItemsStyles = 'ml-10 my-1'
 
     return (
         <div className="border border-[var(--company-gray)] rounded-sm px-4 pb-4 pt-2 mx-auto">
@@ -87,7 +100,7 @@ export default function ContactRequirements({ contactInfo }: { contactInfo: Cont
                 }
                 <strong>There must be at least one contact (with email) identified for each:</strong>
             </p>
-            <ul>
+            <ul className="grid grid-cols-1 sm:grid-cols-2">
                 <li className={listItemsStyles}>
                     {requirementsMet?.businessContact ?
                         <span className='text-[var(--success)] text-[1.25rem] mr-1'>&#x2713;</span>

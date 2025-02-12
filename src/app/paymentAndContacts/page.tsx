@@ -24,10 +24,10 @@ export default function Page() {
     const contactInfoInitialState: Contact[] = []
 
     const router = useRouter();
-    const [isSaving, setIsSaving] = useState<boolean>(false)
+    const [isSaving, setIsSaving] = useState(false)
     const [paymentMethod, setPaymentMethod] = useState(paymentMethodInitialState)
     const [contactInfo, setContactInfo] = useState(contactInfoInitialState)
-
+    const [isAllRequirementsMet, setIsAllRequirementsMet] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,6 +45,14 @@ export default function Page() {
         try {
             setIsSaving(true)
             await saveFormData({ paymentMethod, contactInfo })
+            // don't move forward if requirements not met
+            if (!isAllRequirementsMet) {
+                notify("Contact Requirements not met");
+                return
+            } else if (paymentMethod.paymentMethod === '') {
+                notify("Choose a payment method");
+                return
+            }
             router.push('/creditApplication')
         } catch (error) {
             console.log('error submitting form', error)
@@ -60,7 +68,7 @@ export default function Page() {
                 paymentMethod,
                 contactInfo
             })
-            notify();
+            notify("Data Saved!");
         } catch (error) {
             console.log('error saving data', error)
         } finally {
@@ -88,7 +96,7 @@ export default function Page() {
         try {
             setIsSaving(true)
             await saveFormData({ contactInfo: updatedContactInfo })
-            addedContactNotify();
+            notify("Contact Added!");
         } catch (error) {
             console.log('error saving data', error)
         } finally {
@@ -107,8 +115,7 @@ export default function Page() {
         }
     }
 
-    const notify = () => toast("Data Saved!");
-    const addedContactNotify = () => toast('Added Contact')
+    const notify = (message:string) => toast(message);
 
     return (
         <main className="h-[100vh] max-w-[750px] mx-auto">
@@ -143,7 +150,7 @@ export default function Page() {
             <FormBlockHeading headingText="Contacts" />
             <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
                 {/* Contact Requirements */}
-                <ContactRequirements contactInfo={contactInfo}/>
+                <ContactRequirements contactInfo={contactInfo} setAllRequirementsMet={setIsAllRequirementsMet}/>
 
                 {/* Contact input fields */}
                 <div className="mt-4">
