@@ -40,10 +40,10 @@ export default function InputLabelEl({
             {labelText && (
                 <>
                     <label
-                        className="text-[.95rem] mr-1"
+                        className="text-[.95rem] mr-1 relative"
                         htmlFor={nameAndId}
                     >
-                        {labelText}
+                        {labelText} {required ? <span className="text-[var(--company-red)] top-[-3px] absolute text-[1.3rem]">*</span> : ''}
                     </label>
 
                     {characterLimit && typeof userText === 'string' && (
@@ -67,10 +67,11 @@ export default function InputLabelEl({
                 onChange={(e) => handleStateChange(nameAndId, e.target.value)}
                 className={
                     `${isSignature ?
-                        `${cursiveFont.className} text-[1.05rem] border-b border-gray-500 rounded-none`
+                        `${cursiveFont.className} text-[1.2rem] py-0 my-0 border-b border-gray-500 rounded-none`
                         :
                         'border border-gray-500 block py-[1px]'
                         } 
+                        ${inline ? 'ml-2' : ''}
                     input-browser-reset px-2 w-full`
                 }
             />

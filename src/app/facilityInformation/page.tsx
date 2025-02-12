@@ -112,7 +112,7 @@ export default function Home() {
                         radioOptions={accountTypeOptions}
                     />
                     <InputLabelEl
-                        labelText="Account # &nbsp;"
+                        labelText="Account #"
                         userText={facilityInformation.accountNumber}
                         nameAndId="accountNumber"
                         handleStateChange={handleFacilityInfoChange}
@@ -235,6 +235,7 @@ export default function Home() {
                                     userText={facilityInformation.alternativeSchedule}
                                     handleStateChange={handleFacilityInfoChange}
                                     nameAndId="alternativeSchedule"
+                                    characterLimit={350}
                                     required={false}
                                 />
                                 <li className={listItemStyles}>All orders are shipped via UPS or FedEx.</li>

@@ -14,7 +14,7 @@ export default function SubmitButton({ isLoading, isSubmittable, children, value
         <button
             type="submit"
             value={value ?? value}
-            className={`custom-small-btn 
+            className={`custom-small-btn
                 ${color === 'green' ? 'bg-[var(--success)]' : color === 'red' ? 'bg-[var(--company-red)]' : 'bg-[var(--off-black)]'} 
                 h-[30px] 
                 ${isSubmittable ? '' : 'opacity-[.5] pointer-events-none'}`}

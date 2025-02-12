@@ -133,6 +133,7 @@ export default function Page() {
                                 labelText='Signature'
                                 isSignature={true}
                                 isDisabled={true}
+                                required={false}
                             />
                         </div>
                         <div className="ml-3 flex-1 w-[130px]">

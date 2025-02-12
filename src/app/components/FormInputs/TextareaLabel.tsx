@@ -11,7 +11,7 @@ interface Props {
 
 export default function TextareaLabel({ handleStateChange, userText, autofocus = false, characterLimit, labelText, placeholderText, required = true, nameAndId }: Props) {
     return (
-        <div className="flex flex-col w-fit mx-auto mt-2 w-full">
+        <div className="flex flex-col w-fit mx-auto w-full">
             <div className={`flex mx-1 ${labelText ? 'justify-between' : 'justify-end'}`}>
                 {labelText &&
                     <label

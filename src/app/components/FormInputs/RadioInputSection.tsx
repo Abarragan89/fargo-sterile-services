@@ -11,7 +11,7 @@ interface Props {
 export default function RadioInputSection({ category, setCategories, radioOptions, labelText }: Props) {
     return (
         <fieldset className="w-full">
-            {/* {labelText && <legend className="text-[.95rem] block">{labelText}</legend>} */}
+            {labelText && <legend className="text-[.95rem] block relative">{labelText} <span className="text-[var(--company-red)] top-[-3px] absolute text-[1.3rem]">*</span></legend>}
             <div className="flex flex-wrap mx-auto bg-white rounded-sm">
                 {radioOptions.map(input => {
                     return (
@@ -33,7 +33,7 @@ export default function RadioInputSection({ category, setCategories, radioOption
                                 value={input.value}
                                 checked={category === input.value}
                                 onChange={(e) => setCategories(e.target.name, input.value)}
-                                className="opacity-0 relative top-[1px] left-[2px]"
+                                className="opacity-0 relative top-[1px] left-[2px] w-[0px]"
                                 aria-label={`Select ${input.label}`}
                                 aria-describedby={labelText}
                             />

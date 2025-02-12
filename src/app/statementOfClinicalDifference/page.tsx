@@ -62,8 +62,6 @@ export default function Page() {
         }
     }
 
-    console.log('clickcal difference ', clinicalDifference)
-
     function handleFacilityInfoChange(inputName: string, inputValue: string | undefined) {
         setClinicalDifference(prev => ({ ...prev, [inputName]: inputValue }))
     }
@@ -87,13 +85,13 @@ export default function Page() {
             />
             <FormProgressBar progress={65} position={5} />
 
-            <div className='max-w-[700px] mx-auto'>
+            <div className='max-w-[700px] w-[93%] mx-auto'>
                 {/* Complete PDF */}
-                <div className="h-[600px] w-full mx-auto border-4 border-black">
-                    <iframe src={'pdfs/statementOfClinicalDifference.pdf'} width="100%" height="100%" />
+                <div className="h-[600px] border-4 border-black">
+                    <iframe src={'pdfs/statementOfClinicalDifferenceNoFields.pdf'} width="100%" height="100%" />
                 </div>
 
-                <form onSubmit={(e) => handleFormSubmit(e)}>
+                <form onSubmit={(e) => handleFormSubmit(e)} className='mx-3'>
                     <p className='text-center py-4 my-4 border-b border-[var(--company-gray)] font-bold'>Please complete and sign below as acknowledgement and confirmation of the applicable statement of clinical difference corresponding to the above preparations.
                     </p>
                     {/* Radio selection for the amount of facilities */}
@@ -103,13 +101,15 @@ export default function Page() {
                         radioOptions={clinicalDifferenceRadioOptions}
                     />
                     {/*  Input fields */}
-                    <InputLabelEl
-                        userText={clinicalDifference.facilityName}
-                        nameAndId='facilityName'
-                        handleStateChange={handleFacilityInfoChange}
-                        labelText='Facility Name'
-                        required={true}
-                    />
+                    <div className="mt-3">
+                        <InputLabelEl
+                            userText={clinicalDifference.facilityName}
+                            nameAndId='facilityName'
+                            handleStateChange={handleFacilityInfoChange}
+                            labelText='Facility Name'
+                            required={true}
+                        />
+                    </div>
                     <div className="flex justify-between mt-6">
                         <div className='w-full mr-2'>
                             <InputLabelEl
