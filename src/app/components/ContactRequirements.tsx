@@ -2,14 +2,14 @@ import { useState, useEffect } from "react"
 import { Contact } from "@/types/Contact"
 
 export default function ContactRequirements(
-    { 
+    {
         contactInfo,
-        setAllRequirementsMet 
+        setAllRequirementsMet
     }
-    : { 
-        contactInfo: Contact[] 
-        setAllRequirementsMet: React.Dispatch<React.SetStateAction<boolean>>
-    }
+        : {
+            contactInfo: Contact[]
+            setAllRequirementsMet: React.Dispatch<React.SetStateAction<boolean>>
+        }
 ) {
 
     const requirementsMetInitialState = {
@@ -30,39 +30,39 @@ export default function ContactRequirements(
         const isTwoUniqueEmails = contactInfo.some(contact => contact.email !== firstEmail)
         setIsTwoEmails(isTwoUniqueEmails)
 
-        // Reset values every time for rerender on delete
-        setRequirementsMet(requirementsMetInitialState);
+        // Create a new state object instead of calling setState multiple times
+        const newRequirementsMet = { ...requirementsMetInitialState };
+
         contactInfo.forEach((contact) => {
             contact.type?.forEach((type) => {
                 switch (type.id) {
                     case 'business-contact':
-                        setRequirementsMet(prev => ({ ...prev, businessContact: true }))
+                        newRequirementsMet.businessContact = true;
                         break;
                     case 'invoice-emails':
-                        setRequirementsMet(prev => ({ ...prev, invoiceEmails: true }))
+                        newRequirementsMet.invoiceEmails = true;
                         break;
                     case 'web-shop-access':
-                        setRequirementsMet(prev => ({ ...prev, webShopAccess: true }))
+                        newRequirementsMet.webShopAccess = true;
                         break;
                     case 'ap-contact':
-                        setRequirementsMet(prev => ({ ...prev, apContact: true }))
+                        newRequirementsMet.apContact = true;
                         break;
                     case 'order-confirmation-emails':
-                        setRequirementsMet(prev => ({ ...prev, orderConfirmation: true }))
+                        newRequirementsMet.orderConfirmation = true;
                         break;
                 }
-            })
-        })
-    }
+            });
+        });
 
-    useEffect(() => {
-        // Check if all contacts have been met
-        const isAllContactsMet = Object.values(requirementsMet).every(value => value === true)
-        setIsAllContactsProvided(isAllContactsMet)
-        if (isAllContactsProvided && isTwoEmails) {
+        // Set state only once to prevent React batching issues
+        setRequirementsMet(newRequirementsMet);
+        const areRequirementsMet = Object.values(newRequirementsMet).every(value => value === true)
+        if (areRequirementsMet && isTwoUniqueEmails) {
             setAllRequirementsMet(true)
+            setIsAllContactsProvided(true)
         }
-    }, [requirementsMet])
+    }
 
     // useEffect to check for requirements
     useEffect(() => {

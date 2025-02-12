@@ -204,7 +204,7 @@ export default function Page() {
                 pauseOnHover
                 theme="dark"
             />
-            <FormProgressBar progress={78} position={5} />
+            <FormProgressBar progress={75} position={5} />
             <FormBlockHeading headingText="Documents" />
             <form onSubmit={handleFormSubmit}>
                 <section className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">

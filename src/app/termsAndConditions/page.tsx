@@ -51,7 +51,7 @@ export default function Page() {
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
-            <FormProgressBar progress={21} position={2} />
+            <FormProgressBar progress={24} position={2} />
             <FormBlockHeading headingText="Terms and Conditions" />
             <div className=" border-2 border-[var(--company-gray)] rounded-[3px] p-8 mx-5 max-h-[500px] overflow-y-scroll">
                 <p className="mb-2 text-[.95rem]">The person signing this section warrants on behalf of Customer that the above information is complete and accurate and

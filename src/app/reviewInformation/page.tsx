@@ -82,7 +82,7 @@ export default function ReviewPage() {
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
-            <FormProgressBar progress={94} position={6} />
+            <FormProgressBar progress={92} position={6} />
             {/* Conditionally render when user pdfs are made */}
             {pdfOne ?
                 <>

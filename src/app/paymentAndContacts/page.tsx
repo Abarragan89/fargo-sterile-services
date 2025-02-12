@@ -55,7 +55,7 @@ export default function Page() {
                 notify("Choose a payment method");
                 return
             }
-            router.push('/creditApplication')
+            router.push('/statementOfClinicalDifference')
         } catch (error) {
             console.log('error submitting form', error)
         } finally {
@@ -134,7 +134,7 @@ export default function Page() {
                 pauseOnHover
                 theme="dark"
             />
-            <FormProgressBar progress={36} position={3} />
+            <FormProgressBar progress={42} position={3} />
 
             {isLoading ?
                 <p className='text-center'>Loading...</p>
@@ -143,7 +143,7 @@ export default function Page() {
                     {/* Payment Form */}
                     <form onSubmit={(e) => handleFormSubmit(e)}>
                         <FormBlockHeading headingText="Payment" />
-                        <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-6 mx-5">
+                        <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-6 mx-8">
                             <RadioInputSection
                                 category={paymentMethod.paymentMethod}
                                 setCategories={handlePaymentChange}
@@ -155,7 +155,7 @@ export default function Page() {
 
                     {/* Contact Section */}
                     <FormBlockHeading headingText="Contacts" />
-                    <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-10 pt-0 mx-5">
+                    <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-10 pt-0 mx-8">
 
                         <div className="flex flex-wrap justify-center">
                             {/* Contact Requirements */}

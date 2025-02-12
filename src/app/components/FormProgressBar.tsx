@@ -7,7 +7,6 @@ export default function FormProgressBar({ progress, position }: { progress: numb
         { text: "Facility Information", href: "/facilityInformation" },
         { text: "Terms & Conditions", href: "/termsAndConditions" },
         { text: "Payment & Contacts", href: "/paymentAndContacts" },
-        { text: "Credit Application", href: "/creditApplication" },
         { text: "Clinical Difference", href: "/statementOfClinicalDifference" },
         { text: "Document Uploads", href: "/documentUploads" },
         { text: "Review Information", href: "/reviewInformation" },
