@@ -6,16 +6,17 @@ interface Props {
     setCategories: (textInput: string, inputName?: string | undefined) => void;
     radioOptions: { [key: string]: string }[];
     labelText?: string
+    isFlex?: boolean
 }
 
-export default function RadioInputSection({ category, setCategories, radioOptions, labelText }: Props) {
+export default function RadioInputSection({ category, setCategories, radioOptions, labelText, isFlex=true }: Props) {
     return (
         <fieldset className="w-full">
             {labelText && <legend className="text-[.95rem] block relative">{labelText} <span className="text-[var(--company-red)] top-[-3px] absolute text-[1.3rem]">*</span></legend>}
-            <div className="flex flex-wrap mx-auto bg-white rounded-sm">
+            <div className={`${isFlex ? 'flex flex-wrap' : ''} mx-auto bg-white rounded-sm`}>
                 {radioOptions.map(input => {
                     return (
-                        <label htmlFor={input.id} className="relative flex cursor-pointer w-[120px] text-[.95rem] w-fit mr-8 my-2" key={input.id}>
+                        <label htmlFor={input.id} className={`${isFlex ? 'my-2' : 'my-4'} relative flex cursor-pointer w-[120px] text-[.95rem] w-fit mr-8`} key={input.id}>
                             <div className="min-w-[20px] h-[20px] bg-white border border-gray-500 rounded-sm">
                                 {category === input.id ?
                                     <GiCheckMark

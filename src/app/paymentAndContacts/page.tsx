@@ -28,6 +28,7 @@ export default function Page() {
     const [paymentMethod, setPaymentMethod] = useState(paymentMethodInitialState)
     const [contactInfo, setContactInfo] = useState(contactInfoInitialState)
     const [isAllRequirementsMet, setIsAllRequirementsMet] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,6 +37,7 @@ export default function Page() {
                 setPaymentMethod(savedData?.paymentMethod || paymentMethodInitialState);
                 setContactInfo(savedData?.contactInfo || contactInfoInitialState)
             }
+            setIsLoading(false)
         };
         fetchData();
     }, [])
@@ -80,7 +82,6 @@ export default function Page() {
         setPaymentMethod(prev => ({ ...prev, [inputName]: inputValue }))
     }
 
-
     async function handleSaveContact(e: React.FormEvent<HTMLFormElement>, newContact: Contact, contactType: SelectItem[]) {
         e.preventDefault();
 
@@ -104,21 +105,22 @@ export default function Page() {
         }
     }
 
-    function deleteContact(e: React.FormEvent<HTMLFormElement>, contact: Contact) {
-        e.preventDefault();
+    function deleteContact(contact: Contact) {
         try {
             const updatedContact = contactInfo.filter((currentContact) => currentContact.id !== contact.id)
+            // set requirements to False, will be set to true if met in useEffect in contact form
+            setIsAllRequirementsMet(false)
             setContactInfo(updatedContact)
-            saveFormData({ contactInfo: updatedContact})
+            saveFormData({ contactInfo: updatedContact })
         } catch (error) {
             console.log('error deleting contact ', error)
         }
     }
 
-    const notify = (message:string) => toast(message);
+    const notify = (message: string) => toast(message);
 
     return (
-        <main className="h-[100vh] max-w-[750px] mx-auto">
+        <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
             <ToastContainer
                 position="top-right"
@@ -134,54 +136,62 @@ export default function Page() {
             />
             <FormProgressBar progress={36} position={3} />
 
-            {/* Payment Form */}
-            <form onSubmit={(e) => handleFormSubmit(e)}>
-                <FormBlockHeading headingText="Payment" />
-                <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
-                    <RadioInputSection
-                        category={paymentMethod.paymentMethod}
-                        setCategories={handlePaymentChange}
-                        radioOptions={paymentOptions}
-                    />
-                </div>
-            </form>
+            {isLoading ?
+                <p className='text-center'>Loading...</p>
+                :
+                <>
+                    {/* Payment Form */}
+                    <form onSubmit={(e) => handleFormSubmit(e)}>
+                        <FormBlockHeading headingText="Payment" />
+                        <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-6 mx-5">
+                            <RadioInputSection
+                                category={paymentMethod.paymentMethod}
+                                setCategories={handlePaymentChange}
+                                radioOptions={paymentOptions}
+                                isFlex={false}
+                            />
+                        </div>
+                    </form>
 
-            {/* Contact Requirements Requirements */}
-            <FormBlockHeading headingText="Contacts" />
-            <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
-                {/* Contact Requirements */}
-                <ContactRequirements contactInfo={contactInfo} setAllRequirementsMet={setIsAllRequirementsMet}/>
+                    {/* Contact Section */}
+                    <FormBlockHeading headingText="Contacts" />
+                    <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-10 pt-0 mx-5">
 
-                {/* Contact input fields */}
-                <div className="mt-4">
-                    <ContactForm
-                        updateStateHandler={handleSaveContact}
-                    />
-                </div>
+                        <div className="flex flex-wrap justify-center">
+                            {/* Contact Requirements */}
+                            <ContactRequirements contactInfo={contactInfo} setAllRequirementsMet={setIsAllRequirementsMet} />
 
-                {/* Current Contacts */}
-                <h3
-                    className="text-center text-[1.05rem] font-bold text-[var(--company-gray)] mb-2 mt-5"
-                >My Contacts</h3>
-                <div>
-                    {contactInfo?.length > 0 ? contactInfo?.map((contact, index) =>
-                        <ContactView key={index} contact={contact} deleteHandler={deleteContact} />)
-                        :
-                        <p className='text-center'>No Contacts Added</p>
-                    }
-                </div>
+                            {/* Contact input fields */}
+                            <ContactForm
+                                updateStateHandler={handleSaveContact}
+                            />
+                        </div>
+                        {/* Current Contacts */}
+                        <h3
+                            className="text-center text-[1.05rem] font-bold text-[var(--company-gray)] mx-5 mb-2 mt-[45px] pt-4 border-t border-[var(--company-gray)]"
+                        >My Contacts</h3>
+                        <div className='flex flex-wrap justify-center'>
+                            {contactInfo?.length > 0 ? contactInfo?.map((contact, index) =>
+                                <ContactView key={index} contact={contact} deleteHandler={deleteContact} />)
+                                :
+                                <p className='text-center'>No Contacts Added</p>
+                            }
+                        </div>
 
 
-            </div>
+                    </div>
 
-            {/* Form to save the payment and everything else on page. */}
-            <form onSubmit={(e) => (handleFormSubmit(e))}>
-                {/* Save and Continue Btn section */}
-                <SaveAndContinueBtns
-                    isSaving={isSaving}
-                    submitHandler={handleSaveData}
-                />
-            </form>
+                    {/* Form to save the payment and everything else on page. */}
+                    <form onSubmit={(e) => (handleFormSubmit(e))}>
+                        {/* Save and Continue Btn section */}
+                        <SaveAndContinueBtns
+                            isSaving={isSaving}
+                            submitHandler={handleSaveData}
+                        />
+                    </form>
+                </>
+            }
+
         </main>
     )
 }

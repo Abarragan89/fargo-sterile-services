@@ -35,14 +35,14 @@ export default function ContactForm({ updateStateHandler }: Props) {
 
     return (
         <form
-            className="border border-[var(--company-gray)] rounded-sm px-4 pb-4 pt-2 mx-auto"
-            onSubmit={(e) => {updateStateHandler(e, currentContact, contactType); clearForm()}}>
+            className="max-w-[370px] border border-[var(--company-gray)] rounded-r-sm p-5 pt-2 mt-10"
+            onSubmit={(e) => { updateStateHandler(e, currentContact, contactType); clearForm() }}>
             <legend
                 className="text-center text-[1.05rem] font-bold text-[var(--company-gray)] mb-2"
             >Add Contact</legend>
 
             {/* Input Fields (Name Email Phone) */}
-            <div className='grid grid-cols-1 sm:grid-cols-3 gap-2'>
+            <div className='grid grid-cols-1 gap-2'>
                 <div>
                     <InputLabelEl
                         labelText='Contact Name'
@@ -76,7 +76,8 @@ export default function ContactForm({ updateStateHandler }: Props) {
 
             {/* Select Boxes */}
             <fieldset className="w-full mt-3">
-                <div className="grid grid-cols-1 sm:grid-cols-3 flex-wrap mx-auto">
+                <label className="relative text-[.95rem]">Contact Type:<span className="text-[var(--company-red)] top-[-3px] absolute text-[1.3rem]">*</span></label>
+                <div className="flex flex-wrap mx-auto border border-[var(--company-gray)] p-3 rounded-sm">
                     <SelectAreaEl
                         chosenSelectionOptionsArr={contactType}
                         setChosenSelectionOptionsArr={setContactType}
@@ -85,7 +86,7 @@ export default function ContactForm({ updateStateHandler }: Props) {
                 </div>
             </fieldset>
             {/* Submit Button */}
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-center mt-4">
                 <SubmitButton
                     isLoading={false}
                     isSubmittable={true}

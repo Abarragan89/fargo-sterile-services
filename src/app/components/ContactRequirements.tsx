@@ -33,7 +33,6 @@ export default function ContactRequirements(
         // Reset values every time for rerender on delete
         setRequirementsMet(requirementsMetInitialState);
         contactInfo.forEach((contact) => {
-            console.log('contact info ', contactInfo)
             contact.type?.forEach((type) => {
                 switch (type.id) {
                     case 'business-contact':
@@ -63,7 +62,6 @@ export default function ContactRequirements(
         if (isAllContactsProvided && isTwoEmails) {
             setAllRequirementsMet(true)
         }
-
     }, [requirementsMet])
 
     // useEffect to check for requirements
@@ -74,23 +72,24 @@ export default function ContactRequirements(
             setRequirementsMet(requirementsMetInitialState)
             setIsTwoEmails(false)
             setIsAllContactsProvided(false)
+            setAllRequirementsMet(false)
         }
     }, [contactInfo])
 
-    const listItemsStyles = 'ml-10 my-1'
+    const listItemsStyles = 'ml-7 my-1'
 
     return (
-        <div className="border border-[var(--company-gray)] rounded-sm px-4 pb-4 pt-2 mx-auto">
+        <div className="max-w-[370px] w-full mb-10 sm:mb-0 border border-[var(--company-gray)] rounded-l-sm px-6 pb-4 pt-2 mt-10">
             <h3
                 className="text-center text-[1.05rem] font-bold text-[var(--company-gray)] mb-2"
-            >Requirements Met</h3>
+            >Requirements</h3>
             <p>
                 {isTwoEmails ?
                     <span className='text-[var(--success)] text-[1.25rem] mr-1'>&#x2713;</span>
                     :
                     <span className='text-[var(--company-red)] text-[1.25rem] mr-1'>&#x2717;</span>
                 }
-                <strong>Two different contacts and email addresses are required for every account.</strong>
+                <strong>Two distinct email contacts.</strong>
             </p>
             <p>
                 {isAllContactsProvided ?
@@ -98,10 +97,10 @@ export default function ContactRequirements(
                     :
                     <span className='text-[var(--company-red)] text-[1.25rem] mr-1'>&#x2717;</span>
                 }
-                <strong>There must be at least one contact (with email) identified for each:</strong>
+                <strong>One contact identified for each:</strong>
             </p>
-            <ul className="grid grid-cols-1 sm:grid-cols-2">
-                <li className={listItemsStyles}>
+            <ul className="grid grid-cols-1 ">
+                <li className={`${listItemsStyles} col-span-2`}>
                     {requirementsMet?.businessContact ?
                         <span className='text-[var(--success)] text-[1.25rem] mr-1'>&#x2713;</span>
                         :
@@ -109,7 +108,7 @@ export default function ContactRequirements(
                     }
                     Business Contact
                 </li>
-                <li className={listItemsStyles}>
+                <li className={`${listItemsStyles} col-span-2`}>
                     {requirementsMet?.invoiceEmails ?
                         <span className='text-[var(--success)] text-[1.25rem] mr-1'>&#x2713;</span>
                         :
@@ -117,15 +116,7 @@ export default function ContactRequirements(
                     }
                     Invoice Emails
                 </li>
-                <li className={listItemsStyles}>
-                    {requirementsMet?.orderConfirmation ?
-                        <span className='text-[var(--success)] text-[1.25rem] mr-1'>&#x2713;</span>
-                        :
-                        <span className='text-[var(--company-red)] text-[1.25rem] mr-1'>&#x2717;</span>
-                    }
-                    Order Confirmation Emails
-                </li>
-                <li className={listItemsStyles}>
+                <li className={`${listItemsStyles} col-span-2`}>
                     {requirementsMet?.webShopAccess ?
                         <span className='text-[var(--success)] text-[1.25rem] mr-1'>&#x2713;</span>
                         :
@@ -133,13 +124,21 @@ export default function ContactRequirements(
                     }
                     Web Shop Access
                 </li>
-                <li className={listItemsStyles}>
+                <li className={`${listItemsStyles} col-span-2`}>
                     {requirementsMet?.apContact ?
                         <span className='text-[var(--success)] text-[1.25rem] mr-1'>&#x2713;</span>
                         :
                         <span className='text-[var(--company-red)] text-[1.25rem] mr-1'>&#x2717;</span>
                     }
                     A/P Contact
+                </li>
+                <li className={`${listItemsStyles} col-span-3`}>
+                    {requirementsMet?.orderConfirmation ?
+                        <span className='text-[var(--success)] text-[1.25rem] mr-1'>&#x2713;</span>
+                        :
+                        <span className='text-[var(--company-red)] text-[1.25rem] mr-1'>&#x2717;</span>
+                    }
+                    Order Confirmation Emails
                 </li>
             </ul>
         </div>

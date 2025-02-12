@@ -24,7 +24,7 @@ export default function SelectAreaEl({ chosenSelectionOptionsArr, setChosenSelec
         <>
             {totalSelectionOptionsArr.map((input: SelectItem) => {
                 return (
-                    <label htmlFor={input.id} className="flex items-center cursor-pointer my-2 text-[.9rem]" key={input.id}>
+                    <label htmlFor={input.id} className="flex items-center cursor-pointer p-[9px] text-[.9rem]" key={input.id}>
                         <div className="w-[20px] h-[20px] bg-white border border-gray-500 rounded-sm relative">
                             {chosenSelectionOptionsArr.some((category) => category.id === input.id) ?
                                 <GiCheckMark
