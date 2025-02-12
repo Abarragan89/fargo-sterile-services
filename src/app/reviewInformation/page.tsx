@@ -108,7 +108,7 @@ export default function ReviewPage() {
                             </div>
                             <SubmitButton
                                 isLoading={isLoading}
-                                isSubmittable={chosenSelectionArr.length > 0}
+                                isSubmittable={chosenSelectionArr?.length > 0}
                                 color="red"
                             >
                                 Complete

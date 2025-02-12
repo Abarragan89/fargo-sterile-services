@@ -47,7 +47,7 @@ export default function InputLabelEl({
                     </label>
 
                     {characterLimit && typeof userText === 'string' && (
-                        <p className="text-[.85rem] text-right">{userText.length}/{characterLimit}</p>
+                        <p className="text-[.85rem] text-right">{userText?.length}/{characterLimit}</p>
                     )}
                 </>
             )}

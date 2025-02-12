@@ -55,7 +55,7 @@ export default function ContactRequirements({ contactInfo }: { contactInfo: Cont
 
     // useEffect to check for requirements
     useEffect(() => {
-        if (contactInfo.length > 0) {
+        if (contactInfo?.length > 0) {
             checkRequirements()
         } else {
             setRequirementsMet(requirementsMetInitialState)

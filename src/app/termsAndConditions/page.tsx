@@ -152,7 +152,7 @@ export default function Page() {
                         <SubmitButton
                             isLoading={isLoading}
                             isSubmittable={
-                                chosenSelectionArr.length > 0 &&
+                                chosenSelectionArr?.length > 0 &&
                                 termsAndConditionsInformation.date !== '' &&
                                 termsAndConditionsInformation.jobTitle !== '' &&
                                 termsAndConditionsInformation.fullName !== ''

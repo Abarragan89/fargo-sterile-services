@@ -20,7 +20,7 @@ export default function TextareaLabel({ handleStateChange, userText, autofocus =
                     >{labelText}</label>
                 }
                 {characterLimit &&
-                    <p className="text-[.85rem] text-[var(--gray-600)]">{userText.length}/{characterLimit}</p>
+                    <p className="text-[.85rem] text-[var(--gray-600)]">{userText?.length}/{characterLimit}</p>
                 }
             </div>
 
