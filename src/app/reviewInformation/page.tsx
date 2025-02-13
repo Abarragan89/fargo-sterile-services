@@ -63,20 +63,17 @@ export default function ReviewPage() {
 
 
     const generatePdfForViewers = async () => {
-        const { data: pdf1 } = await axios.post('/api/generatePDF', {
-            clientInfo
-        })
-        setCompletePDFToSend(pdf1)
-        const base64Pdf = pdf1.data;
-        // Decode Base64 into a Blob
-        const pdfBlob = new Blob([Uint8Array.from(atob(base64Pdf), (char) => char.charCodeAt(0))], {
-            type: 'application/pdf',
-        });
-        // Create an Object URL for the Blob
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-
-        // Coming back as a base64 string
-        setPdfOne(pdfUrl)
+        try {
+            const response = await axios.post('/api/generatePDF', { clientInfo }, { responseType: 'blob' });
+    
+            // Convert Blob to Object URL
+            const pdfUrl = URL.createObjectURL(response.data);
+    
+            // Set the iframe source
+            setPdfOne(pdfUrl);
+        } catch (error) {
+            console.error("Error fetching PDF:", error);
+        }
     };
 
     return (

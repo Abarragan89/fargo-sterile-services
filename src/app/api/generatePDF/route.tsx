@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
         const paymentContactPdf = await PDFDocument.load(paymentContactsArrayBuffer);
         let upLoadedDocuments = []
         const documentFields = ['stateLicense', 'deaLicense', 'letterHead', 'taxExceptionDocs', 'otherDocument']
-        
+
         // Loop through the clientInfo
         for (const item in clientInfo) {
             if (documentFields.includes(item)) {
@@ -98,8 +98,8 @@ export async function POST(request: NextRequest) {
 
         //  2. Mark the X
         lastPage.drawText('X', {
-            x: clientInfo.clinicalDifference.facilityAmount === 'one-facility' ?  48 : 49,
-            y: clientInfo.clinicalDifference.facilityAmount === 'one-facility' ?  527 : 488,
+            x: clientInfo.clinicalDifference.facilityAmount === 'one-facility' ? 48 : 49,
+            y: clientInfo.clinicalDifference.facilityAmount === 'one-facility' ? 527 : 488,
             size: 17,
             color: rgb(0, 0, 0),
         });
@@ -110,13 +110,17 @@ export async function POST(request: NextRequest) {
         //  Merge the two pdfs
         const mergedPDFBase64 = await mergePDFs(NASUFpdf, paymentContactPdf, ...upLoadedDocuments, secondPdf)
 
-        const pdfFile = {
-            name: 'GeneratedPDF.pdf',  // File name
-            data: mergedPDFBase64,          // Base64-encoded string
-            type: 'application/pdf',   // MIME type
-        };
+        // Convert Base64 to Buffer
+        const pdfBuffer = Buffer.from(mergedPDFBase64, 'base64');
 
-        return NextResponse.json(pdfFile);
+        // Return the response as a binary stream
+        return new NextResponse(pdfBuffer, {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename=GeneratedPDF.pdf',
+            },
+        });
     } catch (error) {
         console.error('Error generating PDF:', error);
         return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
