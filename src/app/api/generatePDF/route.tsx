@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         const NASUFpdf = await PDFDocument.load(NASUFarrayBuffer);
         const paymentContactPdf = await PDFDocument.load(paymentContactsArrayBuffer);
         let upLoadedDocuments = []
-        const documentFields = ['stateLicense', 'deaLicense', 'letterHead', 'taxExceptionDocuments', 'otherDocument']
+        const documentFields = ['stateLicense', 'deaLicense', 'letterHead', 'taxExceptionDocs', 'otherDocument']
         
         // Loop through the clientInfo
         for (const item in clientInfo) {
