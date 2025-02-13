@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { pdf } from '@react-pdf/renderer';
 import FinalCompletePDF from '@/app/components/pdfTemplates/FinalCompletePDF'
+import PaymentContactPDF from '@/app/components/pdfTemplates/PaymentContactPDF';
 import { PDFDocument, rgb } from 'pdf-lib';
 import fs from 'fs/promises';
 import path from 'path';
@@ -12,15 +13,31 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
 export async function POST(request: NextRequest) {
     const { clientInfo } = await request.json();
-
     // Generate the first PDF from your React component
-    const pdfBlob = await pdf(<FinalCompletePDF data={clientInfo} />).toBlob();
+    const NASUFblob = await pdf(<FinalCompletePDF data={clientInfo} />).toBlob();
+    const paymentContactsBlob = await pdf(<PaymentContactPDF data={clientInfo} />).toBlob();
 
-    // Convert Blob to ArrayBuffer
-    const arrayBuffer = await pdfBlob.arrayBuffer();
+    // Convert Blob to ArrayBuffer for Generated PDFs
+    const NASUFarrayBuffer = await NASUFblob.arrayBuffer();
+    const paymentContactsArrayBuffer = await paymentContactsBlob.arrayBuffer();
 
-    // Load the first PDF into pdf-lib
-    const firstPdf = await PDFDocument.load(arrayBuffer);
+    // Load the PDF
+    const NASUFpdf = await PDFDocument.load(NASUFarrayBuffer);
+    const paymentContactPdf = await PDFDocument.load(paymentContactsArrayBuffer);
+    let upLoadedDocuments = []
+    const documentFields = ['stateLicense', 'deaLicense', 'letterHead', 'taxExceptionDocuments', 'otherDocument']
+
+    // Loop through the clientInfo
+    for (const item in clientInfo) {
+        if (documentFields.includes(item)) {
+            if (clientInfo[item].data) {
+                const itemIndex = documentFields.indexOf(item)
+                upLoadedDocuments[itemIndex] = await PDFDocument.load(clientInfo[item].data)
+            }
+        }
+    }
+
+    upLoadedDocuments = [...upLoadedDocuments.filter((item) => item !== undefined)]
 
     // Read the second PDF from file
     const clinicalDifferencePDF = path.join(process.cwd(), 'public', 'pdfs/statementOfClinicalDifference.pdf');
@@ -28,7 +45,6 @@ export async function POST(request: NextRequest) {
 
     // Load the second PDF into pdf-lib
     const secondPdf = await PDFDocument.load(clinicalDifferenceBuffer);
-
 
     // Write signature on the alst page of Statement of clinical difference
     const lastPageIndex = secondPdf.getPageCount() - 1;
@@ -92,7 +108,10 @@ export async function POST(request: NextRequest) {
 
     // Save the updated clinical of difference
     await secondPdf.save();
-    const mergedPDFBase64 = await mergePDFs(firstPdf, secondPdf)
+
+    //  Merge the two pdfs
+    const mergedPDFBase64 = await mergePDFs(NASUFpdf, paymentContactPdf, ...upLoadedDocuments, secondPdf)
+
 
     const pdfFile = {
         name: 'GeneratedPDF.pdf',  // File name

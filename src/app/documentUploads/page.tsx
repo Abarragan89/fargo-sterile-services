@@ -11,15 +11,16 @@ import { IoMdCloseCircle } from "react-icons/io";
 import FormProgressBar from '../components/FormProgressBar';
 import { ToastContainer, toast } from 'react-toastify';
 import ScrollToTop from '../components/ScrollToTop';
+import { convertImageToPdf, readFileAsBase64 } from '../../../utils/convertImageToPdf';
 
 export default function Page() {
 
     const router = useRouter();
     const [stateLicense, setStateLicense] = useState<PDFFile | null>(null);
     const [deaLicense, setDeaLicense] = useState<PDFFile | null>(null);
-    const [otherLicense1, setOtherLicense1] = useState<PDFFile | null>(null);
-    const [otherLicense2, setOtherLicense2] = useState<PDFFile | null>(null);
-    const [otherLicense3, setOtherLicense3] = useState<PDFFile | null>(null);
+    const [letterHead, setLetterHead] = useState<PDFFile | null>(null);
+    const [taxExceptionDocs, setTaxExceptionDocs] = useState<PDFFile | null>(null);
+    const [otherDocument, setOtherDocument] = useState<PDFFile | null>(null);
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [isUpLoading, setIsUploading] = useState<boolean>(false)
     const notify = () => toast("Data Saved!");
@@ -31,9 +32,9 @@ export default function Page() {
             if (savedData) {
                 setStateLicense(savedData?.stateLicense || '')
                 setDeaLicense(savedData?.deaLicense || '')
-                setOtherLicense1(savedData?.otherLicense1 || '')
-                setOtherLicense2(savedData?.otherLicense2 || '')
-                setOtherLicense3(savedData?.otherLicense3 || '')
+                setLetterHead(savedData?.letterHead || '')
+                setTaxExceptionDocs(savedData?.taxExceptionDocs || '')
+                setOtherDocument(savedData?.otherDocument || '')
             }
         };
         fetchData();
@@ -42,65 +43,57 @@ export default function Page() {
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) {
-            throw new Error('Please add a file');
+            throw new Error("Please add a file");
         }
-        try {
-            setIsUploading(true)
-            const options = {
-                maxSizeMB: .5,
-                maxWidthOrHeight: 400,
-                useWebWorker: true,
-            }
-            // compress the file
-            const compressedFile = await imageCompression(file, options);
 
-            const reader = new FileReader();
-            reader.onload = (readerEvent) => {
-                // @ts-expect-error: error getting 
-                const fileData = readerEvent.target.result.split(',')[1];
-                switch (event.target.id) {
-                    case 'state-license':
-                        setStateLicense({
-                            name: file.name,
-                            type: file.type,
-                            data: fileData,
-                        });
-                        break;
-                    case 'dea-license':
-                        setDeaLicense({
-                            name: file.name,
-                            type: file.type,
-                            data: fileData,
-                        });
-                        break;
-                    case 'other-license-1':
-                        setOtherLicense1({
-                            name: file.name,
-                            type: file.type,
-                            data: fileData,
-                        });
-                        break;
-                    case 'other-license-2':
-                        setOtherLicense2({
-                            name: file.name,
-                            type: file.type,
-                            data: fileData,
-                        });
-                        break;
-                    case 'other-license-3':
-                        setOtherLicense3({
-                            name: file.name,
-                            type: file.type,
-                            data: fileData,
-                        });
-                        break;
-                }
-            };
-            reader.readAsDataURL(compressedFile);
+        try {
+            setIsUploading(true);
+            let fileData: string;
+            let fileType = file.type;
+            let fileName = file.name;
+
+            // If the file is an image, convert it to a PDF
+            if (fileType.startsWith("image/")) {
+                const options = {
+                    maxSizeMB: 0.5,
+                    maxWidthOrHeight: 400,
+                    useWebWorker: true,
+                };
+
+                // Compress image
+                const compressedFile = await imageCompression(file, options);
+                fileData = await convertImageToPdf(compressedFile);
+                fileType = "application/pdf"; // Change type to PDF
+                fileName = fileName.replace(/\.[^.]+$/, ".pdf"); // Change file extension
+            } else if (fileType === "application/pdf") {
+                // If it's already a PDF, just read it as base64
+                fileData = await readFileAsBase64(file);
+            } else {
+                throw new Error("Unsupported file type. Only images and PDFs are allowed.");
+            }
+
+            // Set the correct state based on the input ID
+            switch (event.target.id) {
+                case "state-license":
+                    setStateLicense({ name: fileName, type: fileType, data: fileData });
+                    break;
+                case "dea-license":
+                    setDeaLicense({ name: fileName, type: fileType, data: fileData });
+                    break;
+                case "letter-head":
+                    setLetterHead({ name: fileName, type: fileType, data: fileData });
+                    break;
+                case "tax-excemption-documents":
+                    setTaxExceptionDocs({ name: fileName, type: fileType, data: fileData });
+                    break;
+                case "other-document":
+                    setOtherDocument({ name: fileName, type: fileType, data: fileData });
+                    break;
+            }
         } catch (error) {
-            console.log('error compresssion image ', error)
+            console.error("Error processing file:", error);
         } finally {
-            setIsUploading(false)
+            setIsUploading(false);
         }
     };
 
@@ -112,9 +105,9 @@ export default function Page() {
             await saveFormData({
                 stateLicense,
                 deaLicense,
-                otherLicense1,
-                otherLicense2,
-                otherLicense3
+                letterHead,
+                taxExceptionDocs,
+                otherDocument
             })
             router.push('/reviewInformation')
         } catch (error) {
@@ -130,9 +123,9 @@ export default function Page() {
             await saveFormData({
                 stateLicense,
                 deaLicense,
-                otherLicense1,
-                otherLicense2,
-                otherLicense3
+                letterHead,
+                taxExceptionDocs,
+                otherDocument
             })
             notify();
         } catch (error) {
@@ -145,9 +138,9 @@ export default function Page() {
     const possibleImageFiles = [
         { label: 'State License', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
         { label: 'DEA License', state: deaLicense, isRequired: true, dbFieldName: 'deaLicense' },
-        { label: 'Letter Head', state: otherLicense1, isRequired: false, dbFieldName: 'otherLicense1' },
-        { label: 'Tax Excemption Documents', state: otherLicense2, isRequired: false, dbFieldName: 'otherLicense2' },
-        { label: 'Other Document 2', state: otherLicense3, isRequired: false, dbFieldName: 'otherLicense3' },
+        { label: 'Letter Head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
+        { label: 'Tax Excemption Documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocuments' },
+        { label: 'Other Document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
     ];
 
     async function deleteFileHandler(fieldName: string) {
@@ -160,14 +153,14 @@ export default function Page() {
                 case 'deaLicense':
                     setDeaLicense(null)
                     break;
-                case 'otherLicense1':
-                    setOtherLicense1(null)
+                case 'letterHead':
+                    setLetterHead(null)
                     break;
-                case 'otherLicense2':
-                    setOtherLicense2(null)
+                case 'taxExceptionDocs':
+                    setTaxExceptionDocs(null)
                     break;
-                case 'otherLicense3':
-                    setOtherLicense3(null)
+                case 'otherDocument':
+                    setOtherDocument(null)
                     break;
             }
         } catch (error) {
@@ -241,7 +234,7 @@ export default function Page() {
                                     <input
                                         id={fileOption.label.replace(/ /g, '-').toLocaleLowerCase()}
                                         type="file"
-                                        accept=".jpeg,.png,.jpg"
+                                        accept=".jpeg,.png,.jpg, .pdf"
                                         className="mt-5"
                                         hidden
                                         onChange={(e) => handleFileChange(e)}

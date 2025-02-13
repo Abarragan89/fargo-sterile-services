@@ -235,7 +235,7 @@ const FinalCompletePDF = ({ data }) => {
                 </View>
             </Page>
 
-            {licenses.map(({ key, label }) =>
+            {/* {licenses.map(({ key, label }) =>
                 data?.[key] ? (
                     <Page key={key} size="A4" style={styles.page}>
                         <View>
@@ -247,7 +247,7 @@ const FinalCompletePDF = ({ data }) => {
                         </View>
                     </Page>
                 ) : null
-            )}
+            )} */}
         </Document>
     )
 };
