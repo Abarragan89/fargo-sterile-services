@@ -3,43 +3,34 @@ interface Props {
     userChoice: string | number;
     handleStateChange: (textInput: string, inputName?: string | undefined) => void;
     labelText: string;
-    nameAndId: string
+    nameAndId: string;
+    optionArr: string[];
+    isRequired?: boolean;
+    initialValue: string
 }
 
-export default function DropDown({ userChoice, handleStateChange, labelText, nameAndId }: Props) {
-    const states = [
-        "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
-        "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
-        "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
-        "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
-        "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
-        "New Hampshire", "New Jersey", "New Mexico", "New York",
-        "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
-        "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
-        "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
-        "West Virginia", "Wisconsin", "Wyoming"
-    ];
+export default function DropDown({ userChoice, handleStateChange, labelText, nameAndId, optionArr, isRequired=true, initialValue }: Props) {
 
     return (
         <>
-            <label htmlFor="states" className="text-[.95rem] block">
-                {labelText}
+            <label htmlFor="states" className="text-[.95rem] block relative">
+                {labelText}<span className="text-[var(--company-red)] top-[-3px] absolute text-[1.3rem]">*</span>
             </label>
             <select
                 id={nameAndId}
                 name={nameAndId}
-                required
+                required={isRequired}
                 value={userChoice}
                 onChange={(e) => handleStateChange(nameAndId, e.target.value)}
-                className="border border-[var(--company-gray)] text-[.95rem] rounded-sm py-[3px] px-2"
+                className="border border-[var(--company-gray)] text-[.95rem] rounded-sm py-[3px] px-2 w-full"
             >
                 <option value="" disabled>
-                    Choose a state...
+                    {initialValue}
                 </option>
-                {states.map((state) => (
+                {optionArr.map((option) => (
                     <option
-                        key={state} value={state}>
-                        {state}
+                        key={option} value={option}>
+                        {option}
                     </option>
                 ))}
             </select>

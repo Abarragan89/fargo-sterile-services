@@ -154,7 +154,7 @@ export default function Page() {
                     {/* Payment Form */}
                     <form onSubmit={(e) => handleFormSubmit(e)}>
                         <FormBlockHeading headingText="Payment" />
-                        <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-6 mx-8">
+                        <div className="border-2 border-[var(--company-gray)] rounded-[3px] p-6 mx-4">
                             <RadioInputSection
                                 category={paymentMethod.paymentMethod}
                                 setCategories={handlePaymentChange}
@@ -166,7 +166,7 @@ export default function Page() {
 
                     {/* Contact Section */}
                     <FormBlockHeading headingText="Contacts" />
-                    <div className="border-2 border-[var(--company-gray)] rounded-[3px] pt-0 px-5 mx-5">
+                    <div className="border-2 border-[var(--company-gray)] rounded-[3px] pt-0 px-5 pb-5 mx-5">
 
                         <div className="flex flex-wrap justify-center">
                             {/* Contact Requirements */}

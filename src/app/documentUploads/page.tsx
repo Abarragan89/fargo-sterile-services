@@ -145,9 +145,9 @@ export default function Page() {
     const possibleImageFiles = [
         { label: 'State License', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
         { label: 'DEA License', state: deaLicense, isRequired: true, dbFieldName: 'deaLicense' },
-        { label: 'Other License 1', state: otherLicense1, isRequired: false, dbFieldName: 'otherLicense1' },
-        { label: 'Other License 2', state: otherLicense2, isRequired: false, dbFieldName: 'otherLicense2' },
-        { label: 'Other License 3', state: otherLicense3, isRequired: false, dbFieldName: 'otherLicense3' },
+        { label: 'Letter Head', state: otherLicense1, isRequired: false, dbFieldName: 'otherLicense1' },
+        { label: 'Tax Excemption Documents', state: otherLicense2, isRequired: false, dbFieldName: 'otherLicense2' },
+        { label: 'Other Document 2', state: otherLicense3, isRequired: false, dbFieldName: 'otherLicense3' },
     ];
 
     async function deleteFileHandler(fieldName: string) {
@@ -211,7 +211,7 @@ export default function Page() {
                     <p className='text-center text-[.95rem]'> <span className='font-bold mr-1'>Acceptable File Types:</span>.jpeg .jpg or .png. </p>
                     <p className='text-center text-[.9rem]'>(If you need to convert a <span className='underline'>pdf</span> to an <span className='underline'>image</span> , click <a href='https://www.freeconvert.com/pdf-to-jpg' target='_blank' rel='noopener noreferrer' className='underline text-blue-700'>here</a>.)</p>
                     {possibleImageFiles.map((fileOption, index) => (
-                        <div key={index} className='ml-3 my-5 p-5 border border-gray-300 rounded-[3px] relative'>
+                        <div key={index} className='mx-3 my-5 p-5 border border-gray-300 rounded-[3px] relative'>
 
                             <p className='font-bold'>{fileOption.label}: {fileOption.isRequired && <span className='text-[.95rem] text-[var(--company-red)]'>(required)</span>}</p>
 

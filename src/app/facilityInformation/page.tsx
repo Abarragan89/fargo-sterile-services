@@ -6,12 +6,13 @@ import FormBlockHeading from "../components/Headings/FormBlockHeading";
 import DropDown from "../components/FormInputs/DropDown";
 import TextareaLabel from "../components/FormInputs/TextareaLabel";
 import { useRouter } from "next/navigation";
-import { accountTypeOptions, facilityTypeOptions } from "../../../data";
+import { accountTypeOptions, facilityTypeOptions, GPOOptions, yesNoOptions } from "../../../data";
 import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
 import ScrollToTop from "../components/ScrollToTop";
 import SaveAndContinueBtns from "../components/Buttons/SaveAndContinueBtns";
 import FormProgressBar from "../components/FormProgressBar";
 import { ToastContainer, toast } from 'react-toastify';
+import { united_states } from "../../../data";
 
 export default function Home() {
 
@@ -34,7 +35,8 @@ export default function Home() {
         city: '',
         state: '',
         zipCode: '',
-        alternativeSchedule: ''
+        alternativeSchedule: '',
+        isRequiringDEA: ''
     }
 
     const [facilityInformation, setFacilityInformation] = useState(originalFacilityInfoState);
@@ -208,6 +210,9 @@ export default function Home() {
                                 <DropDown
                                     labelText="State"
                                     nameAndId="state"
+                                    initialValue="Choose a state..."
+                                    isRequired={true}
+                                    optionArr={united_states}
                                     userChoice={facilityInformation.state}
                                     handleStateChange={handleFacilityInfoChange}
                                 />
@@ -254,10 +259,12 @@ export default function Home() {
                         {/* GOP and IDN Group */}
                         <div className="flex w-full mt-5">
                             <div className="w-full mr-5">
-                                <InputLabelEl
+                                <DropDown
                                     labelText="Primary GPO Name"
                                     nameAndId="primaryGPOName"
-                                    userText={facilityInformation.primaryGPOName}
+                                    initialValue="Choose an option..."
+                                    optionArr={GPOOptions}
+                                    userChoice={facilityInformation.primaryGPOName}
                                     handleStateChange={handleFacilityInfoChange}
                                 />
                             </div>
@@ -270,6 +277,17 @@ export default function Home() {
                                 />
                             </div>
                         </div>
+                    </div>
+                    {/* Opt into Controlled Substances */}
+                    <div className="mt-7">
+
+                        <RadioInputSection
+                            radioOptions={yesNoOptions}
+                            category={facilityInformation.isRequiringDEA}
+                            setCategories={handleFacilityInfoChange}
+                            labelText="Will you be ordering controlled substances? If yes, you will need to provide a DEA license."
+                        />
+
                     </div>
                 </div>
                 {/* Save and Continue Btn section */}

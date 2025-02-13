@@ -15,6 +15,10 @@ export const clinicalDifferenceRadioOptions = [
     { id: 'one-facility', name: 'facilityAmount', value: 'one-facility', label: 'I am signing this statement of clinical difference on behalf of one facility, listed below.' },
     { id: 'multiple-facility', name: 'facilityAmount', value: 'multiple-facility', label: 'I am signing this statement of clinical difference on behalf of multiple facilities, please reference attached list for facilities this statement of clinical differences covers. (List of facilities must be attached.)' }
 ]
+export const yesNoOptions = [
+    { id: 'Yes', name: 'isRequiringDEA', value: 'Yes', label: 'Yes' },
+    { id: 'No', name: 'isRequiringDEA', value: 'No', label: 'No' }
+]
 
 export const paymentOptions = [
     { id: 'check', name: 'paymentMethod', value: 'check', label: 'Check - Mail to: PO Box: Dept CH 18048, Palatine, IL 60055-8048' },
@@ -29,4 +33,24 @@ export const contactTypeOptions = [
     { id: 'web-shop-access', name: 'web-shop-access', value: 'web-shop-access', label: 'Web Shop Access' },
     { id: 'ap-contact', name: 'ap-contact', value: 'ap-contact', label: 'A/P Contact' },
     { id: 'order-confirmation-emails', name: 'order-confirmation-emails', value: 'order-confirmation-emails', label: 'Order Confirmation Emails' },
+];
+
+
+export const united_states = [
+    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
+    "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
+    "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
+    "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+    "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
+    "New Hampshire", "New Jersey", "New Mexico", "New York",
+    "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+    "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+    "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+    "West Virginia", "Wisconsin", "Wyoming"
+];
+
+export const GPOOptions = [
+    "HPG", "Premier", "Advantus", "EyePro", "Cardinal Acuity",
+    "The Resource Group", "Intalere", "KP-T3", "MNS", "NY-Pres",
+    "PDM", "Sutter", "TJUH", "UMMS", "UPMC", "VHPC"
 ];

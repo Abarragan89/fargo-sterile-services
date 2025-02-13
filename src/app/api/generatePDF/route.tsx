@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { pdf } from '@react-pdf/renderer';
 import FinalCompletePDF from '@/app/components/pdfTemplates/FinalCompletePDF'
+import PaymentContactPDF from '@/app/components/pdfTemplates/PaymentContactPDF'
 import { PDFDocument, rgb } from 'pdf-lib';
 import fs from 'fs/promises';
 import path from 'path';
@@ -11,13 +12,16 @@ export async function POST(request: NextRequest) {
     try {
         const { clientInfo } = await request.json();
         // Generate the first PDF from your React component
-        const pdfBlob = await pdf(<FinalCompletePDF data={clientInfo} />).toBlob();
+        const NASUFblob = await pdf(<FinalCompletePDF data={clientInfo} />).toBlob();
+        const paymentContactsBlog = await pdf(<PaymentContactPDF data={clientInfo} />).toBlob();
 
         // Convert Blob to ArrayBuffer
-        const arrayBuffer = await pdfBlob.arrayBuffer();
+        const NASUFarrayBuffer = await NASUFblob.arrayBuffer();
+        const paymentContactsArrayBuffer = await paymentContactsBlog.arrayBuffer();
 
         // Load the first PDF into pdf-lib
-        const firstPdf = await PDFDocument.load(arrayBuffer);
+        const NASUFpdf = await PDFDocument.load(NASUFarrayBuffer);
+        const paymentContactPdf = await PDFDocument.load(paymentContactsArrayBuffer);
 
         // Read the second PDF from file
         const clinicalDifferencePDF = path.join(process.cwd(), 'public', 'pdfs/statementOfClinicalDifference.pdf');
@@ -90,7 +94,7 @@ export async function POST(request: NextRequest) {
         await secondPdf.save();
 
         //  Merge the two pdfs
-        const mergedPDFBase64 = await mergePDFs(firstPdf, secondPdf)
+        const mergedPDFBase64 = await mergePDFs(NASUFpdf, paymentContactPdf, secondPdf)
 
         const pdfFile = {
             name: 'GeneratedPDF.pdf',  // File name

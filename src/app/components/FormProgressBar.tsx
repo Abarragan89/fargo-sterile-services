@@ -15,7 +15,7 @@ export default function FormProgressBar({ progress, position }: { progress: numb
     function renderLabels(index: number, label: { text: string, href: string }) {
         if (index < position) {
             return (
-                <Link href={label.href} key={index} className='mx-3'>
+                <Link href={label.href} key={index} className='mx-4'>
                     <span className="text-[var(--off-black)] hover:text-[var(--company-red)]">
                         {label.text}
                     </span>
@@ -23,14 +23,14 @@ export default function FormProgressBar({ progress, position }: { progress: numb
             );
         }
         return (
-            <p key={index} className="text-gray-400 mx-3">
+            <p key={index} className="text-gray-400 mx-4">
                 {label.text}
             </p>
         );
     }
 
     return (
-        <div className='mt-10 max-w-[900px] min-w-[600px] mx-5'>
+        <div className='mt-10 max-w-[900px] min-w-[400px] mx-5'>
             <div className="flex justify-between items-end w-[100%] mx-auto text-[.8rem] text-center leading-none mb-1 opacity-85">
                 {labels.map((label, index) => renderLabels(index, label))}
             </div>

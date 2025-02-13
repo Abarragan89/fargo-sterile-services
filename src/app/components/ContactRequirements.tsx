@@ -62,6 +62,11 @@ export default function ContactRequirements(
             setAllRequirementsMet(true)
             setIsAllContactsProvided(true)
         }
+
+        // Just check if contacts have been provided have been met
+        if (areRequirementsMet) {
+            setIsAllContactsProvided(true)
+        }
     }
 
     // useEffect to check for requirements
