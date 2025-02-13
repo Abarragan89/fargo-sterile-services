@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
         img-src 'self' blob: data:;
         worker-src 'self' blob:;
         font-src 'self';
-        frame-src 'self' blob:;
+        frame-src 'self' 'https://fargo-sterile-services.vercel.app/' blob:;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
