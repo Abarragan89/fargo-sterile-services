@@ -12,11 +12,11 @@ export function middleware(request: NextRequest) {
         img-src 'self' blob: data:;
         worker-src 'self' blob:;
         font-src 'self';
-        frame-src 'self' 'https://fargo-sterile-services.vercel.app/' blob:;
+        frame-src 'self' blob:;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
-        frame-ancestors 'none';
+        frame-ancestors 'https://fargo-sterile-services.vercel.app/';
         upgrade-insecure-requests;
     `;
     }
