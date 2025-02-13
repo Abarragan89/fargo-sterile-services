@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         // Loop through the clientInfo
         for (const item in clientInfo) {
             if (documentFields.includes(item)) {
-                if (clientInfo[item].data) {
+                if (clientInfo[item]?.data) {
                     const itemIndex = documentFields.indexOf(item)
                     upLoadedDocuments[itemIndex] = await PDFDocument.load(clientInfo[item].data)
                 }
