@@ -156,7 +156,7 @@ export default function Page() {
                 case 'letterHead':
                     setLetterHead(null)
                     break;
-                case 'taxExceptionDocs':
+                case 'taxExceptionDocuments':
                     setTaxExceptionDocs(null)
                     break;
                 case 'otherDocument':
