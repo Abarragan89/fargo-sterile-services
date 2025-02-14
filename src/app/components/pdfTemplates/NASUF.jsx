@@ -14,7 +14,7 @@ import { formatDate } from '../../../../utils/formatDate';
 
 Font.register({
     family: 'cursiveFont',
-    src: path.resolve('public', 'fonts', 'cursiveFont.ttf'), 
+    src: path.resolve('public', 'fonts', 'cursiveFont.ttf'),
 });
 
 
@@ -82,17 +82,12 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     signatureSection: {
-        marginTop: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        marginTop: 5,
         flexWrap: 'wrap',
-        border: '1px solid gray',
+        borderTop: '1px solid gray',
+        paddingTop: 5,
         paddingHorizontal: 5,
-        paddingVertical: 10
-    },
-    signatureLine: {
-        width: '40%',
-        borderBottom: '1 solid black',
+        width: '100%'
     },
     smallText: {
         fontSize: 10,
@@ -130,7 +125,7 @@ const NASUFpdf
                                     stroke='black'
                                 />
                             </Svg>
-                            {data?.accountType === 'new-account' && <Text style={styles.XMark}>X</Text>}
+                            {data?.facilityInformation?.accountType === 'new-account' && <Text style={styles.XMark}>X</Text>}
                             <Text style={{ marginLeft: 3 }}>New Account</Text>
                         </View>
                         <View style={styles.checkBoxLabel}>
@@ -145,7 +140,7 @@ const NASUFpdf
                                     stroke='black'
                                 />
                             </Svg>
-                            {data?.accountType === 'update' && <Text style={styles.XMark}>X</Text>}
+                            {data?.facilityInformation?.accountType === 'update' && <Text style={styles.XMark}>X</Text>}
                             <Text style={{ marginLeft: 3 }}>Update</Text>
                         </View>
                         <Text style={styles.text}>Fagron Account Number: <Text style={styles.clientInfo}>{data?.facilityInformation?.accountNumber || ''}</Text></Text>
@@ -240,9 +235,14 @@ const NASUFpdf
                     </View>
 
                     <View style={styles.signatureSection}>
-                        <Text>Agreed to by: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.fullName || ''}</Text></Text>
-                        <Text>Job Title: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.jobTitle || ''}</Text></Text>
-                        <Text>Date: <Text style={styles.clientInfo}>{formatDate(data?.termsAndConditionsInformation?.date) || ''}</Text></Text>
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
+                            <Text>Agreed to by: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.fullName || ''}</Text></Text>
+                            <Text>Job Title: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.jobTitle || ''}</Text></Text>
+                        </View>
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 5}}>
+                            <Text>Signature: <Text style={[styles.clientInfo, {fontFamily: 'cursiveFont', fontSize: 16}]}>{data?.termsAndConditionsInformation?.fullName || ''}</Text></Text>
+                            <Text>Date: <Text style={styles.clientInfo}>{formatDate(data?.termsAndConditionsInformation?.date) || ''}</Text></Text>
+                        </View>
                     </View>
                 </Page>
             </Document>

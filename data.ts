@@ -4,10 +4,10 @@ export const accountTypeOptions = [
 ];
 
 export const facilityTypeOptions = [
-    { id: 'clinic-physician-office', name: 'facilityType', value: 'clinic-physician-office', label: 'Clinic/Physician Office' },
-    { id: 'dialysis-clinic', name: 'facilityType', value: 'dialysis-clinic', label: 'Dialysis Clinic' },
-    { id: 'hospital', name: 'facilityType', value: 'hospital', label: 'Hospital' },
-    { id: 'surgery-center', name: 'facilityType', value: 'surgery-center', label: 'Surgery Center' },
+    { id: 'clinic-physician-office', name: 'facilityType', value: 'Clinic/Physician Office', label: 'Clinic/Physician Office' },
+    { id: 'dialysis-clinic', name: 'facilityType', value: 'Dialysis Clinic', label: 'Dialysis Clinic' },
+    { id: 'hospital', name: 'facilityType', value: 'Hospital', label: 'Hospital' },
+    { id: 'surgery-center', name: 'facilityType', value: 'Surgery Center', label: 'Surgery Center' },
     { id: 'EMS', name: 'facilityType', value: 'EMS', label: 'EMS' },
 ]
 

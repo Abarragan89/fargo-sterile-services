@@ -70,7 +70,7 @@ export default function Page() {
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        
+
         if (!file) {
             throw new Error("Please add a file");
         }
@@ -230,8 +230,13 @@ export default function Page() {
             <FormBlockHeading headingText="Documents" />
             <form onSubmit={handleFormSubmit}>
                 <section className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
-                    <p className='text-center text-[.95rem]'> <span className='font-bold mr-1'>Acceptable File Types:</span>.jpeg .jpg or .png. </p>
-                    <p className='text-center text-[.9rem]'>(If you need to convert a <span className='underline'>pdf</span> to an <span className='underline'>image</span> , click <a href='https://www.freeconvert.com/pdf-to-jpg' target='_blank' rel='noopener noreferrer' className='underline text-blue-700'>here</a>.)</p>
+                    <p className='text-center text-[.95rem]'>
+                        <span className='font-bold mr-1'>Acceptable Files:</span>
+                        <span className="bg-gray-200 px-2 py-[2px] rounded-md mx-1">.jpeg</span>
+                        <span className="bg-gray-200 px-2 py-[2px] rounded-md mx-1">.jpg</span>
+                        <span className="bg-gray-200 px-2 py-[2px] rounded-md mx-1">.png</span>
+                        <span className="bg-gray-200 px-2 py-[2px] rounded-md mx-1">.pdf</span>
+                    </p>
                     {fileUploadFields?.map((fileOption, index) => (
                         <div key={index} className='mx-3 my-5 p-5 border border-gray-300 rounded-[3px] relative'>
 
