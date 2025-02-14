@@ -23,6 +23,7 @@ export default function ReviewPage() {
     // pdfOne will be in base64
     const [pdfOne, setPdfOne] = useState<string | null>(null)
     const [completePDFToSend, setCompletePDFToSend] = useState()
+    const [PDFBlob, setPDFBlob] = useState<Blob>()
 
     // Get the data from IndexedDB
     useEffect(() => {
@@ -43,21 +44,23 @@ export default function ReviewPage() {
 
     async function sendMail(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setIsLoading(true)
+        setIsLoading(true);
         try {
-            if (clientInfo)
-                await axios.post('/api/sendEmail', {
-                    clientInfo
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-            router.push('/thankyou')
+            const formData = new FormData();
+            formData.append('file', PDFBlob as Blob, 'GeneratedPDF.pdf'); // Attach the Blob
+            formData.append('clientInfo', JSON.stringify(clientInfo)); // Attach clientInfo as a string
+    
+            await axios.post('/api/sendEmail', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+    
+            router.push('/thankyou');
         } catch (error) {
-            console.log('errror ', error)
+            console.error('Error sending email:', error);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     }
 
@@ -68,7 +71,7 @@ export default function ReviewPage() {
     
             // Convert Blob to Object URL
             const pdfUrl = URL.createObjectURL(response.data);
-    
+            setPDFBlob(response.data)
             // Set the iframe source
             setPdfOne(pdfUrl);
         } catch (error) {

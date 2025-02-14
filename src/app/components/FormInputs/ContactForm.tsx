@@ -69,7 +69,7 @@ export default function ContactForm({ updateStateHandler }: Props) {
                 </div>
                 <div>
                     <InputLabelEl
-                        labelText='Phone'
+                        labelText='Direct Phone'
                         inputType="tel"
                         nameAndId='phone'
                         handleStateChange={handleContactChange}

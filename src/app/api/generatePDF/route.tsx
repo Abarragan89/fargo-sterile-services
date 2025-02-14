@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { pdf } from '@react-pdf/renderer';
-import FinalCompletePDF from '@/app/components/pdfTemplates/FinalCompletePDF'
+import NASUF from '@/app/components/pdfTemplates/NASUF'
 import PaymentContactPDF from '@/app/components/pdfTemplates/PaymentContactPDF'
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument, rgb, PDFTextField } from 'pdf-lib';
 import fs from 'fs/promises';
 import path from 'path';
 import mergePDFs from '../../../../utils/mergePdfs';
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     try {
         const { clientInfo } = await request.json();
         // Generate the first PDF from your React component
-        const NASUFblob = await pdf(<FinalCompletePDF data={clientInfo} />).toBlob();
+        const NASUFblob = await pdf(<NASUF data={clientInfo} />).toBlob();
         const paymentContactsBlob = await pdf(<PaymentContactPDF data={clientInfo} />).toBlob();
 
         // Convert Blob to ArrayBuffer for Generated PDFs
@@ -95,6 +95,18 @@ export async function POST(request: NextRequest) {
             // Remove the radio button group field entirely
             form.removeField(radioGroup);
         }
+        // Set all text fields to READ ONLY
+        const fields = form.getFields();
+        fields.forEach(field => {
+            const fieldName = field.getName();
+            if (field instanceof PDFTextField) {
+                try {
+                    field.enableReadOnly(); // Set empty value to avoid errors
+                } catch (error) {
+                    console.error(`Error removing field ${fieldName}:`, error);
+                }
+            }
+        });
 
         //  2. Mark the X
         lastPage.drawText('X', {

@@ -15,6 +15,7 @@ import { convertImageToPdf, readFileAsBase64 } from '../../../utils/convertImage
 
 export default function Page() {
 
+
     const router = useRouter();
     const [stateLicense, setStateLicense] = useState<PDFFile | null>(null);
     const [deaLicense, setDeaLicense] = useState<PDFFile | null>(null);
@@ -23,9 +24,23 @@ export default function Page() {
     const [otherDocument, setOtherDocument] = useState<PDFFile | null>(null);
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [isUpLoading, setIsUploading] = useState<boolean>(false)
-    const notify = () => toast("Data Saved!");
+    const [needsDEA, setNeedsDEA] = useState<boolean>(false)
 
 
+    // Initial state for the Forms, Need to conditionally render false
+    const possibleImageFilesInitialState = [
+        { label: 'State License', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
+        { label: 'DEA License', state: deaLicense, isRequired: false, dbFieldName: 'deaLicense' },
+        { label: 'Letter Head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
+        { label: 'Tax Excemption Documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocuments' },
+        { label: 'Other Document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
+    ];
+
+    const [fileUploadFields, setFileUploadFields] = useState(possibleImageFilesInitialState)
+
+    const notify = (message: string) => toast(message);
+
+    // Initial fetch to data store
     useEffect(() => {
         const fetchData = async () => {
             const savedData = await getFormData(); // Fetch saved data from IndexedDB or any source
@@ -36,12 +51,26 @@ export default function Page() {
                 setTaxExceptionDocs(savedData?.taxExceptionDocs || '')
                 setOtherDocument(savedData?.otherDocument || '')
             }
+            // require DEA license if checked controlled substance
+            if (savedData?.facilityInformation?.isRequiringDEA === 'Yes') setNeedsDEA(true)
         };
         fetchData();
     }, [])
 
+    // use effect to updated the nested state variables. need this because neset state variables wont be tracked.
+    useEffect(() => {
+        setFileUploadFields([
+            { label: 'State License', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
+            { label: 'DEA License', state: deaLicense, isRequired: needsDEA, dbFieldName: 'deaLicense' },
+            { label: 'Letter Head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
+            { label: 'Tax Excemption Documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocuments' },
+            { label: 'Other Document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
+        ]);
+    }, [stateLicense, deaLicense, letterHead, taxExceptionDocs, otherDocument, needsDEA]);
+
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
+        
         if (!file) {
             throw new Error("Please add a file");
         }
@@ -56,7 +85,7 @@ export default function Page() {
             if (fileType.startsWith("image/")) {
                 const options = {
                     maxSizeMB: 0.5,
-                    maxWidthOrHeight: 400,
+                    maxWidthOrHeight: 450,
                     useWebWorker: true,
                 };
 
@@ -100,6 +129,14 @@ export default function Page() {
 
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        if (!stateLicense) {
+            notify('Missing State License')
+            return;
+        }
+        if (!deaLicense && needsDEA) {
+            notify('Missing DEA License')
+            return;
+        }
         try {
             setIsSaving(true)
             await saveFormData({
@@ -127,21 +164,13 @@ export default function Page() {
                 taxExceptionDocs,
                 otherDocument
             })
-            notify();
+            notify('Data Saved!');
         } catch (error) {
             console.log('error saving data', error)
         } finally {
             setIsSaving(false)
         }
     }
-
-    const possibleImageFiles = [
-        { label: 'State License', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
-        { label: 'DEA License', state: deaLicense, isRequired: true, dbFieldName: 'deaLicense' },
-        { label: 'Letter Head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
-        { label: 'Tax Excemption Documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocuments' },
-        { label: 'Other Document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
-    ];
 
     async function deleteFileHandler(fieldName: string) {
         try {
@@ -203,7 +232,7 @@ export default function Page() {
                 <section className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
                     <p className='text-center text-[.95rem]'> <span className='font-bold mr-1'>Acceptable File Types:</span>.jpeg .jpg or .png. </p>
                     <p className='text-center text-[.9rem]'>(If you need to convert a <span className='underline'>pdf</span> to an <span className='underline'>image</span> , click <a href='https://www.freeconvert.com/pdf-to-jpg' target='_blank' rel='noopener noreferrer' className='underline text-blue-700'>here</a>.)</p>
-                    {possibleImageFiles.map((fileOption, index) => (
+                    {fileUploadFields?.map((fileOption, index) => (
                         <div key={index} className='mx-3 my-5 p-5 border border-gray-300 rounded-[3px] relative'>
 
                             <p className='font-bold'>{fileOption.label}: {fileOption.isRequired && <span className='text-[.95rem] text-[var(--company-red)]'>(required)</span>}</p>
@@ -237,6 +266,7 @@ export default function Page() {
                                         accept=".jpeg,.png,.jpg, .pdf"
                                         className="mt-5"
                                         hidden
+                                        name={fileOption.dbFieldName}
                                         onChange={(e) => handleFileChange(e)}
                                     />
                                 </label>

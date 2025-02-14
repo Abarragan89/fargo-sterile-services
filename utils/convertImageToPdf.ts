@@ -25,7 +25,6 @@ export const readFileAsBase64 = async (file: File): Promise<string> => {
 export const convertImageToPdf = async (imageFile: File): Promise<string> => {
     const reader = new FileReader();
 
-    console.log('image type ', imageFile.type)
     return new Promise((resolve, reject) => {
         reader.onload = async () => {
             try {

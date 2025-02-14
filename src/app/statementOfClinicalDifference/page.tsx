@@ -83,7 +83,7 @@ export default function Page() {
                 pauseOnHover
                 theme="dark"
             />
-            <FormProgressBar progress={59} position={5} />
+            <FormProgressBar progress={59} position={4} />
 
             <div className='max-w-[700px] w-[93%] mx-auto'>
                 {/* Complete PDF */}
