@@ -7,6 +7,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import mergePDFs from '../../../../utils/mergePdfs';
 import fontkit from '@pdf-lib/fontkit'
+import { formatDate } from '../../../../utils/formatDate';
 
 export async function POST(request: NextRequest) {
     try {
@@ -80,7 +81,7 @@ export async function POST(request: NextRequest) {
             size: 14,
             color: rgb(0, 0, 0),
         });
-        lastPage.drawText(clientInfo.clinicalDifference.signatureDate, {
+        lastPage.drawText(formatDate(clientInfo.clinicalDifference.signatureDate), {
             x: 355,
             y: 335,
             size: 14,

@@ -13,6 +13,7 @@ import SaveAndContinueBtns from "../components/Buttons/SaveAndContinueBtns";
 import FormProgressBar from "../components/FormProgressBar";
 import { ToastContainer, toast } from 'react-toastify';
 import { united_states } from "../../../data";
+import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
 
 export default function Home() {
 
@@ -53,6 +54,12 @@ export default function Home() {
 
 
     function handleFacilityInfoChange(inputName: string, inputValue: string | undefined) {
+        // only accept digits for phoneNumbers
+        if (inputName === 'phoneNumber' && inputValue) {
+            if (inputValue.length >= 15) return
+            setFacilityInformation(prev => ({ ...prev, [inputName]: formatPhoneNumber(inputValue) }))
+            return
+        }
         setFacilityInformation(prev => ({ ...prev, [inputName]: inputValue }))
     }
 
@@ -136,7 +143,7 @@ export default function Home() {
                     <div className="flex-2 mx-2">
                         <InputLabelEl
                             labelText="Phone Number"
-                            placeholderText="(555)-555-5555"
+                            placeholderText="(555)555-5555"
                             inputType="tel"
                             nameAndId='phoneNumber'
                             userText={facilityInformation.phoneNumber}

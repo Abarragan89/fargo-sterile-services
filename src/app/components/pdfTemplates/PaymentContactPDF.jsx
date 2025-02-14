@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         fontSize: 12,
         fontFamily: 'Helvetica',
+        width: 612,
+        height: 792
     },
     companyLogo: {
         width: 120,
@@ -69,7 +71,7 @@ const contactTypes = [
 const PaymentContactPDF = ({ data }) => {
     return (
         <Document>
-            <Page size="A4" style={styles.page}>
+            <Page style={styles.page}>
                 <Image style={styles.companyLogo}
                     src="https://unfinished-pages.s3.us-east-2.amazonaws.com/companyLogo.png"
                 />
@@ -100,10 +102,10 @@ const PaymentContactPDF = ({ data }) => {
                 {data.contactInfo.map((contact, index) => (
                     <View key={index} style={{ borderTop: '1px solid gray', padding: '10 0', marginBottom: 5 }}>
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ marginBottom: 10 }}>Name: <Text style={styles.clientInfo}>{contact.name || ''}</Text></Text>
-                            <Text style={{ marginBottom: 10 }}>Phone: <Text style={styles.clientInfo}>{contact.phone || 'N/A'}</Text></Text>
+                            <Text style={{ marginBottom: 5 }}>Name: <Text style={styles.clientInfo}>{contact.name || ''}</Text></Text>
+                            <Text style={{ marginBottom: 5 }}>Phone: <Text style={styles.clientInfo}>{contact.phone || 'N/A'}</Text></Text>
                         </View>
-                        <Text style={{ marginBottom: 15 }}>Email: <Text style={styles.clientInfo}>{contact.email || ''}</Text></Text>
+                        <Text style={{ marginBottom: 10 }}>Email: <Text style={styles.clientInfo}>{contact.email || ''}</Text></Text>
 
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             {contactTypes.map((contactType, subIndex) => (

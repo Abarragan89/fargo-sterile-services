@@ -7,7 +7,15 @@ import {
     Image,
     Rect,
     Svg,
+    Font
 } from '@react-pdf/renderer';
+import path from 'path';
+import { formatDate } from '../../../../utils/formatDate';
+
+Font.register({
+    family: 'cursiveFont',
+    src: path.resolve('public', 'fonts', 'cursiveFont.ttf'), 
+});
 
 
 // Define styles
@@ -17,6 +25,8 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         fontSize: 12,
         fontFamily: 'Helvetica',
+        width: 612,
+        height: 792
     },
     companyLogo: {
         width: 120,
@@ -103,7 +113,7 @@ const NASUFpdf
     = ({ data }) => {
         return (
             <Document>
-                <Page size="A4" style={styles.page}>
+                <Page style={styles.page}>
                     <Image style={styles.companyLogo}
                         src="https://unfinished-pages.s3.us-east-2.amazonaws.com/companyLogo.png"
                     />
@@ -232,7 +242,7 @@ const NASUFpdf
                     <View style={styles.signatureSection}>
                         <Text>Agreed to by: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.fullName || ''}</Text></Text>
                         <Text>Job Title: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.jobTitle || ''}</Text></Text>
-                        <Text>Date: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.date || ''}</Text></Text>
+                        <Text>Date: <Text style={styles.clientInfo}>{formatDate(data?.termsAndConditionsInformation?.date) || ''}</Text></Text>
                     </View>
                 </Page>
             </Document>
