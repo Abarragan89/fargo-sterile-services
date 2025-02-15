@@ -100,7 +100,7 @@ const PaymentContactPDF = ({ data }) => {
                 <Text style={[styles.heading, styles.marginY]}>Contact Information</Text>
 
                 {data.contactInfo.map((contact, index) => (
-                    <View key={index} style={{ borderTop: '1px solid gray', padding: '10 0', marginBottom: 5 }}>
+                    <View key={index} style={{ borderTop: '1px solid gray', padding: '7 0', marginBottom: 5 }}>
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={{ marginBottom: 5 }}>Name: <Text style={styles.clientInfo}>{contact.name || ''}</Text></Text>
                             <Text style={{ marginBottom: 5 }}>Phone: <Text style={styles.clientInfo}>{contact.phone || 'N/A'}</Text></Text>

@@ -14,16 +14,14 @@ import NineDotsLoader from "../components/LoaderSpinners/NineDotsLoader";
 export default function ReviewPage() {
 
     const selectionArr = [{ id: 'confirmCompletePDF', label: 'By clicking here, you affirm that the information provided above is accurate.' }]
-
     const router = useRouter();
-
     const [clientInfo, setClientInfo] = useState();
     const [chosenSelectionArr, setChosenSelectionArr] = useState<SelectItem[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
     // pdfOne will be in base64
     const [pdfOne, setPdfOne] = useState<string | null>(null)
-    const [completePDFToSend, setCompletePDFToSend] = useState()
     const [PDFBlob, setPDFBlob] = useState<Blob>()
+    const [salesPersonId, setSalesPersonId] = useState('')
 
     // Get the data from IndexedDB
     useEffect(() => {
@@ -31,6 +29,7 @@ export default function ReviewPage() {
             const allClientInfo = await getFormData(); // Fetch saved data from IndexedDB or any source
             if (allClientInfo) {
                 setClientInfo(allClientInfo);
+                setSalesPersonId(allClientInfo.salesPersonId)
             }
         };
         fetchData();
@@ -48,8 +47,8 @@ export default function ReviewPage() {
         try {
             const formData = new FormData();
             formData.append('file', PDFBlob as Blob, 'GeneratedPDF.pdf'); // Attach the Blob
-            formData.append('clientInfo', JSON.stringify(clientInfo)); // Attach clientInfo as a string
-    
+            formData.append('salesPersonId', salesPersonId); // Attach clientInfo as a string
+        
             await axios.post('/api/sendEmail', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',

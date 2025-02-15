@@ -1,4 +1,4 @@
-import { SelectItem } from "../../types/formInputs";
+import { SelectItem } from "./formInputs";
 export interface Contact {
     id: string;
     name: string;

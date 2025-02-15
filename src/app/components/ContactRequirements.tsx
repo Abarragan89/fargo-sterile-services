@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Contact } from "@/types/Contact"
+import { Contact } from "../../../types/Contact"
 
 export default function ContactRequirements(
     {

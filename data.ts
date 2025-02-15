@@ -54,3 +54,15 @@ export const GPOOptions = [
     "The Resource Group", "Intalere", "KP-T3", "MNS", "NY-Pres",
     "PDM", "Sutter", "TJUH", "UMMS", "UPMC", "VHPC"
 ];
+
+
+export const salesPersonDirectory = {
+    '12930': {
+        name: 'Anthony Barragan',
+        email: 'anthony.bar.89@gmail.com'
+    },
+    '1293230': {
+        name: 'Mr. Barragan',
+        email: 'a.barragan@villagecharteracademy.com'
+    }
+}

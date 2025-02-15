@@ -1,6 +1,6 @@
 import InputLabelEl from "./InputLabelEl"
 import { useState } from "react"
-import { Contact } from "@/types/Contact"
+import { Contact } from "../../../../types/Contact"
 import SubmitButton from "../Buttons/SubmitButton"
 import SelectAreaEl from "./SelectAreaEl"
 import { SelectItem } from "../../../../types/formInputs"

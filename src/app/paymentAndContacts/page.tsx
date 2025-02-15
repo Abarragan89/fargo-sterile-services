@@ -11,7 +11,7 @@ import RadioInputSection from '../components/FormInputs/RadioInputSection';
 import { paymentOptions } from '../../../data';
 import { getFormData } from '../../../utils/indexedDBActions';
 import ContactForm from '../components/FormInputs/ContactForm';
-import { Contact } from '@/types/Contact';
+import { Contact } from '../../../types/Contact';
 import { SelectItem } from '../../../types/formInputs';
 import ContactView from '../components/ContactView';
 import ContactRequirements from '../components/ContactRequirements';

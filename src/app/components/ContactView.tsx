@@ -1,4 +1,4 @@
-import { Contact } from "@/types/Contact"
+import { Contact } from "../../../types/Contact"
 import SubmitButton from "./Buttons/SubmitButton"
 
 interface Props {
@@ -14,14 +14,14 @@ export default function ContactView({ contact, deleteHandler }: Props) {
                 <div className="py-1 px-2 bg-[var(--off-white)] w-full">
                     <div className="flex flex-wrap justify-between">
                         <p>{contact.name}</p>
-                        <p 
-                        className="text-[.9rem] text-[var(--company-red)] underline hover:cursor-pointer"
-                        onClick={() => deleteHandler(contact)}
+                        <p
+                            className="text-[.9rem] text-[var(--company-red)] underline hover:cursor-pointer"
+                            onClick={() => deleteHandler(contact)}
                         >Delete</p>
                     </div>
                     {/* <div className="flex flex-wrap justify-between"> */}
-                        <p className="text-[.875rem] text-gray-500">{contact.email}</p>
-                        {contact?.phone ? <p className="text-[.85rem] text-gray-500">{contact.phone}</p> : <p className="text-[.85rem] text-gray-500 italic">(No Phone)</p>}
+                    <p className="text-[.875rem] text-gray-500">{contact.email}</p>
+                    {contact?.phone ? <p className="text-[.85rem] text-gray-500">{contact.phone}</p> : <p className="text-[.85rem] text-gray-500 italic">(No Phone)</p>}
                     {/* </div> */}
                 </div>
             </div>
