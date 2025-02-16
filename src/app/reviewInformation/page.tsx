@@ -122,10 +122,14 @@ export default function ReviewPage() {
             {errorMessage &&
                 <div className="flex flex-col items-center">
                     <p className="font-bold text-[var(--company-red)]">Error Making Final Documents:</p>
-                    {errorMessage?.code === '413' &&
-                        <p className="text-center mx-10 italic mt-3">Some uploaded documents are too large. Update your files in Document Uploads.</p>
+                    {errorMessage?.code === '413' ?
+                        <>
+                            <p className="text-center mx-10 italic mt-3">Your combined uploaded documents are too large. Update your files in</p>
+                            <p className="text-center mx-10 italic mt-3 font-bold italic">&apos;Document Uploads&apos;.</p>
+                        </>
+                        :
+                        <p className="text-center mx-10 italic mt-3">{errorMessage?.message}</p>
                     }
-                    <p className="text-center mx-10 italic mt-3">{errorMessage?.message}</p>
                 </div>
             }
 
