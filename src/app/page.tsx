@@ -7,7 +7,6 @@ import { saveFormData } from "../../utils/indexedDBActions";
 export default function Home() {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
-  console.log(id)
 
   useEffect(() => {
     async function saveSalesPersonId() {

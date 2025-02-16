@@ -124,9 +124,10 @@ export default function ReviewPage() {
                     <p className="font-bold text-[var(--company-red)]">Error Making Final Documents:</p>
                     {errorMessage?.code === '413' ?
                         <>
-                            <p className="text-center mx-10 italic mt-3">Your combined uploaded documents are too large. Update your files in</p>
-                            <p className="text-center mx-10 italic mt-3 font-bold italic">&apos;Document Uploads&apos;.</p>
-                            <p className="text-center mx-10 italic mt-3">Only include necessary files and pages.</p>
+                            <p className="text-center mx-10 italic mt-3">Your combined uploaded documents are too large.</p>
+                            <p className="text-center mx-10 italic mt-1">Update your files in:</p>
+                            <p className="text-center mx-10 italic mt-2 font-bold italic">&apos;Document Uploads&apos;.</p>
+                            <p className="text-center mx-10 italic mt-2">Only include necessary files and pages.</p>
                         </>
                         :
                         <p className="text-center mx-10 italic mt-3">{errorMessage?.message}</p>

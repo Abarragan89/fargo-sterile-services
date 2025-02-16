@@ -9,14 +9,11 @@ export async function POST(req: NextRequest) {
         const form = await req.formData();
         const file = form.get('file') as Blob;
         const salesPersonId = form.get('salesPersonId') as keyof typeof salesPersonDirectory;
-        console.log('salesPersonid', salesPersonId)
 
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
-
         const { name, email  } = salesPersonDirectory[salesPersonId];
-        console.log('name', name, email);
 
         // Convert Blob to Buffer
         const arrayBuffer = await file.arrayBuffer();
