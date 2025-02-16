@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
             },
         });
     } catch (error) {
-        if (error instanceof Error && error.message.includes("Payload Too Large")) {
+        if (error instanceof Error && error.message.includes("Request Entity Too Large")) {
             return new NextResponse(JSON.stringify({ error: "Some uploaded documents are too large to render. Please update your Document Uploads." }), { status: 413 });
         }
         return new NextResponse(JSON.stringify({ error: (error as Error).message }), { status: 500 });

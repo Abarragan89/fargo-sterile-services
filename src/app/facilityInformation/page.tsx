@@ -111,6 +111,7 @@ export default function Home() {
                 theme="dark"
             />
             <FormProgressBar progress={5} position={1} />
+            
             <form onSubmit={(e) => handleFormSubmit(e)}>
                 {/* Account Type */}
                 <FormBlockHeading headingText="Account Information" />
