@@ -11,6 +11,11 @@ import { SelectItem } from "../../../types/formInputs";
 import FormProgressBar from "../components/FormProgressBar";
 import NineDotsLoader from "../components/LoaderSpinners/NineDotsLoader";
 
+interface RequestError {
+    code: string,
+    message: string
+}
+
 export default function ReviewPage() {
 
     const selectionArr = [{ id: 'confirmCompletePDF', label: 'By clicking here, you affirm that the information provided above is accurate.' }]
@@ -22,7 +27,7 @@ export default function ReviewPage() {
     const [pdfOne, setPdfOne] = useState<string | null>(null)
     const [PDFBlob, setPDFBlob] = useState<Blob>()
     const [salesPersonId, setSalesPersonId] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
+    const [errorMessage, setErrorMessage] = useState<RequestError>()
 
     // Get the data from IndexedDB
     useEffect(() => {
@@ -75,24 +80,24 @@ export default function ReviewPage() {
             // Set the iframe source
             setPdfOne(pdfUrl);
         } catch (error) {
-            let message = "An unknown error occurred";
-            // Need all this handling because response is coming back as a blob
+            let message = error;  // Keep the entire error object
+
             if (axios.isAxiosError(error)) {
                 if (error.response?.data instanceof Blob) {
                     try {
                         const errorText = await error.response?.data?.text();
                         const errorJson = JSON.parse(errorText);
-                        message = errorJson.error || "Failed to generate PDF";
+                        message = errorJson.error || error; // Keep error if parsing fails
                     } catch (parseError) {
-                        message = "Failed to parse error response";
+                        message = error; // Keep the original error if parsing fails
                     }
                 } else {
-                    message = error.response?.data?.error || "Failed to generate PDF";
+                    message = error.response?.data?.error || error; // Default to full error if no specific message
                 }
             } else if (error instanceof Error) {
-                message = error.message;
+                message = error; // Keep the entire Error object
             }
-            setErrorMessage(message);
+            setErrorMessage(message as RequestError);
         } finally {
             setIsLoading(false)
         }
@@ -117,7 +122,7 @@ export default function ReviewPage() {
             {errorMessage &&
                 <div className="flex flex-col items-center">
                     <p className="font-bold text-[var(--company-red)]">Error Making Final Documents:</p>
-                    {/* <p className="text-center mx-10 italic mt-3">{errorMessage}</p> */}
+                    <p className="text-center mx-10 italic mt-3">{errorMessage?.message}</p>
                 </div>
             }
 
