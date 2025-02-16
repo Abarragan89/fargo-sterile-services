@@ -80,7 +80,7 @@ export default function ReviewPage() {
             if (axios.isAxiosError(error)) {
                 if (error.response?.data instanceof Blob) {
                     try {
-                        const errorText = await error.response.data.text();
+                        const errorText = await error.response?.data?.text();
                         const errorJson = JSON.parse(errorText);
                         message = errorJson.error || "Failed to generate PDF";
                     } catch (parseError) {
@@ -97,6 +97,8 @@ export default function ReviewPage() {
             setIsLoading(false)
         }
     };
+
+    console.log('error message ', errorMessage)
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
@@ -115,7 +117,7 @@ export default function ReviewPage() {
             {errorMessage &&
                 <div className="flex flex-col items-center">
                     <p className="font-bold text-[var(--company-red)]">Error Making Final Documents:</p>
-                    <p className="text-center mx-10 italic mt-3">{errorMessage}</p>
+                    {/* <p className="text-center mx-10 italic mt-3">{errorMessage}</p> */}
                 </div>
             }
 
