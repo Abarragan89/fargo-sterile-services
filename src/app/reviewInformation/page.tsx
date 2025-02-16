@@ -103,8 +103,6 @@ export default function ReviewPage() {
         }
     };
 
-    console.log('error message ', errorMessage)
-
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
