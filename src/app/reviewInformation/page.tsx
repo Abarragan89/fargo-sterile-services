@@ -22,6 +22,7 @@ export default function ReviewPage() {
     const [pdfOne, setPdfOne] = useState<string | null>(null)
     const [PDFBlob, setPDFBlob] = useState<Blob>()
     const [salesPersonId, setSalesPersonId] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
 
     // Get the data from IndexedDB
     useEffect(() => {
@@ -48,13 +49,13 @@ export default function ReviewPage() {
             const formData = new FormData();
             formData.append('file', PDFBlob as Blob, 'GeneratedPDF.pdf'); // Attach the Blob
             formData.append('salesPersonId', salesPersonId); // Attach clientInfo as a string
-        
+
             await axios.post('/api/sendEmail', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-    
+
             router.push('/thankyou');
         } catch (error) {
             console.error('Error sending email:', error);
@@ -66,15 +67,34 @@ export default function ReviewPage() {
 
     const generatePdfForViewers = async () => {
         try {
+            setIsLoading(true)
             const response = await axios.post('/api/generatePDF', { clientInfo }, { responseType: 'blob' });
-    
             // Convert Blob to Object URL
             const pdfUrl = URL.createObjectURL(response.data);
             setPDFBlob(response.data)
             // Set the iframe source
             setPdfOne(pdfUrl);
         } catch (error) {
-            console.error("Error fetching PDF:", error);
+            let message = "An unknown error occurred";
+            // Need all this handling because response is coming back as a blob
+            if (axios.isAxiosError(error)) {
+                if (error.response?.data instanceof Blob) {
+                    try {
+                        const errorText = await error.response.data.text();
+                        const errorJson = JSON.parse(errorText);
+                        message = errorJson.error || "Failed to generate PDF";
+                    } catch (parseError) {
+                        message = "Failed to parse error response";
+                    }
+                } else {
+                    message = error.response?.data?.error || "Failed to generate PDF";
+                }
+            } else if (error instanceof Error) {
+                message = error.message;
+            }
+            setErrorMessage(message);
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -82,8 +102,25 @@ export default function ReviewPage() {
         <main className="h-[100vh] max-w-[900px] mx-auto">
             <ScrollToTop />
             <FormProgressBar progress={92} position={6} />
-            {/* Conditionally render when user pdfs are made */}
-            {pdfOne ?
+
+            {/* Show Loading screen first if necessary */}
+            {isLoading &&
+                <div className="flex flex-col mb-[175px] justify-center items-center">
+                    <p className="text-center mb-[20px]">Processing your information...</p>
+                    <NineDotsLoader />
+                </div>
+            }
+
+            {/* Show Error screen */}
+            {errorMessage &&
+                <div className="flex flex-col items-center">
+                    <p className="font-bold text-[var(--company-red)]">Error Making Final Documents:</p>
+                    <p className="text-center mx-10 italic mt-3">{errorMessage}</p>
+                </div>
+            }
+
+            {/* Show PDF if no errror and is done loading */}
+            {pdfOne &&
                 <>
                     <FormBlockHeading headingText="Review Information" />
                     <div className="w-full mx-auto pb-[100px]">
@@ -115,11 +152,6 @@ export default function ReviewPage() {
                         </form>
                     </div>
                 </>
-                :
-                <div className="flex flex-col mb-[175px] justify-center items-center">
-                    <p className="text-center mb-[20px]">Processing your information...</p>
-                    <NineDotsLoader />
-                </div>
             }
         </main>
     )

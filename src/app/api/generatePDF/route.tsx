@@ -43,17 +43,17 @@ export async function POST(request: NextRequest) {
         const clinicalDifferenceBuffer = await fs.readFile(clinicalDifferencePDF);
 
         // Load the second PDF into pdf-lib
-        const secondPdf = await PDFDocument.load(clinicalDifferenceBuffer);
+        const clinicalDifferencePdf = await PDFDocument.load(clinicalDifferenceBuffer);
 
         // Write signature on the alst page of Statement of clinical difference
-        const lastPageIndex = secondPdf.getPageCount() - 1;
-        const lastPage = secondPdf.getPage(lastPageIndex);
+        const lastPageIndex = clinicalDifferencePdf.getPageCount() - 1;
+        const lastPage = clinicalDifferencePdf.getPage(lastPageIndex);
 
         const cursiveFontPath = path.join(process.cwd(), 'src', 'fonts/cursiveFont.ttf');
         const cursiveFontBytes = await fs.readFile(cursiveFontPath);
 
-        secondPdf.registerFontkit(fontkit)
-        const font = await secondPdf.embedFont(cursiveFontBytes, { subset: true });
+        clinicalDifferencePdf.registerFontkit(fontkit)
+        const font = await clinicalDifferencePdf.embedFont(cursiveFontBytes, { subset: true });
 
         //  Draw on clinical statement for user information
         lastPage.drawText(clientInfo.clinicalDifference.signerName, {
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
         });
         //  Marking the X
         //  1. Remove the radio boxes
-        const form = secondPdf.getForm();
+        const form = clinicalDifferencePdf.getForm();
         const radioGroup = form.getRadioGroup('Group5'); // Use the name of the radio button group
 
         if (radioGroup) {
@@ -118,10 +118,10 @@ export async function POST(request: NextRequest) {
         });
 
         // Save the updated clinical of difference
-        await secondPdf.save();
+        await clinicalDifferencePdf.save();
 
         //  Merge the two pdfs
-        const mergedPDFBase64 = await mergePDFs(NASUFpdf, paymentContactPdf, ...upLoadedDocuments, secondPdf)
+        const mergedPDFBase64 = await mergePDFs(NASUFpdf, paymentContactPdf, clinicalDifferencePdf, ...upLoadedDocuments)
 
         // Convert Base64 to Buffer
         const pdfBuffer = Buffer.from(mergedPDFBase64, 'base64');
@@ -135,7 +135,9 @@ export async function POST(request: NextRequest) {
             },
         });
     } catch (error) {
-        console.error('Error generating PDF:', error);
-        return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
+        if (error instanceof Error && error.message.includes("Payload Too Large")) {
+            return new NextResponse(JSON.stringify({ error: "Some uploaded documents are too large to render. Please update your Document Uploads." }), { status: 413 });
+        }
+        return new NextResponse(JSON.stringify({ error: (error as Error).message }), { status: 500 });
     }
 }
