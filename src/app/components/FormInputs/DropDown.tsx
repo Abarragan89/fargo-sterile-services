@@ -9,7 +9,7 @@ interface Props {
     initialValue: string
 }
 
-export default function DropDown({ userChoice, handleStateChange, labelText, nameAndId, optionArr, isRequired=true, initialValue }: Props) {
+export default function DropDown({ userChoice, handleStateChange, labelText, nameAndId, optionArr, isRequired = true, initialValue }: Props) {
 
     return (
         <>
@@ -22,7 +22,7 @@ export default function DropDown({ userChoice, handleStateChange, labelText, nam
                 required={isRequired}
                 value={userChoice}
                 onChange={(e) => handleStateChange(nameAndId, e.target.value)}
-                className="border border-[var(--company-gray)] text-[.95rem] rounded-sm py-[3px] px-2 w-full"
+                className="input-browser-reset border border-[var(--company-gray)] text-[.95rem] rounded-sm py-[3px] px-2 w-full"
             >
                 <option value="" disabled>
                     {initialValue}

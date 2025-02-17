@@ -14,8 +14,9 @@ interface Props {
     autocomplete?: boolean;
     required?: boolean;
     pattern?: string;
-    isSignature?: boolean
-    isDisabled?: boolean
+    isSignature?: boolean;
+    isDisabled?: boolean;
+    title?: string;
 }
 
 export default function InputLabelEl({
@@ -32,7 +33,8 @@ export default function InputLabelEl({
     pattern,
     autocomplete = true,
     isSignature = false,
-    isDisabled = false
+    isDisabled = false,
+    title
 }: Props) {
 
     return (
@@ -56,6 +58,7 @@ export default function InputLabelEl({
                 type={inputType}
                 id={nameAndId}
                 name={nameAndId}
+                title={title ?? undefined}
                 required={required}
                 disabled={isDisabled}
                 value={userText}
@@ -70,7 +73,7 @@ export default function InputLabelEl({
                         `${cursiveFont.className} text-[1.2rem] py-0 my-0 border-b border-gray-500 rounded-none`
                         :
                         'border border-gray-500 block py-[1px]'
-                        } 
+                    } 
                         ${inline ? 'ml-2' : ''}
                     input-browser-reset px-2 w-full`
                 }

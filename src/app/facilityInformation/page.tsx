@@ -111,7 +111,7 @@ export default function Home() {
                 theme="dark"
             />
             <FormProgressBar progress={5} position={1} />
-            
+
             <form onSubmit={(e) => handleFormSubmit(e)}>
                 {/* Account Type */}
                 <FormBlockHeading headingText="Account Information" />
@@ -144,7 +144,9 @@ export default function Home() {
                     <div className="flex-2 mx-2">
                         <InputLabelEl
                             labelText="Phone Number"
-                            placeholderText="(555)555-5555"
+                            placeholderText="(555) 555-5555"
+                            title="(555) 555-5555"
+                            pattern='^\(\d{3}\) \d{3}-\d{4}$'
                             inputType="tel"
                             nameAndId='phoneNumber'
                             userText={facilityInformation.phoneNumber}

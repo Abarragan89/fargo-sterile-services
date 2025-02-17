@@ -5,6 +5,7 @@ import SubmitButton from "../Buttons/SubmitButton"
 import SelectAreaEl from "./SelectAreaEl"
 import { SelectItem } from "../../../../types/formInputs"
 import { contactTypeOptions } from "../../../../data"
+import { formatPhoneNumber } from "../../../../utils/formatPhoneNumber"
 
 interface Props {
     updateStateHandler: (
@@ -30,6 +31,11 @@ export default function ContactForm({ updateStateHandler }: Props) {
     const [contactType, setContactType] = useState<SelectItem[]>([])
 
     function handleContactChange(inputName: string, inputValue: string | undefined) {
+        if (inputName === 'phone' && inputValue) {
+            if (inputValue.length >= 15) return
+            setCurrentContact(prev => ({ ...prev, [inputName]: formatPhoneNumber(inputValue) }))
+            return
+        }
         setCurrentContact(prev => ({ ...prev, [inputName]: inputValue }))
     }
 
@@ -72,6 +78,9 @@ export default function ContactForm({ updateStateHandler }: Props) {
                         labelText='Direct Phone'
                         inputType="tel"
                         nameAndId='phone'
+                        placeholderText="(555) 555-5555"
+                        title="(555) 555-5555"
+                        pattern='^\(\d{3}\) \d{3}-\d{4}$'
                         handleStateChange={handleContactChange}
                         userText={currentContact.phone}
                         required={false}

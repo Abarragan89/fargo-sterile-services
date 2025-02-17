@@ -71,10 +71,21 @@ body {
   outline: none;
   box-shadow: none;
   -webkit-appearance: none;
-  /* font-size: 0.95rem; */
   -moz-appearance: none;
   appearance: none;
   resize: none;
+}
+
+input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-size: 1rem; /* Adjust as needed */
+  height: 1.8rem; /* Adjust height */
+  padding: 0rem; /* Adjust padding */
+  border: 1px solid #ccc; /* Ensure consistent borders */
+  border-radius: 4px;
+  background-color: white;
 }
 
 .input-browser-reset:focus {
