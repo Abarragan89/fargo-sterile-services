@@ -11,32 +11,7 @@ import { formatDate } from '../../../../utils/formatDate';
 
 export async function POST(request: NextRequest) {
     try {
-        // const { clientInfo } = await request.json();
-
-
-
-        // Read request body as a stream
-        const chunks = [];
-        for await (const chunk of request.body as unknown as AsyncIterable<Uint8Array>) {
-            chunks.push(chunk);
-        }
-
-        // Convert chunks to a buffer
-        const buffer = Buffer.concat(chunks);
-
-        // Parse JSON safely
-        let clientInfo;
-        try {
-            clientInfo = JSON.parse(buffer.toString());
-        } catch (error) {
-            throw new Error("Invalid JSON format");
-        }
-
-
-
-
-
-
+        const { clientInfo } = await request.json();
         // Generate the first PDF from your React component
         const NASUFblob = await pdf(<NASUF data={clientInfo} />).toBlob();
         const paymentContactsBlob = await pdf(<PaymentContactPDF data={clientInfo} />).toBlob();
