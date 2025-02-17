@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
             return new NextResponse(JSON.stringify({ error: "Invalid request body" }), { status: 400 });
         }
 
-        let chunks = [];
+        const chunks = [];
         let done = false;
 
         while (!done) {
