@@ -72,36 +72,54 @@ export default function ReviewPage() {
 
 
     const generatePdfForViewers = async () => {
+        // try {
+        //     setIsLoading(true)
+        //     const response = await axios.post('/api/generatePDF', { clientInfo }, { responseType: 'blob' });
+        //     // Convert Blob to Object URL
+        //     const pdfUrl = URL.createObjectURL(response.data);
+        //     setPDFBlob(response.data)
+        //     // Set the iframe source
+        //     setPdfOne(pdfUrl);
+        // } catch (error) {
+        //     let message = error;  // Keep the entire error object
+
+        //     if (axios.isAxiosError(error)) {
+        //         if (error.response?.data instanceof Blob) {
+        //             try {
+        //                 const errorText = await error.response?.data?.text();
+        //                 const errorJson = JSON.parse(errorText);
+        //                 message = errorJson.error || error; // Keep error if parsing fails
+        //             } catch (parseError) {
+        //                 message = error; // Keep the original error if parsing fails
+        //             }
+        //         } else {
+        //             message = error.response?.data?.error || error; // Default to full error if no specific message
+        //         }
+        //     } else if (error instanceof Error) {
+        //         message = error; // Keep the entire Error object
+        //     }
+        //     setErrorMessage(message as RequestError);
+        // } finally {
+        //     setIsLoading(false)
+        // }
         try {
-            setIsLoading(true)
-            const response = await axios.post('/api/generatePDF', { clientInfo }, { responseType: 'blob' });
-            // Convert Blob to Object URL
+            setIsLoading(true);
+
+            const formData = new FormData();
+            formData.append("clientInfo", new Blob([JSON.stringify(clientInfo)], { type: "application/json" }));
+
+            const response = await axios.post('/api/generatePDF', formData, { responseType: 'blob' });
+
             const pdfUrl = URL.createObjectURL(response.data);
-            setPDFBlob(response.data)
-            // Set the iframe source
+            setPDFBlob(response.data);
             setPdfOne(pdfUrl);
         } catch (error) {
-            let message = error;  // Keep the entire error object
-
-            if (axios.isAxiosError(error)) {
-                if (error.response?.data instanceof Blob) {
-                    try {
-                        const errorText = await error.response?.data?.text();
-                        const errorJson = JSON.parse(errorText);
-                        message = errorJson.error || error; // Keep error if parsing fails
-                    } catch (parseError) {
-                        message = error; // Keep the original error if parsing fails
-                    }
-                } else {
-                    message = error.response?.data?.error || error; // Default to full error if no specific message
-                }
-            } else if (error instanceof Error) {
-                message = error; // Keep the entire Error object
-            }
-            setErrorMessage(message as RequestError);
+            setErrorMessage(error as RequestError);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
+
+
     };
 
     return (

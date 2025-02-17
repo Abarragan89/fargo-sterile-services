@@ -11,7 +11,33 @@ import { formatDate } from '../../../../utils/formatDate';
 
 export async function POST(request: NextRequest) {
     try {
-        const { clientInfo } = await request.json();
+        // const { clientInfo } = await request.json();
+
+        const reader = request.body?.getReader();
+        if (!reader) {
+            return new NextResponse(JSON.stringify({ error: "Invalid request body" }), { status: 400 });
+        }
+
+        let chunks = [];
+        let done = false;
+
+        while (!done) {
+            const { value, done: streamDone } = await reader.read();
+            if (value) {
+                chunks.push(value);
+            }
+            done = streamDone;
+        }
+
+        const data = Buffer.concat(chunks);
+        const clientInfo = JSON.parse(data.toString());
+
+
+
+
+
+
+
         // Generate the first PDF from your React component
         const NASUFblob = await pdf(<NASUF data={clientInfo} />).toBlob();
         const paymentContactsBlob = await pdf(<PaymentContactPDF data={clientInfo} />).toBlob();
