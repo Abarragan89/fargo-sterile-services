@@ -23,6 +23,7 @@ export default function ReviewPage() {
     const [clientInfo, setClientInfo] = useState();
     const [chosenSelectionArr, setChosenSelectionArr] = useState<SelectItem[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isSendingEmail, setIsSendingEmail] = useState<boolean>(false)
     // pdfOne will be in base64
     const [pdfOne, setPdfOne] = useState<string | null>(null)
     const [PDFBlob, setPDFBlob] = useState<Blob>()
@@ -49,7 +50,7 @@ export default function ReviewPage() {
 
     async function sendMail(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setIsLoading(true);
+        setIsSendingEmail(true);
         try {
             const formData = new FormData();
             formData.append('file', PDFBlob as Blob, 'GeneratedPDF.pdf'); // Attach the Blob
@@ -65,7 +66,7 @@ export default function ReviewPage() {
         } catch (error) {
             console.error('Error sending email:', error);
         } finally {
-            setIsLoading(false);
+            setIsSendingEmail(false);
         }
     }
 
@@ -157,7 +158,7 @@ export default function ReviewPage() {
                                 />
                             </div>
                             <SubmitButton
-                                isLoading={isLoading}
+                                isLoading={isSendingEmail}
                                 isSubmittable={chosenSelectionArr?.length > 0}
                                 color="red"
                             >
