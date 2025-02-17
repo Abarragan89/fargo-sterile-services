@@ -79,7 +79,7 @@ export default function ContactRequirements(
             setIsAllContactsProvided(false)
             setAllRequirementsMet(false)
         }
-    }, [contactInfo])
+    }, [contactInfo,  ])
 
     const listItemsStyles = 'ml-7 my-1'
 
