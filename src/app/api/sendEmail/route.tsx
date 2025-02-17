@@ -23,14 +23,14 @@ export async function POST(req: NextRequest) {
         const message: MailDataRequired = {
             from: process.env.GOOGLE_USER as string,
             to: email,
-            subject: 'Fargo Sterile Services Confirmation',
+            subject: 'Fagron Sterile Services Confirmation',
             html: `
                 <h3>Hi ${name},</h3>
                 <p>A client has just completed their onboarding paperwork!</p>
                 <p>Please review the attached pdf and follow up with the client.</p>
                 <p>If all information looks complete, you may forward it to the Customer Setup Team.</p>
                 <p>Have a great day,</p>
-                <p>-Fargo Sterile Services</p>
+                <p>-Fagron Sterile Services</p>
             `,
             attachments: [
                 {
