@@ -9,15 +9,6 @@ import mergePDFs from '../../../../utils/mergePdfs';
 import fontkit from '@pdf-lib/fontkit'
 import { formatDate } from '../../../../utils/formatDate';
 
-// Disable body parsing for this route (next.config.js equivalent)
-export const dynamic = "force-dynamic";  // This replaces the deprecated `export const config = ...`
-
-export const config = {
-    api: {
-        bodyParser: false, // Disables Next.js automatic JSON parsing
-    },
-};
-
 export async function POST(request: NextRequest) {
     try {
         // const { clientInfo } = await request.json();
