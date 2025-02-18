@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Documentation
 
-## Getting Started
+## Overview
 
-First, run the development server:
+This project is a Next.js application that manages user data, saves state into IndexedDB, and generates PDFs using API routes.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Pages
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- All pages import a save and load utility function that accesses the users indexedDB
+- Each page has 1 - 2 state variable objects that is stored as an item in indexedDB
+- This is a client side application and all pages and components are client components.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Components
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### `FormInputs`
 
-## Learn More
+- `InputLabelEl` - creates an input and label.
+  - Can accept a character limit, placeholder, and several othe r props for customization
+  - `DropDown`. `RadioInputSection`, `SelectAreaEL`, and `TextareaLabel` are very similar and render different input fields prestyled and customizable
 
-To learn more about Next.js, take a look at the following resources:
+## IndexedDB Storage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Look in `utils/indexedDBAction` to interact with indexedDB.
+- Stores pdfs as blobs in indexedDB
+- There will only be one user per session, so functions will search for the first user everytime.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Styles
 
-## Deploy on Vercel
+- Global styles include:
+  - Input browser reset
+  - border shadows
+  - universal buttons
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## PDF
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Two PDFs are rendered from scratch (in components/pdfTemplates)
+  - NASUF
+  - Payment and Contacts
+- Statement of clinical different is a pdf that is written on
+
+## File uploads
+
+- All files uploaded are converted to a PDF.
+- files are first compressed before being convereted
+
+## API Routes
+
+1. generatePDF Route - this route does the heaving lifing in generating the pdfs and merging them all together
+2. sendMail Route - Takes the merged final PDF and sends it to sales person's name that was present in the opening URL query parameter
+
+## Utils files
+
+- convert image to PDF
+- format data
+- format phone number so parenthenses and hypen added automatically
+- indexDBActions - api to indexDB instance
+- mergePDFs - takes and unknown amount of PDFs and merges them into one
