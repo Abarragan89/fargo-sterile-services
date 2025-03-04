@@ -18,7 +18,7 @@ export default function Page() {
 
     const originalFormState = {
         facilityAmount: '',
-        facilityName: '',
+        // facilityName: '',
         signerName: '',
         signerTitle: '',
         signatureDate: '',
@@ -26,6 +26,7 @@ export default function Page() {
     }
     const [clinicalDifference, setClinicalDifference] = useState(originalFormState);
     const [otherFacilities, setOtherFacilities] = useState<{ name: string, value: string }[]>([])
+    const [facilityName, setFacilityName] = useState('')
 
     function handleAddFacility() {
         setOtherFacilities(prev => {
@@ -58,6 +59,7 @@ export default function Page() {
             if (savedData) {
                 setClinicalDifference(savedData?.clinicalDifference || originalFormState);
                 setOtherFacilities(savedData?.otherFacilities || [])
+                setFacilityName(savedData?.facilityInformation?.facilityName)
             }
         };
         fetchData();
@@ -131,11 +133,12 @@ export default function Page() {
                     {/*  Input fields */}
                     <div className="my-3">
                         <InputLabelEl
-                            userText={clinicalDifference.facilityName}
+                            userText={facilityName}
                             nameAndId='facilityName'
-                            handleStateChange={handleFacilityInfoChange}
+                            handleStateChange={() => { }}
                             labelText='Facility Name'
-                            required={true}
+                            // required={true}
+                            isDisabled={true}
                         />
                     </div>
                     {/* <div className="flex justify-between mt-6 mb-4">

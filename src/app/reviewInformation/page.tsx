@@ -29,6 +29,7 @@ export default function ReviewPage() {
     const [PDFBlob, setPDFBlob] = useState<Blob>()
     const [salesPersonId, setSalesPersonId] = useState('')
     const [errorMessage, setErrorMessage] = useState<RequestError>()
+    const [facilityName, setFacilityName] = useState('')
 
     // Get the data from IndexedDB
     useEffect(() => {
@@ -37,6 +38,7 @@ export default function ReviewPage() {
             if (allClientInfo) {
                 setClientInfo(allClientInfo);
                 setSalesPersonId(allClientInfo.salesPersonId)
+                setFacilityName(allClientInfo.facilityInformation.facilityName)
             }
         };
         fetchData();
@@ -55,6 +57,7 @@ export default function ReviewPage() {
             const formData = new FormData();
             formData.append('file', PDFBlob as Blob, 'GeneratedPDF.pdf'); // Attach the Blob
             formData.append('salesPersonId', salesPersonId); // Attach clientInfo as a string
+            formData.append('facilityName', facilityName)
 
             await axios.post('/api/sendEmail', formData, {
                 headers: {

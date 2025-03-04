@@ -9,11 +9,12 @@ export async function POST(req: NextRequest) {
         const form = await req.formData();
         const file = form.get('file') as Blob;
         const salesPersonId = form.get('salesPersonId') as keyof typeof salesPersonDirectory;
+        const facilityName = form.get('facilityName')
 
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
-        const { name, email  } = salesPersonDirectory[salesPersonId];
+        const { name, email } = salesPersonDirectory[salesPersonId];
 
         // Convert Blob to Buffer
         const arrayBuffer = await file.arrayBuffer();
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
             subject: 'Fagron Sterile Services Confirmation',
             html: `
                 <h3>Hi ${name},</h3>
-                <p>A client has just completed their onboarding paperwork!</p>
+                <p>${facilityName} has just completed their onboarding paperwork!</p>
                 <p>Please review the attached pdf and follow up with the client.</p>
                 <p>If all information looks complete, you may forward it to the Customer Setup Team.</p>
                 <p>Have a great day,</p>

@@ -75,6 +75,7 @@ export default function InputLabelEl({
                         'border border-gray-500 block py-[1px]'
                     } 
                         ${inline ? 'ml-2' : ''}
+                        ${isDisabled ? 'hover:cursor-not-allowed bg-gray-100' : ''}
                     input-browser-reset px-2 w-full`
                 }
             />
