@@ -12,8 +12,8 @@ export const facilityTypeOptions = [
 ]
 
 export const clinicalDifferenceRadioOptions = [
-    { id: 'one-facility', name: 'facilityAmount', value: 'one-facility', label: 'I am signing this statement of clinical difference on behalf of one facility, listed below.' },
-    { id: 'multiple-facility', name: 'facilityAmount', value: 'multiple-facility', label: 'I am signing this statement of clinical difference on behalf of multiple facilities, please reference attached list for facilities this statement of clinical differences covers. (List of facilities must be attached.)' }
+    { id: 'one-facility', name: 'facilityAmount', value: 'one-facility', label: 'I am signing this statement of clinical difference on behalf of one facility, listed above.' },
+    { id: 'multiple-facility', name: 'facilityAmount', value: 'multiple-facility', label: 'I am signing this statement of clinical difference on behalf of multiple facilities.' }
 ]
 export const yesNoOptions = [
     { id: 'Yes', name: 'isRequiringDEA', value: 'Yes', label: 'Yes' },

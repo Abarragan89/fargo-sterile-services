@@ -87,6 +87,35 @@ export async function POST(request: NextRequest) {
             size: 14,
             color: rgb(0, 0, 0),
         });
+
+        // Write on PDF for other facilities
+        if (clientInfo.otherFacilities.length > 0) {
+            let yAxisForOtherFacilities = 250
+            lastPage.drawText('List of other facilities:', {
+                x: 30,
+                y: yAxisForOtherFacilities,
+                size: 12,
+                color: rgb(0, 0, 0),
+            });
+            const titleWidth = font.widthOfTextAtSize('OList of other facilities', 12);
+            lastPage.drawLine({
+                start: { x: 30, y: yAxisForOtherFacilities - 1 },
+                end: { x: 30 + titleWidth + 10, y: yAxisForOtherFacilities - 1 },
+                thickness: 1,
+                color: rgb(0, 0, 0),
+            });
+
+            for (let i = 0; i < clientInfo.otherFacilities.length; i++) {
+                yAxisForOtherFacilities = yAxisForOtherFacilities - 20
+                lastPage.drawText(`${i + 1}. ${clientInfo.otherFacilities[i].value}`, {
+                    x: 30,
+                    y: yAxisForOtherFacilities,
+                    size: 12,
+                    color: rgb(0, 0, 0),
+                });
+            }
+        }
+
         //  Marking the X
         //  1. Remove the radio boxes
         const form = clinicalDifferencePdf.getForm();
