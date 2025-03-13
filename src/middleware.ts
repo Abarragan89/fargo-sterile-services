@@ -24,7 +24,6 @@ export function middleware(request: NextRequest) {
     const contentSecurityPolicyHeaderValue = cspHeader.replace(/\s{2,}/g, ' ').trim();
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set('x-nonce', nonce);
-
     requestHeaders.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
 
     const response = NextResponse.next({

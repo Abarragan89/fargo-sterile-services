@@ -128,7 +128,7 @@ export default function ReviewPage() {
                         <>
                             <p className="text-center mx-10 italic mt-3">Your combined uploaded documents are too large.</p>
                             <p className="text-center mx-10 italic mt-1">Update your files in:</p>
-                            <p className="text-center mx-10 italic mt-2 font-bold italic">&apos;Document Uploads&apos;.</p>
+                            <p className="text-center mx-10 italic mt-2 font-bold">&apos;Document Uploads&apos;.</p>
                             <p className="text-center mx-10 italic mt-2">Only include necessary files and pages.</p>
                         </>
                         :

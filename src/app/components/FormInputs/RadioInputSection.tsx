@@ -16,7 +16,7 @@ export default function RadioInputSection({ category, setCategories, radioOption
             <div className={`${isFlex ? 'flex flex-wrap' : ''} mx-auto bg-white rounded-sm`}>
                 {radioOptions.map(input => {
                     return (
-                        <label htmlFor={input.id} className={`${isFlex ? 'my-2' : 'my-4'} relative flex cursor-pointer w-[120px] text-[.95rem] w-fit mr-8`} key={input.id}>
+                        <label htmlFor={input.id} className={`${isFlex ? 'my-2' : 'my-4'} relative flex cursor-pointer text-[.95rem] w-fit mr-8`} key={input.id}>
                             <div className="min-w-[20px] h-[20px] bg-white border border-gray-500 rounded-sm">
                                 {category === input.value ?
                                     <GiCheckMark
