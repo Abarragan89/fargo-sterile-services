@@ -92,7 +92,7 @@ const PaymentContactPDF = ({ data }) => {
                                 />
                             </Svg>
                             {data?.paymentMethod.paymentMethod === option.id && <Text style={styles.XMark}>X</Text>}
-                            <Text style={{ marginLeft: 3 }}>{option.label}</Text>
+                            <Text style={{ marginLeft: 3 }}>{option?.label || ''}</Text>
                         </View>
                     ))}
                 </View>

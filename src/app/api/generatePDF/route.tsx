@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
             size: 14,
             color: rgb(0, 0, 0),
         });
-        lastPage.drawText(clientInfo.clinicalDifference.facilityName, {
+        lastPage.drawText(clientInfo.facilityInformation.facilityName, {
             x: 120,
             y: 422,
             size: 14,

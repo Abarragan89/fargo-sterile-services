@@ -95,14 +95,6 @@ const styles = StyleSheet.create({
     },
 });
 
-const licenses = [
-    { key: "stateLicense", label: "State License" },
-    { key: "deaLicense", label: "DEA License" },
-    { key: "otherLicense1", label: "Other License 1" },
-    { key: "otherLicense2", label: "Other License 2" },
-    { key: "otherLicense3", label: "Other License 3" },
-];
-
 // Define the PDF component
 const NASUFpdf
     = ({ data }) => {
