@@ -57,12 +57,26 @@ export const GPOOptions = [
 
 
 export const salesPersonDirectory = {
-    '12930': {
+    '1': {
         name: 'Anthony Barragan',
         email: 'anthony.bar.89@gmail.com'
     },
-    '1293230': {
-        name: 'Mr. Barragan',
-        email: 'a.barragan@villagecharteracademy.com'
+    '75610': {
+        name: 'Ben Diles',
+        email: 'ben.diles@fagronsterile.com'
+    },
+    '10973': {
+        name: 'Shane McCarney',
+        email: 'shane.mccarney@fagronsterile.com'
+    },
+    '43892': {
+        name: 'Justin Feagin',
+        email: 'justin.feagin@fagronsterile.com'
+    },
+    '87462': {
+        name: 'Rocky Brown',
+        email: 'rocky.brown@fagronsterile.com'
     }
 }
+
+
