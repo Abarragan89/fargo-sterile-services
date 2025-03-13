@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
         clinicalDifferencePdf.registerFontkit(fontkit)
         const font = await clinicalDifferencePdf.embedFont(cursiveFontBytes, { subset: true });
 
+
         //  Draw on clinical statement for user information
         lastPage.drawText(clientInfo.clinicalDifference.signerName, {
             x: 110,

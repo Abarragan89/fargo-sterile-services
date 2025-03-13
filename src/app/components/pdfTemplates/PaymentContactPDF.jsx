@@ -102,10 +102,10 @@ const PaymentContactPDF = ({ data }) => {
                 {data.contactInfo.map((contact, index) => (
                     <View key={index} style={{ borderTop: '1px solid gray', padding: '7 0', marginBottom: 5, marginTop: index === 8 ? 25 : 0 }}>
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ marginBottom: 5 }}>Name: <Text style={styles.clientInfo}>{contact.name || ''}</Text></Text>
-                            <Text style={{ marginBottom: 5 }}>Phone: <Text style={styles.clientInfo}>{contact.phone || 'N/A'}</Text></Text>
+                            <Text style={{ marginBottom: 5 }}>Name: <Text style={styles.clientInfo}>{contact?.name || ''}</Text></Text>
+                            <Text style={{ marginBottom: 5 }}>Phone: <Text style={styles.clientInfo}>{contact?.phone || 'N/A'}</Text></Text>
                         </View>
-                        <Text style={{ marginBottom: 10 }}>Email: <Text style={styles.clientInfo}>{contact.email || ''}</Text></Text>
+                        <Text style={{ marginBottom: 10 }}>Email: <Text style={styles.clientInfo}>{contact?.email || ''}</Text></Text>
 
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             {contactTypes.map((contactType, subIndex) => (
@@ -122,7 +122,7 @@ const PaymentContactPDF = ({ data }) => {
                                         />
                                     </Svg>
                                     {contact?.type?.some(type => type.id === contactType.id) && <Text style={styles.XMark}>X</Text>}
-                                    <Text style={{ marginLeft: 3, fontSize: 11 }}>{contactType.label}</Text>
+                                    <Text style={{ marginLeft: 3, fontSize: 11 }}>{contactType?.label || ''}</Text>
                                 </View>
                             ))}
                         </View>
