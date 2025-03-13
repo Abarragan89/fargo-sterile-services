@@ -18,7 +18,6 @@ export default function Page() {
 
     const originalFormState = {
         facilityAmount: '',
-        // facilityName: '',
         signerName: '',
         signerTitle: '',
         signatureDate: '',
@@ -141,26 +140,6 @@ export default function Page() {
                             isDisabled={true}
                         />
                     </div>
-                    {/* <div className="flex justify-between mt-6 mb-4">
-                        <div className='w-full mr-2'>
-                            <InputLabelEl
-                                userText={clinicalDifference.signerName}
-                                nameAndId='signerName'
-                                handleStateChange={handleFacilityInfoChange}
-                                labelText='Name'
-                                required={true}
-                            />
-                        </div>
-                        <div className='w-full ml-2'>
-                            <InputLabelEl
-                                userText={clinicalDifference.signerTitle}
-                                nameAndId='signerTitle'
-                                handleStateChange={handleFacilityInfoChange}
-                                labelText='Title'
-                                required={true}
-                            />
-                        </div>
-                    </div> */}
                     {/* Radio selection for the amount of facilities */}
                     <div className="my-5">
                         <RadioInputSection

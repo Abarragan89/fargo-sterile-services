@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
         });
 
         // Write on PDF for other facilities
-        if (clientInfo.otherFacilities.length > 0) {
+        if (clientInfo?.otherFacilities?.length > 0) {
             let yAxisForOtherFacilities = 250
             lastPage.drawText('List of other facilities:', {
                 x: 30,
