@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
         img-src 'self' blob: data: https://unfinished-pages.s3.us-east-2.amazonaws.com;
         worker-src 'self' blob:;
         font-src 'self';
-        frame-src 'self' blob:;
+        frame-src 'self' blob: https://fagron-services.s3.us-east-2.amazonaws.com/;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
