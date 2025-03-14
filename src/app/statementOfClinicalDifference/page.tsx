@@ -175,10 +175,10 @@ export default function Page() {
                                     }
                                 </div>
                             ))}
-                            <div className="flex justify-end">
+                            <div className="flex justify-center">
                                 <button
                                     type='button'
-                                    className='underline text-blue-700 mt-2'
+                                    className='custom-small-btn bg-[var(--off-black)] mt-2 mb-6'
                                     onClick={handleAddFacility}
                                 >Add another facility
                                 </button>

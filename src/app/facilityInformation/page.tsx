@@ -123,6 +123,8 @@ export default function Home() {
                     />
                     <InputLabelEl
                         labelText="Account #"
+                        required={facilityInformation.accountType === 'update'}
+                        isDisabled={facilityInformation.accountType !== 'update'}
                         userText={facilityInformation.accountNumber}
                         nameAndId="accountNumber"
                         handleStateChange={handleFacilityInfoChange}
@@ -157,7 +159,7 @@ export default function Home() {
                         <InputLabelEl
                             labelText="Number of Beds"
                             nameAndId='numberOfBeds'
-                            inputType="number"
+                            required={false}
                             userText={facilityInformation.numberOfBeds}
                             handleStateChange={handleFacilityInfoChange}
                         />
@@ -231,7 +233,6 @@ export default function Home() {
                                 <InputLabelEl
                                     labelText="Zip Code"
                                     pattern="[0-9]{5}"
-                                    characterLimit={5}
                                     nameAndId='zipCode'
                                     placeholderText="12345"
                                     userText={facilityInformation.zipCode}
