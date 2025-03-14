@@ -231,6 +231,7 @@ export default function Home() {
                                 <InputLabelEl
                                     labelText="Zip Code"
                                     pattern="[0-9]{5}"
+                                    characterLimit={5}
                                     nameAndId='zipCode'
                                     placeholderText="12345"
                                     userText={facilityInformation.zipCode}

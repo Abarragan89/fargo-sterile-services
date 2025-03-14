@@ -1,24 +1,38 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { salesPersonDirectory } from '../../../../data';
-
+import axios from 'axios';
+import { Buffer } from 'buffer';
 import sgMail, { MailDataRequired } from '@sendgrid/mail';
 sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+
+// Helper function to convert PDF blob to base64
+const blobToBase64 = (blob: Blob) => {
+    return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+};
 
 export async function POST(req: NextRequest) {
     try {
         const form = await req.formData();
-        const file = form.get('file') as Blob;
+        const pdfUrl = form.get('pdfUrl') as string;
         const salesPersonId = form.get('salesPersonId') as keyof typeof salesPersonDirectory;
         const facilityName = form.get('facilityName')
 
-        if (!file) {
+        if (!pdfUrl) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
         const { name, email } = salesPersonDirectory[salesPersonId];
 
-        // Convert Blob to Buffer
-        const arrayBuffer = await file.arrayBuffer();
-        const pdfBuffer = Buffer.from(arrayBuffer);
+        // Fetch PDF from URL using axios
+        const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+
+        // Convert the PDF buffer to base64
+        const pdfBase64 = Buffer.from(pdfResponse.data).toString('base64');
+
 
         // Email message
         const message: MailDataRequired = {
@@ -35,7 +49,7 @@ export async function POST(req: NextRequest) {
             `,
             attachments: [
                 {
-                    content: pdfBuffer.toString('base64'), // Convert to Base64 for email
+                    content: pdfBase64,
                     filename: 'GeneratedPDF.pdf',
                     type: 'application/pdf',
                     disposition: 'attachment',
@@ -44,6 +58,12 @@ export async function POST(req: NextRequest) {
         };
 
         await sgMail.send(message);
+
+        // Delete the PDF from the bucket: 
+        // Call the DELETE route to remove the PDF from S3
+        await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+            data: { pdfUrl }
+        });
 
         return NextResponse.json({ message: 'Email sent successfully' });
     } catch (error) {

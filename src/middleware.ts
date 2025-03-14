@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
         default-src 'self';
         script-src 'self' 'nonce-${nonce}' https://cdn.jsdelivr.net;
         style-src 'self' 'unsafe-inline';
-        img-src 'self' blob: data:;
+        img-src 'self' blob: data: https://unfinished-pages.s3.us-east-2.amazonaws.com;
         worker-src 'self' blob:;
         font-src 'self';
         frame-src 'self' blob:;

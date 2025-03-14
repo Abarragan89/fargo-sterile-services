@@ -156,14 +156,34 @@ export async function POST(request: NextRequest) {
         // Convert Base64 to Buffer
         const pdfBuffer = Buffer.from(mergedPDFBase64, 'base64');
 
-        // Return the response as a binary stream
-        return new NextResponse(pdfBuffer, {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/pdf',
-                'Content-Disposition': 'attachment; filename=GeneratedPDF.pdf',
-            },
+        const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
+
+        // Upload to S3
+        // const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({
+        //         pdfBuffer: mergedPDFBase64, // Send base64 string to avoid binary issues in JSON
+        //         key: `generated-pdfs/${Date.now()}-GeneratedPDF.pdf`,
+        //     }),
+        // });
+        const formData = new FormData();
+        formData.append('file', blob);
+        formData.append('key', `generated-pdfs/${Date.now()}-GeneratedPDF.pdf`);
+
+        const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+            method: 'POST',
+            body: formData,
         });
+
+        const uploadResult = await uploadResponse.json();
+        if (!uploadResponse.ok) {
+            return new NextResponse(JSON.stringify({ error: uploadResult.error }), { status: 500 });
+        }
+
+        // Return the S3 URL to the client
+        return NextResponse.json({ url: uploadResult.pdfUrl }, { status: 200 });
+
     } catch (error) {
         if (error instanceof Error && error.message.includes("Request Entity Too Large")) {
             return new NextResponse(JSON.stringify({ error: "Some uploaded documents are too large to render. Please update your Document Uploads." }), { status: 413 });

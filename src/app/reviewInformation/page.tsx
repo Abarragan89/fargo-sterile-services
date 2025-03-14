@@ -24,12 +24,11 @@ export default function ReviewPage() {
     const [chosenSelectionArr, setChosenSelectionArr] = useState<SelectItem[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isSendingEmail, setIsSendingEmail] = useState<boolean>(false)
-    // pdfOne will be in base64
-    const [pdfOne, setPdfOne] = useState<string | null>(null)
-    const [PDFBlob, setPDFBlob] = useState<Blob>()
     const [salesPersonId, setSalesPersonId] = useState('')
     const [errorMessage, setErrorMessage] = useState<RequestError>()
     const [facilityName, setFacilityName] = useState('')
+
+    const [pdfUrl, setPdfUrl] = useState<string>('')
 
     // Get the data from IndexedDB
     useEffect(() => {
@@ -44,6 +43,7 @@ export default function ReviewPage() {
         fetchData();
     }, []);
 
+
     // Generate the PDF based on IndexedDB
     useEffect(() => {
         // need to wati to get data from local indexdb
@@ -55,7 +55,7 @@ export default function ReviewPage() {
         setIsSendingEmail(true);
         try {
             const formData = new FormData();
-            formData.append('file', PDFBlob as Blob, 'GeneratedPDF.pdf'); // Attach the Blob
+            formData.append('pdfUrl', pdfUrl); // Attach the Blob
             formData.append('salesPersonId', salesPersonId); // Attach clientInfo as a string
             formData.append('facilityName', facilityName)
 
@@ -77,12 +77,8 @@ export default function ReviewPage() {
     const generatePdfForViewers = async () => {
         try {
             setIsLoading(true)
-            const response = await axios.post('/api/generatePDF', { clientInfo }, { responseType: 'blob' });
-            // Convert Blob to Object URL
-            const pdfUrl = URL.createObjectURL(response.data);
-            setPDFBlob(response.data)
-            // Set the iframe source
-            setPdfOne(pdfUrl);
+            const { data } = await axios.post('/api/generatePDF', { clientInfo });
+            setPdfUrl(data.url)
         } catch (error) {
             let message = error;  // Keep the entire error object
 
@@ -138,7 +134,7 @@ export default function ReviewPage() {
             }
 
             {/* Show PDF if no errror and is done loading */}
-            {pdfOne &&
+            {pdfUrl &&
                 <>
                     <FormBlockHeading headingText="Review Information" />
                     <div className="w-full mx-auto pb-[100px]">
@@ -146,7 +142,7 @@ export default function ReviewPage() {
 
                         {/* Complete PDF */}
                         <div className="h-[600px] w-full max-w-[700px] mx-auto border-4 border-black">
-                            <iframe src={pdfOne as string} width="100%" height="100%" />
+                            <iframe src={pdfUrl} width="100%" height="100%" />
                         </div>
 
                         {/* Submit Button */}
