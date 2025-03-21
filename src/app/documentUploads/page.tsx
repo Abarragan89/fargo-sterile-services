@@ -15,7 +15,6 @@ import { convertImageToPdf } from '../../../utils/convertImageToPdf';
 
 export default function Page() {
 
-
     const router = useRouter();
     const [stateLicense, setStateLicense] = useState<PDFFile | null>(null);
     const [deaLicense, setDeaLicense] = useState<PDFFile | null>(null);
