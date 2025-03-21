@@ -11,7 +11,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import FormProgressBar from '../components/FormProgressBar';
 import { ToastContainer, toast } from 'react-toastify';
 import ScrollToTop from '../components/ScrollToTop';
-import { convertImageToPdf, readFileAsBase64 } from '../../../utils/convertImageToPdf';
+import { convertImageToPdf } from '../../../utils/convertImageToPdf';
 
 export default function Page() {
 
@@ -70,18 +70,18 @@ export default function Page() {
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-
         if (!file) {
-            throw new Error("Please add a file");
+            console.error("Please add a file");
+            return;
         }
 
         try {
             setIsUploading(true);
-            let fileData: string;
+            let fileToUpload = file;
             let fileType = file.type;
             let fileName = file.name;
 
-            // If the file is an image, convert it to a PDF
+            // Compress and convert images to PDF
             if (fileType.startsWith("image/")) {
                 const options = {
                     maxSizeMB: 0.5,
@@ -91,32 +91,48 @@ export default function Page() {
 
                 // Compress image
                 const compressedFile = await imageCompression(file, options);
-                fileData = await convertImageToPdf(compressedFile);
-                fileType = "application/pdf"; // Change type to PDF
-                fileName = fileName.replace(/\.[^.]+$/, ".pdf"); // Change file extension
-            } else if (fileType === "application/pdf") {
-                // If it's already a PDF, just read it as base64
-                fileData = await readFileAsBase64(file);
-            } else {
-                throw new Error("Unsupported file type. Only images and PDFs are allowed.");
+                fileToUpload = new File([await convertImageToPdf(compressedFile)], fileName.replace(/\.[^.]+$/, ".pdf"), {
+                    type: "application/pdf",
+                });
+                fileType = "application/pdf";
+                fileName = fileToUpload.name;
             }
 
+            // Upload to S3
+            const formData = new FormData();
+            formData.append("file", fileToUpload);
+            formData.append("key", `generated-pdfs/${Date.now()}-${fileName}`);
+
+            const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!uploadResponse.ok) {
+                throw new Error("Failed to upload file.");
+            }
+
+            const { pdfUrl } = await uploadResponse.json();
+            console.log("Uploaded file URL:", pdfUrl);
+
             // Set the correct state based on the input ID
+            const fileData = { name: fileName, type: fileType, data:pdfUrl }; // Store only URL now
+
             switch (event.target.id) {
                 case "state-license":
-                    setStateLicense({ name: fileName, type: fileType, data: fileData });
+                    setStateLicense(fileData);
                     break;
                 case "dea-license":
-                    setDeaLicense({ name: fileName, type: fileType, data: fileData });
+                    setDeaLicense(fileData);
                     break;
                 case "letter-head":
-                    setLetterHead({ name: fileName, type: fileType, data: fileData });
+                    setLetterHead(fileData);
                     break;
                 case "tax-excemption-documents":
-                    setTaxExceptionDocs({ name: fileName, type: fileType, data: fileData });
+                    setTaxExceptionDocs(fileData);
                     break;
                 case "other-document":
-                    setOtherDocument({ name: fileName, type: fileType, data: fileData });
+                    setOtherDocument(fileData);
                     break;
             }
         } catch (error) {
@@ -202,7 +218,7 @@ export default function Page() {
             {isUpLoading &&
                 <div className="flex items-center justify-center z-10 fixed top-0 bottom-0 left-0 right-0 pointer-events-auto bg-[rgba(0,0,0,0.9)]">
                     <div className='flex items-baseline justify-center mb-[175px]'>
-                        <p className='text-[1.5rem] font-bold text-white mr-2'>Compressing image </p>
+                        <p className='text-[1.5rem] font-bold text-white mr-2'>Uploading File</p>
                         <PulseLoader
                             loading={true}
                             size={7}

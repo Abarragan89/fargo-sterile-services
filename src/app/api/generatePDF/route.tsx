@@ -35,21 +35,22 @@ export async function POST(request: NextRequest) {
         let upLoadedDocuments = []
         const documentFields = ['stateLicense', 'deaLicense', 'letterHead', 'taxExceptionDocs', 'otherDocument']
 
-        // Loop through the clientInfo
-        // for (const item in clientInfo) {
-        //     if (documentFields.includes(item)) {
-        //         if (clientInfo[item]?.data) {
-        //             const itemIndex = documentFields.indexOf(item)
-        //             upLoadedDocuments[itemIndex] = await PDFDocument.load(clientInfo[item].data)
-        //         }
-        //     }
-        // }
-
         for (const item in clientInfo) {
             if (documentFields.includes(item)) {
                 if (clientInfo[item]?.data) {
                     const itemIndex = documentFields.indexOf(item);
-                    const loadedDoc = await PDFDocument.load(clientInfo[item].data);
+
+                    // Fetch the PDF from S3
+                    const response = await fetch(clientInfo[item].data);
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch ${item} PDF from S3`);
+                    }
+
+                    // Convert the response to ArrayBuffer
+                    const pdfArrayBuffer = await response.arrayBuffer();
+
+                    // Load the PDF
+                    const loadedDoc = await PDFDocument.load(pdfArrayBuffer);
 
                     // Compress uploaded PDF
                     const compressedDocBytes = await loadedDoc.save({ useObjectStreams: false });
@@ -66,9 +67,6 @@ export async function POST(request: NextRequest) {
 
         // Load the second PDF into pdf-lib
         const clinicalDifferencePdf = await PDFDocument.load(clinicalDifferenceBuffer);
-
-        const compressedClinicalDifference = await clinicalDifferencePdf.save({ useObjectStreams: false });
-        const reloadedClinicalDifference = await PDFDocument.load(compressedClinicalDifference);
 
         // Write signature on the alst page of Statement of clinical difference
         const lastPageIndex = clinicalDifferencePdf.getPageCount() - 1;
@@ -175,14 +173,10 @@ export async function POST(request: NextRequest) {
         // Save the updated clinical of difference
         await clinicalDifferencePdf.save();
 
-        //  Merge the two pdfs
-        // const mergedPDFBase64 = await mergePDFs(NASUFpdf, paymentContactPdf, clinicalDifferencePdf, ...upLoadedDocuments)
-
-
         const mergedPDFBase64 = await mergePDFs(
             compressedNASUF,
             compressedPaymentContact,
-            reloadedClinicalDifference,
+            clinicalDifferencePdf,
             ...upLoadedDocuments
         );
         // Convert Base64 to Buffer
