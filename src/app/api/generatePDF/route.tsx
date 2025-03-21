@@ -23,15 +23,37 @@ export async function POST(request: NextRequest) {
         // Load the PDF
         const NASUFpdf = await PDFDocument.load(NASUFarrayBuffer);
         const paymentContactPdf = await PDFDocument.load(paymentContactsArrayBuffer);
+
+        // Compress generated PDFs
+        const compressedNASUFpdf = await NASUFpdf.save({ useObjectStreams: false });
+        const compressedPaymentContactPdf = await paymentContactPdf.save({ useObjectStreams: false });
+
+        // Reload compressed PDFs
+        const compressedNASUF = await PDFDocument.load(compressedNASUFpdf);
+        const compressedPaymentContact = await PDFDocument.load(compressedPaymentContactPdf);
+
         let upLoadedDocuments = []
         const documentFields = ['stateLicense', 'deaLicense', 'letterHead', 'taxExceptionDocs', 'otherDocument']
 
         // Loop through the clientInfo
+        // for (const item in clientInfo) {
+        //     if (documentFields.includes(item)) {
+        //         if (clientInfo[item]?.data) {
+        //             const itemIndex = documentFields.indexOf(item)
+        //             upLoadedDocuments[itemIndex] = await PDFDocument.load(clientInfo[item].data)
+        //         }
+        //     }
+        // }
+
         for (const item in clientInfo) {
             if (documentFields.includes(item)) {
                 if (clientInfo[item]?.data) {
-                    const itemIndex = documentFields.indexOf(item)
-                    upLoadedDocuments[itemIndex] = await PDFDocument.load(clientInfo[item].data)
+                    const itemIndex = documentFields.indexOf(item);
+                    const loadedDoc = await PDFDocument.load(clientInfo[item].data);
+
+                    // Compress uploaded PDF
+                    const compressedDocBytes = await loadedDoc.save({ useObjectStreams: false });
+                    upLoadedDocuments[itemIndex] = await PDFDocument.load(compressedDocBytes);
                 }
             }
         }
@@ -44,6 +66,9 @@ export async function POST(request: NextRequest) {
 
         // Load the second PDF into pdf-lib
         const clinicalDifferencePdf = await PDFDocument.load(clinicalDifferenceBuffer);
+
+        const compressedClinicalDifference = await clinicalDifferencePdf.save({ useObjectStreams: false });
+        const reloadedClinicalDifference = await PDFDocument.load(compressedClinicalDifference);
 
         // Write signature on the alst page of Statement of clinical difference
         const lastPageIndex = clinicalDifferencePdf.getPageCount() - 1;
@@ -151,22 +176,20 @@ export async function POST(request: NextRequest) {
         await clinicalDifferencePdf.save();
 
         //  Merge the two pdfs
-        const mergedPDFBase64 = await mergePDFs(NASUFpdf, paymentContactPdf, clinicalDifferencePdf, ...upLoadedDocuments)
+        // const mergedPDFBase64 = await mergePDFs(NASUFpdf, paymentContactPdf, clinicalDifferencePdf, ...upLoadedDocuments)
 
+
+        const mergedPDFBase64 = await mergePDFs(
+            compressedNASUF,
+            compressedPaymentContact,
+            reloadedClinicalDifference,
+            ...upLoadedDocuments
+        );
         // Convert Base64 to Buffer
         const pdfBuffer = Buffer.from(mergedPDFBase64, 'base64');
 
         const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
 
-        // Upload to S3
-        // const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({
-        //         pdfBuffer: mergedPDFBase64, // Send base64 string to avoid binary issues in JSON
-        //         key: `generated-pdfs/${Date.now()}-GeneratedPDF.pdf`,
-        //     }),
-        // });
         const formData = new FormData();
         formData.append('file', blob);
         formData.append('key', `generated-pdfs/${Date.now()}-GeneratedPDF.pdf`);

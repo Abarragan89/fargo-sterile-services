@@ -46,7 +46,6 @@ export const getFormData = async () => {
 
 export const deleteField = async (fieldName: string) => {
     const db = await openIndexedDB();
-    // const store = db.transaction('formData').objectStore('formData');
 
     const tx = db.transaction('formData', 'readwrite');
     const store = tx.objectStore('formData');
