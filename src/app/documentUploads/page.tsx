@@ -32,7 +32,7 @@ export default function Page() {
         { label: 'State License', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
         { label: 'DEA License', state: deaLicense, isRequired: false, dbFieldName: 'deaLicense' },
         { label: 'Letter Head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
-        { label: 'Tax Excemption Documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocuments' },
+        { label: 'Tax Excemption Documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocs' },
         { label: 'Other Document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
     ];
 
