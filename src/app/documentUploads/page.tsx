@@ -141,7 +141,6 @@ export default function Page() {
         }
     };
 
-
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         if (!stateLicense) {
