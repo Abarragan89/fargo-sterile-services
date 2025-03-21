@@ -12,11 +12,11 @@ export function middleware(request: NextRequest) {
         img-src 'self' blob: data: https://unfinished-pages.s3.us-east-2.amazonaws.com;
         worker-src 'self' blob:;
         font-src 'self';
-        frame-src 'self' blob: https://fagron-services.s3.us-east-2.amazonaws.com/;
+        frame-src 'self' blob: https://fagron-services.s3.us-east-2.amazonaws.com/ https://fagron-sterile-services-d92ac81c2d87.herokuapp.com/;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
-        frame-ancestors https://fagron-onboarding.vercel.app/;
+        frame-ancestors https://fagron-onboarding.vercel.app/ https://fagron-sterile-services-d92ac81c2d87.herokuapp.com/;
         upgrade-insecure-requests;
     `;
     }
