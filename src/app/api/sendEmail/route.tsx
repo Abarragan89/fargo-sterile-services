@@ -5,16 +5,6 @@ import { Buffer } from 'buffer';
 import sgMail, { MailDataRequired } from '@sendgrid/mail';
 sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
-// Helper function to convert PDF blob to base64
-const blobToBase64 = (blob: Blob) => {
-    return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
-};
-
 interface PDFdata {
     documentType: string;
     url: string

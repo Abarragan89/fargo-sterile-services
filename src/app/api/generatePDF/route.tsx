@@ -47,24 +47,24 @@ export async function POST(request: NextRequest) {
                     let displayName = ''
                     switch (item) {
                         case 'stateLicense':
-                            documentName = 'STATE',
-                            displayName = 'State License'
+                            documentName = 'STATE';
+                            displayName = 'State License';
                             break;
                         case 'deaLicense':
-                            documentName = 'DEA',
-                            displayName = 'DEA License'
+                            documentName = 'DEA';
+                            displayName = 'DEA License';
                             break;
                         case 'letterHead':
-                            documentName = 'LETTERHEAD',
-                            displayName = 'Letter Head'
+                            documentName = 'LETTERHEAD';
+                            displayName = 'Letter Head';
                             break;
                         case 'taxExceptionDocs':
-                            documentName = 'TAXEXCEPT',
-                            displayName = 'Tax Excemption Documents'
+                            documentName = 'TAXEXCEPT';
+                            displayName = 'Tax Excemption Documents';
                             break;
                         case 'otherDocument':
-                            documentName = 'OTHERDOCS',
-                            displayName = 'Other Documents'
+                            documentName = 'OTHERDOCS';
+                            displayName = 'Other Documents';
                             break;
                     }
                     upLoadedDocuments.push({
