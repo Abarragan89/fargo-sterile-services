@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getFormData } from "../../../utils/indexedDBActions";
+import { deleteField, getFormData } from "../../../utils/indexedDBActions";
 import ScrollToTop from "../components/ScrollToTop";
 import FormBlockHeading from "@/app/components/Headings/FormBlockHeading"
 import SubmitButton from "../components/Buttons/SubmitButton";
@@ -28,7 +28,7 @@ export default function ReviewPage() {
     const [errorMessage, setErrorMessage] = useState<RequestError>()
     const [facilityName, setFacilityName] = useState('')
 
-    const [pdfUrl, setPdfUrl] = useState<string>('')
+    const [pdfUrls, setPdfUrls] = useState<{ url: string, documentType: string, displayName: string }[]>([])
 
     // Get the data from IndexedDB
     useEffect(() => {
@@ -55,8 +55,8 @@ export default function ReviewPage() {
         setIsSendingEmail(true);
         try {
             const formData = new FormData();
-            formData.append('pdfUrl', pdfUrl); // Attach the Blob
-            formData.append('salesPersonId', salesPersonId); // Attach clientInfo as a string
+            formData.append('pdfUrls', JSON.stringify(pdfUrls));
+            formData.append('salesPersonId', salesPersonId);
             formData.append('facilityName', facilityName)
 
             await axios.post('/api/sendEmail', formData, {
@@ -65,6 +65,10 @@ export default function ReviewPage() {
                 },
             });
 
+            const indexedDBfieldsToDelete = ['stateLicense', 'deaLicense', 'letterHead', 'taxExceptionDocs', 'otherDocument']
+            for (const item of indexedDBfieldsToDelete) {
+                await deleteField(item)
+            }
             router.push('/thankyou');
         } catch (error) {
             console.error('Error sending email:', error);
@@ -74,11 +78,13 @@ export default function ReviewPage() {
     }
 
 
+
     const generatePdfForViewers = async () => {
         try {
             setIsLoading(true)
             const { data } = await axios.post('/api/generatePDF', { clientInfo });
-            setPdfUrl(data.url)
+            // setPdfUrl(data.url)
+            setPdfUrls(data.urls)
         } catch (error) {
             let message = error;  // Keep the entire error object
 
@@ -117,7 +123,7 @@ export default function ReviewPage() {
             }
 
             {/* Show Error screen */}
-            {errorMessage &&
+            {errorMessage && !isLoading &&
                 <div className="flex flex-col items-center">
                     <p className="font-bold text-[var(--company-red)]">Error Making Final Documents:</p>
                     {errorMessage?.code === '413' ?
@@ -134,15 +140,21 @@ export default function ReviewPage() {
             }
 
             {/* Show PDF if no errror and is done loading */}
-            {pdfUrl &&
+            {pdfUrls && !isLoading &&
                 <>
                     <FormBlockHeading headingText="Review Information" />
-                    <div className="w-full mx-auto pb-[100px]">
-                        <p className="text-center font-bold mt-[-5px] mb-3 text-[.95rem]">Confirm the following information is correct and complete.</p>
+                    <div className="w-full pb-[100px]">
+                        <p className="text-center font-bold mt-[-5px] mb-3">Confirm the following information is correct and complete.</p>
 
-                        {/* Complete PDF */}
-                        <div className="h-[600px] w-full max-w-[700px] mx-auto border-4 border-black">
-                            <iframe src={pdfUrl} width="100%" height="100%" />
+
+
+                        <div className="mx-auto">
+                            {pdfUrls?.map((pdfData, index) => (
+                                <>
+                                    <h3 key={pdfData.url} className="text-center font-bold mt-2 mb-1 text-[1.5rem]">{pdfData.displayName}</h3>
+                                    <iframe key={index} src={pdfData?.url} className="border-4 border-black h-[600px] w-10/12 mx-auto mb-10" />
+                                </>
+                            ))}
                         </div>
 
                         {/* Submit Button */}

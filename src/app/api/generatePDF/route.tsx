@@ -5,7 +5,6 @@ import PaymentContactPDF from '@/app/components/pdfTemplates/PaymentContactPDF'
 import { PDFDocument, rgb, PDFTextField } from 'pdf-lib';
 import fs from 'fs/promises';
 import path from 'path';
-import mergePDFs from '../../../../utils/mergePdfs';
 import fontkit from '@pdf-lib/fontkit'
 import { formatDate } from '../../../../utils/formatDate';
 
@@ -33,28 +32,47 @@ export async function POST(request: NextRequest) {
         const compressedPaymentContact = await PDFDocument.load(compressedPaymentContactPdf);
 
         let upLoadedDocuments = []
-        const documentFields = ['stateLicense', 'deaLicense', 'letterHead', 'taxExceptionDocs', 'otherDocument']
+        const documentFields = [
+            'stateLicense',
+            'deaLicense',
+            'letterHead',
+            'taxExceptionDocs',
+            'otherDocument'
+        ]
 
         for (const item in clientInfo) {
             if (documentFields.includes(item)) {
                 if (clientInfo[item]?.data) {
-                    const itemIndex = documentFields.indexOf(item);
-
-                    // Fetch the PDF from S3
-                    const response = await fetch(clientInfo[item].data);
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch ${item} PDF from S3`);
+                    let documentName = ''
+                    let displayName = ''
+                    switch (item) {
+                        case 'stateLicense':
+                            documentName = 'STATE',
+                            displayName = 'State License'
+                            break;
+                        case 'deaLicense':
+                            documentName = 'DEA',
+                            displayName = 'DEA License'
+                            break;
+                        case 'letterHead':
+                            documentName = 'LETTERHEAD',
+                            displayName = 'Letter Head'
+                            break;
+                        case 'taxExceptionDocs':
+                            documentName = 'TAXEXCEPT',
+                            displayName = 'Tax Excemption Documents'
+                            break;
+                        case 'otherDocument':
+                            documentName = 'OTHERDOCS',
+                            displayName = 'Other Documents'
+                            break;
                     }
-
-                    // Convert the response to ArrayBuffer
-                    const pdfArrayBuffer = await response.arrayBuffer();
-
-                    // Load the PDF
-                    const loadedDoc = await PDFDocument.load(pdfArrayBuffer);
-
-                    // Compress uploaded PDF
-                    const compressedDocBytes = await loadedDoc.save({ useObjectStreams: false });
-                    upLoadedDocuments[itemIndex] = await PDFDocument.load(compressedDocBytes);
+                    upLoadedDocuments.push({
+                        documentType: documentName,
+                        displayName: displayName,
+                        url: clientInfo[item]?.data
+                    }
+                    )
                 }
             }
         }
@@ -173,35 +191,60 @@ export async function POST(request: NextRequest) {
         // Save the updated clinical of difference
         await clinicalDifferencePdf.save();
 
-        const mergedPDFBase64 = await mergePDFs(
-            compressedNASUF,
-            compressedPaymentContact,
-            clinicalDifferencePdf,
-            ...upLoadedDocuments
-        );
-        // Convert Base64 to Buffer
-        const pdfBuffer = Buffer.from(mergedPDFBase64, 'base64');
+        const generatedPDFs = [
+            {
+                documentName: 'ClinicalDifference',
+                displayName: 'Statement of Clinical Difference',
+                data: clinicalDifferencePdf
+            },
+            {
+                documentName: 'Payment&Contacts',
+                displayName: 'Payment & Contacts',
+                data: compressedPaymentContact,
 
-        const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
+            },
+            {
+                documentName: 'NASUF',
+                displayName: 'Facility Information & Terms and Conditions',
+                data: compressedNASUF
+            },
+        ];
 
-        const formData = new FormData();
-        formData.append('file', blob);
-        formData.append('key', `generated-pdfs/${Date.now()}-GeneratedPDF.pdf`);
+        // Array to hold uploaded PDF URLs
+        const pdfUrls = [...upLoadedDocuments];
 
-        const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
-            method: 'POST',
-            body: formData,
-        });
+        // Upload each PDF individually to S3
+        for (const pdfDocument of generatedPDFs) {
 
-        const uploadResult = await uploadResponse.json();
-        if (!uploadResponse.ok) {
-            return new NextResponse(JSON.stringify({ error: uploadResult.error }), { status: 500 });
+            // Serialize the PDF document to a Uint8Array
+            const pdfBytes = await pdfDocument!.data.save(); // This returns a Uint8Array
+
+            // Convert the Uint8Array to a Blob
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+            const formData = new FormData();
+            formData.append('file', blob);
+            formData.append('key', `generated-pdfs/${Date.now()}-GeneratedPDF.pdf`);
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            const uploadResult = await response.json();
+
+            if (!response.ok) {
+                return new NextResponse(JSON.stringify({ error: uploadResult.error }), { status: 500 });
+            }
+
+            // Add the uploaded PDF URL to the array
+            pdfUrls.unshift({ documentType: pdfDocument?.documentName as string, url: uploadResult.pdfUrl, displayName: pdfDocument.displayName });
         }
 
-        // Return the S3 URL to the client
-        return NextResponse.json({ url: uploadResult.pdfUrl }, { status: 200 });
+        return NextResponse.json({ urls: pdfUrls }, { status: 200 });
 
     } catch (error) {
+        console.log('error generating pdf', error)
         if (error instanceof Error && error.message.includes("Request Entity Too Large")) {
             return new NextResponse(JSON.stringify({ error: "Some uploaded documents are too large to render. Please update your Document Uploads." }), { status: 413 });
         }

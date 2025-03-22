@@ -15,23 +15,36 @@ const blobToBase64 = (blob: Blob) => {
     });
 };
 
+interface PDFdata {
+    documentType: string;
+    url: string
+}
 export async function POST(req: NextRequest) {
     try {
         const form = await req.formData();
-        const pdfUrl = form.get('pdfUrl') as string;
+        const pdfUrl = form.get('pdfUrls') as string;
+        const pdfUrls = await JSON.parse(pdfUrl) as PDFdata[] | []
         const salesPersonId = form.get('salesPersonId') as keyof typeof salesPersonDirectory;
-        const facilityName = form.get('facilityName')
+        const facilityName = form.get('facilityName') as string
 
-        if (!pdfUrl) {
+        if (!pdfUrls) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
         const { name, email } = salesPersonDirectory[salesPersonId];
 
-        // Fetch PDF from URL using axios
-        const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
-
-        // Convert the PDF buffer to base64
-        const pdfBase64 = Buffer.from(pdfResponse.data).toString('base64');
+        // Fetch all PDFs and create attachments
+        const attachments = await Promise.all(
+            pdfUrls.map(async (pdfData: PDFdata, index: number) => {
+                const pdfResponse = await axios.get(pdfData.url, { responseType: 'arraybuffer' });
+                const pdfBase64 = Buffer.from(pdfResponse.data).toString('base64');
+                return {
+                    content: pdfBase64,
+                    filename: `${facilityName.replace(/ /g, '')}-${pdfData.documentType}.pdf`,
+                    type: 'application/pdf',
+                    disposition: 'attachment',
+                };
+            })
+        );
 
 
         // Email message
@@ -47,23 +60,17 @@ export async function POST(req: NextRequest) {
                 <p>Have a great day,</p>
                 <p>-Fagron Sterile Services</p>
             `,
-            attachments: [
-                {
-                    content: pdfBase64,
-                    filename: 'GeneratedPDF.pdf',
-                    type: 'application/pdf',
-                    disposition: 'attachment',
-                },
-            ],
+            attachments,
         };
 
         await sgMail.send(message);
 
         // Delete the PDF from the bucket: 
-        // Call the DELETE route to remove the PDF from S3
-        await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
-            data: { pdfUrl }
-        });
+        for (const pdfUrl of pdfUrls) {
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+                data: { pdfUrl: pdfUrl.url }
+            });
+        }
 
         return NextResponse.json({ message: 'Email sent successfully' });
     } catch (error) {

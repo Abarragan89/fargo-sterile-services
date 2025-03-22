@@ -28,11 +28,11 @@ export default function Page() {
 
     // Initial state for the Forms, Need to conditionally render false
     const possibleImageFilesInitialState = [
-        { label: 'State License', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
-        { label: 'DEA License', state: deaLicense, isRequired: false, dbFieldName: 'deaLicense' },
-        { label: 'Letter Head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
-        { label: 'Tax Excemption Documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocs' },
-        { label: 'Other Document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
+        { label: 'State License', id: 'state-license', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
+        { label: 'DEA License', id: 'dea-license', state: deaLicense, isRequired: false, dbFieldName: 'deaLicense' },
+        { label: 'Letter Head', id: 'letter-head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
+        { label: 'Tax Excemption Documents', id: 'tax-excemption-documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocs' },
+        { label: 'Other Document', id: 'other-document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
     ];
 
     const [fileUploadFields, setFileUploadFields] = useState(possibleImageFilesInitialState)
@@ -59,11 +59,11 @@ export default function Page() {
     // use effect to updated the nested state variables. need this because neset state variables wont be tracked.
     useEffect(() => {
         setFileUploadFields([
-            { label: 'State License', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
-            { label: 'DEA License', state: deaLicense, isRequired: needsDEA, dbFieldName: 'deaLicense' },
-            { label: 'Letter Head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
-            { label: 'Tax Excemption Documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocuments' },
-            { label: 'Other Document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
+            { label: 'State License', id: 'state-license', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
+            { label: 'DEA License', id: 'dea-license', state: deaLicense, isRequired: needsDEA, dbFieldName: 'deaLicense' },
+            { label: 'Letter Head', id: 'letter-head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
+            { label: 'Tax Excemption Documents', id: 'tax-excemption-documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocs' },
+            { label: 'Other Document', id: 'other-document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
         ]);
     }, [stateLicense, deaLicense, letterHead, taxExceptionDocs, otherDocument, needsDEA]);
 
@@ -112,7 +112,6 @@ export default function Page() {
             }
 
             const { pdfUrl } = await uploadResponse.json();
-            console.log("Uploaded file URL:", pdfUrl);
 
             // Set the correct state based on the input ID
             const fileData = { name: fileName, type: fileType, data:pdfUrl }; // Store only URL now
@@ -199,7 +198,7 @@ export default function Page() {
                 case 'letterHead':
                     setLetterHead(null)
                     break;
-                case 'taxExceptionDocuments':
+                case 'taxExceptionDocs':
                     setTaxExceptionDocs(null)
                     break;
                 case 'otherDocument':
@@ -280,7 +279,7 @@ export default function Page() {
                                         'Upload File'
                                     }
                                     <input
-                                        id={fileOption.label.replace(/ /g, '-').toLocaleLowerCase()}
+                                        id={fileOption.id}
                                         type="file"
                                         accept=".jpeg,.png,.jpg, .pdf"
                                         className="mt-5"
