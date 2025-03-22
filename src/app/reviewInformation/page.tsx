@@ -142,12 +142,9 @@ export default function ReviewPage() {
             {/* Show PDF if no errror and is done loading */}
             {pdfUrls && !isLoading &&
                 <>
-                    <FormBlockHeading headingText="Review Information" />
+                    <FormBlockHeading headingText="Confirm the following information is correct and complete." />
                     <div className="w-full pb-[100px]">
-                        <p className="text-center font-bold mt-[-5px] mb-3">Confirm the following information is correct and complete.</p>
-
-
-
+                        {/* <p className="text-center font-bold mt-[-5px] mb-3">Confirm the following information is correct and complete.</p> */}
                         <div className="mx-auto">
                             {pdfUrls?.map((pdfData, index) => (
                                 <>
