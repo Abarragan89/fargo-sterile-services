@@ -252,7 +252,7 @@ export default function Home() {
                                     userText={facilityInformation.alternativeSchedule}
                                     handleStateChange={handleFacilityInfoChange}
                                     nameAndId="alternativeSchedule"
-                                    characterLimit={350}
+                                    characterLimit={250}
                                     required={false}
                                 />
                                 <li className={listItemStyles}>All orders are shipped via UPS or FedEx.</li>

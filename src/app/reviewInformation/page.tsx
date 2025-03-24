@@ -148,7 +148,7 @@ export default function ReviewPage() {
                         <div className="mx-auto">
                             {pdfUrls?.map((pdfData, index) => (
                                 <>
-                                    <h3 key={pdfData.url} className="text-center font-bold mt-2 mb-1 text-[1.5rem]">{pdfData.displayName}</h3>
+                                    <h3 key={pdfData.url} className="text-center font-bold mt-3 mb-1 text-[1.2rem]">{pdfData.displayName}</h3>
                                     <iframe key={index} src={pdfData?.url} className="border-4 border-black h-[600px] w-10/12 mx-auto mb-10" />
                                 </>
                             ))}

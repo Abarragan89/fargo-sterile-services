@@ -7,6 +7,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import fontkit from '@pdf-lib/fontkit'
 import { formatDate } from '../../../../utils/formatDate';
+import mergePDFs from '../../../../utils/mergePdfs';
 
 export async function POST(request: NextRequest) {
     try {
@@ -191,22 +192,18 @@ export async function POST(request: NextRequest) {
         // Save the updated clinical of difference
         await clinicalDifferencePdf.save();
 
+        const combinedNASUFandPayments = await mergePDFs(NASUFpdf, paymentContactPdf)
+
         const generatedPDFs = [
             {
-                documentName: 'ClinicalDifference',
+                documentName: 'SOCD',
                 displayName: 'Statement of Clinical Difference',
                 data: clinicalDifferencePdf
             },
             {
-                documentName: 'Payment&Contacts',
-                displayName: 'Payment & Contacts',
-                data: compressedPaymentContact,
-
-            },
-            {
                 documentName: 'NASUF',
-                displayName: 'Facility Information & Terms and Conditions',
-                data: compressedNASUF
+                displayName: 'Facility Information / Terms & Conditions / Payment & Contacts',
+                data: combinedNASUFandPayments
             },
         ];
 

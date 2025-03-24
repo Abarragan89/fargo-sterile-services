@@ -11,7 +11,6 @@ import {
 } from '@react-pdf/renderer';
 import path from 'path';
 import { formatDate } from '../../../../utils/formatDate';
-
 Font.register({
     family: 'cursiveFont',
     src: path.resolve('public', 'fonts', 'cursiveFont.ttf'),
@@ -23,7 +22,7 @@ const styles = StyleSheet.create({
     page: {
         paddingHorizontal: 30,
         paddingVertical: 20,
-        fontSize: 12,
+        fontSize: 11,
         fontFamily: 'Helvetica',
         width: 612,
         height: 792
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
     },
     clientInfo: {
         fontFamily: 'Courier',
-        fontSize: 12,
+        fontSize: 11,
         textDecoration: 'underline',
     },
     checkBoxLabel: {
@@ -73,7 +72,7 @@ const styles = StyleSheet.create({
         marginVertical: 5
     },
     numberedPoints: {
-        marginVertical: 3,
+        marginVertical: 1,
         fontSize: 11
     },
     inputBox: {
@@ -164,7 +163,7 @@ const NASUFpdf
                                 <Text style={styles.text}>Zip Code: <Text style={styles.clientInfo}>{data?.facilityInformation?.zipCode || ''}</Text></Text>
                             </View>
 
-                            <View style={[styles.section, { marginTop: 8 }]}>
+                            <View style={[styles.section, { marginTop: 5 }]}>
                                 <Text style={styles.bulletPoint}>
                                     • Shipping charges for expedited shipping will be applied to the order invoice.
                                 </Text>
@@ -174,14 +173,14 @@ const NASUFpdf
                                     • If alternative delivery schedule is required, please indicate details here:
                                 </Text>
                                 <View style={styles.inputBox}>
-                                    <Text style={styles.clientInfo}>{data?.facilityInformation?.alternativeSchedule || 'N/A'}</Text>
+                                    <Text style={[styles.clientInfo, { textDecoration: 'none' }]}>{data?.facilityInformation?.alternativeSchedule || 'N/A'}</Text>
                                 </View>
                                 <Text style={styles.bulletPoint}>• All orders are shipped via UPS or FedEx.</Text>
                                 <Text style={styles.bulletPoint}>
                                     • If shipping per customer&apos;s FedEx or UPS account is preferred, enter account number here:
                                 </Text>
                                 <View style={styles.inputBox}>
-                                    <Text style={styles.clientInfo}>{data?.facilityInformation?.fedExUpsNumber || 'N/A'}</Text>
+                                    <Text style={[styles.clientInfo, { textDecoration: 'none' }]}>{data?.facilityInformation?.fedExUpsNumber || 'N/A'}</Text>
                                 </View>
                             </View>
 
@@ -227,13 +226,25 @@ const NASUFpdf
                     </View>
 
                     <View style={styles.signatureSection}>
-                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
-                            <Text>Agreed to by: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.fullName || ''}</Text></Text>
-                            <Text>Job Title: <Text style={styles.clientInfo}>{data?.termsAndConditionsInformation?.jobTitle || ''}</Text></Text>
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 10 }}>
+                            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={[styles.clientInfo, { paddingHorizontal: 10, fontSize: 11, textDecoration: 'none' }]}>{data?.termsAndConditionsInformation?.fullName || ''}</Text>
+                                <Text style={{ textAlign: 'center', fontSize: 10, fontWeight: 'hairline', width: 230, borderTop: '1px solid black' }}>Customer Name</Text>
+                            </View>
+                            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={[styles.clientInfo, { paddingHorizontal: 10, fontSize: 11, textAlign: 'center', textDecoration: 'none' }]}>{data?.termsAndConditionsInformation?.jobTitle || ''}</Text>
+                                <Text style={{ textAlign: 'center', fontSize: 10, fontWeight: 'hairline', width: 230, borderTop: '1px solid black' }}>Job Title</Text>
+                            </View>
                         </View>
-                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 5}}>
-                            <Text>Signature: <Text style={[styles.clientInfo, {fontFamily: 'cursiveFont', fontSize: 16}]}>{data?.termsAndConditionsInformation?.fullName || ''}</Text></Text>
-                            <Text>Date: <Text style={styles.clientInfo}>{formatDate(data?.termsAndConditionsInformation?.date) || ''}</Text></Text>
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 10 }}>
+                            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={[styles.clientInfo, { paddingHorizontal: 10, fontSize: 11, fontFamily: 'cursiveFont', textDecoration: 'none' }]}>{data?.termsAndConditionsInformation?.fullName || ''}</Text>
+                                <Text style={{ textAlign: 'center', fontSize: 10, fontWeight: 'hairline', width: 230, borderTop: '1px solid black' }}>Signature</Text>
+                            </View>
+                            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={[styles.clientInfo, { paddingHorizontal: 10, fontSize: 11, textAlign: 'center', textDecoration: 'none' }]}>{formatDate(data?.termsAndConditionsInformation?.date) || ''}</Text>
+                                <Text style={{ textAlign: 'center', fontSize: 10, fontWeight: 'hairline', width: 230, borderTop: '1px solid black' }}>Date</Text>
+                            </View>
                         </View>
                     </View>
                 </Page>

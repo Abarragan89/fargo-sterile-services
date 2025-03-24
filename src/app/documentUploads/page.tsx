@@ -250,6 +250,7 @@ export default function Page() {
                         <span className="bg-gray-200 px-2 py-[2px] rounded-md mx-1">.png</span>
                         <span className="bg-gray-200 px-2 py-[2px] rounded-md mx-1">.pdf</span>
                     </p>
+                    <p className='text-center text-[var(--company-gray)] mt-1 mb-0'>Maximum file size: 4mb</p>
                     {fileUploadFields?.map((fileOption, index) => (
                         <div key={index} className='mx-3 my-5 p-5 border border-gray-300 rounded-[3px] relative'>
 

@@ -4,8 +4,8 @@ export function formatDate(date: Date | string): string {
     const newDate = new Date(date)
     const year = newDate.getFullYear();
     const monthNames = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
     ];
     const month = monthNames[newDate.getMonth()]; // Get month name from the array
     const day = newDate.getDate();
