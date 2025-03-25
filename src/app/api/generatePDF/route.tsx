@@ -60,8 +60,8 @@ export async function POST(request: NextRequest) {
                             displayName = 'Letter Head';
                             break;
                         case 'taxExceptionDocs':
-                            documentName = 'TAXEXCEPT';
-                            displayName = 'Tax Excemption Documents';
+                            documentName = 'TAXEXEMPT';
+                            displayName = 'Tax Exemption Documents';
                             break;
                         case 'otherDocument':
                             documentName = 'OTHERDOCS';

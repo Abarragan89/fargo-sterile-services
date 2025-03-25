@@ -12,6 +12,7 @@ import FormProgressBar from '../components/FormProgressBar';
 import { ToastContainer, toast } from 'react-toastify';
 import ScrollToTop from '../components/ScrollToTop';
 import { convertImageToPdf } from '../../../utils/convertImageToPdf';
+import axios from 'axios';
 
 export default function Page() {
 
@@ -61,8 +62,8 @@ export default function Page() {
         setFileUploadFields([
             { label: 'State License', id: 'state-license', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
             { label: 'DEA License', id: 'dea-license', state: deaLicense, isRequired: needsDEA, dbFieldName: 'deaLicense' },
+            { label: 'Tax Exemption Documents', id: 'tax-excemption-documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocs' },
             { label: 'Letter Head', id: 'letter-head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
-            { label: 'Tax Excemption Documents', id: 'tax-excemption-documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocs' },
             { label: 'Other Document', id: 'other-document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
         ]);
     }, [stateLicense, deaLicense, letterHead, taxExceptionDocs, otherDocument, needsDEA]);
@@ -114,8 +115,7 @@ export default function Page() {
             const { pdfUrl } = await uploadResponse.json();
 
             // Set the correct state based on the input ID
-            const fileData = { name: fileName, type: fileType, data:pdfUrl }; // Store only URL now
-
+            const fileData = { name: fileName, type: fileType, data: pdfUrl }; // Store only URL now
             switch (event.target.id) {
                 case "state-license":
                     setStateLicense(fileData);
@@ -190,23 +190,38 @@ export default function Page() {
             await deleteField(fieldName)
             switch (fieldName) {
                 case 'stateLicense':
+                    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+                        data: { pdfUrl: stateLicense?.data }
+                    });
                     setStateLicense(null)
                     break;
                 case 'deaLicense':
+                    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+                        data: { pdfUrl: deaLicense?.data }
+                    });
                     setDeaLicense(null)
                     break;
                 case 'letterHead':
+                    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+                        data: { pdfUrl: letterHead?.data }
+                    });
                     setLetterHead(null)
                     break;
                 case 'taxExceptionDocs':
+                    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+                        data: { pdfUrl: taxExceptionDocs?.data }
+                    });
                     setTaxExceptionDocs(null)
                     break;
                 case 'otherDocument':
+                    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+                        data: { pdfUrl: otherDocument?.data }
+                    });
                     setOtherDocument(null)
                     break;
             }
         } catch (error) {
-
+            console.log('error deleting file ', error)
         }
     }
 
@@ -241,6 +256,7 @@ export default function Page() {
             />
             <FormProgressBar progress={75} position={5} />
             <FormBlockHeading headingText="Documents" />
+            <p className='text-[1rem] font-bold text-center max-w-[700px] w-[80%] mx-auto mb-3 text-[var(--company-red)] mt-[-5px]'>Disclaimer: Please make sure the licensure addresses both match the shipping address you provided earlier. If the addresses do not match, a physician letterhead is required.</p>
             <form onSubmit={handleFormSubmit}>
                 <section className="border-2 border-[var(--company-gray)] rounded-[3px] p-5 mx-5">
                     <p className='text-center text-[.95rem]'>
@@ -266,7 +282,7 @@ export default function Page() {
                                     <span className='italic'>No File Selected</span>}</p>
                                 <label
                                     className={`w-fit custom-small-btn bg-[var(--off-black)] absolute top-10 right-10`}
-                                    htmlFor={fileOption.label.replace(/ /g, '-').toLocaleLowerCase()}
+                                    htmlFor={fileOption.id}
                                 >
                                     {isUpLoading ?
                                         <PulseLoader
@@ -285,6 +301,7 @@ export default function Page() {
                                         accept=".jpeg,.png,.jpg, .pdf"
                                         className="mt-5"
                                         hidden
+                                        value={''}
                                         name={fileOption.dbFieldName}
                                         onChange={(e) => handleFileChange(e)}
                                     />

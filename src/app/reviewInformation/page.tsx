@@ -144,13 +144,12 @@ export default function ReviewPage() {
                 <>
                     <FormBlockHeading headingText="Confirm the following information is correct and complete." />
                     <div className="w-full pb-[100px]">
-                        {/* <p className="text-center font-bold mt-[-5px] mb-3">Confirm the following information is correct and complete.</p> */}
                         <div className="mx-auto">
-                            {pdfUrls?.map((pdfData, index) => (
-                                <>
-                                    <h3 key={pdfData.url} className="text-center font-bold mt-3 mb-1 text-[1.2rem]">{pdfData.displayName}</h3>
-                                    <iframe key={index} src={pdfData?.url} className="border-4 border-black h-[600px] w-10/12 mx-auto mb-10" />
-                                </>
+                            {pdfUrls?.map((pdfData) => (
+                                <div key={pdfData.url}>
+                                    <h3 className="text-center font-bold mt-3 mb-1 text-[1.2rem]">{pdfData.displayName}</h3>
+                                    <iframe src={pdfData?.url} className="border-4 border-black h-[600px] w-10/12 mx-auto mb-10" />
+                                </div>
                             ))}
                         </div>
 
