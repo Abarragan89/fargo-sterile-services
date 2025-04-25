@@ -9,14 +9,13 @@ const s3Client = new S3Client({
     }
 });
 
-async function uploadPdfToS3(file: Buffer, filename: string) {
+async function uploadPdfToS3(file: Buffer, filename: string, type: string) {
     const timestampedKey = `${filename}-${Date.now()}`;
-
     const s3Params = {
         Bucket: process.env.AWS_S3_BUCKET_NAME,
         Key: timestampedKey,
         Body: file,
-        ContentType: 'application/pdf',
+        ContentType: type,
         ContentDisposition: 'inline'
     };
 
@@ -36,12 +35,9 @@ export async function POST(request: NextRequest) {
         }
 
         if (pdfFile instanceof File) {
-            if (pdfFile.type !== 'application/pdf') {
-                return NextResponse.json({ error: 'Only PDF files are allowed' }, { status: 400 });
-            }
 
             const buffer = Buffer.from(await pdfFile.arrayBuffer());
-            const pdfUrl = await uploadPdfToS3(buffer, pdfFile.name);
+            const pdfUrl = await uploadPdfToS3(buffer, pdfFile.name, pdfFile.type);
 
             return NextResponse.json({ pdfUrl }, { status: 200 });
         } else {

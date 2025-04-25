@@ -21,17 +21,20 @@ export default function Page() {
     const [deaLicense, setDeaLicense] = useState<PDFFile | null>(null);
     const [letterHead, setLetterHead] = useState<PDFFile | null>(null);
     const [taxExceptionDocs, setTaxExceptionDocs] = useState<PDFFile | null>(null);
+    const [facilityRoster, setFacilityRoster] = useState<PDFFile | null>(null);
     const [otherDocument, setOtherDocument] = useState<PDFFile | null>(null);
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [isUpLoading, setIsUploading] = useState<boolean>(false)
     const [needsDEA, setNeedsDEA] = useState<boolean>(false)
+    const [needsFacilityRoster, setNeedsFacilityRoster] = useState<boolean>(false)
 
 
     // Initial state for the Forms, Need to conditionally render false
     const possibleImageFilesInitialState = [
         { label: 'State License', id: 'state-license', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
         { label: 'DEA License', id: 'dea-license', state: deaLicense, isRequired: false, dbFieldName: 'deaLicense' },
-        { label: 'Letter Head', id: 'letter-head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
+        { label: 'Physician Letter Head', id: 'letter-head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
+        { label: 'Facility Roster', id: 'facility-roster', state: facilityRoster, isRequired: false, dbFieldName: 'letterHead' },
         { label: 'Tax Excemption Documents', id: 'tax-excemption-documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocs' },
         { label: 'Other Document', id: 'other-document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
     ];
@@ -50,9 +53,11 @@ export default function Page() {
                 setLetterHead(savedData?.letterHead || '')
                 setTaxExceptionDocs(savedData?.taxExceptionDocs || '')
                 setOtherDocument(savedData?.otherDocument || '')
+                setFacilityRoster(savedData?.facilityRoster || '')
             }
             // require DEA license if checked controlled substance
             if (savedData?.facilityInformation?.isRequiringDEA === 'Yes') setNeedsDEA(true)
+            if (savedData?.clinicalDifference?.facilityAmount === 'multiple-facility') setNeedsFacilityRoster(true)
         };
         fetchData();
     }, [])
@@ -63,10 +68,11 @@ export default function Page() {
             { label: 'State License', id: 'state-license', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
             { label: 'DEA License', id: 'dea-license', state: deaLicense, isRequired: needsDEA, dbFieldName: 'deaLicense' },
             { label: 'Tax Exemption Documents', id: 'tax-excemption-documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocs' },
-            { label: 'Letter Head', id: 'letter-head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
+            { label: 'Physician Letter Head', id: 'letter-head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
+            { label: 'Facility Roster', id: 'facility-roster', state: facilityRoster, isRequired: needsFacilityRoster, dbFieldName: 'facilityRoster' },
             { label: 'Other Document', id: 'other-document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
         ]);
-    }, [stateLicense, deaLicense, letterHead, taxExceptionDocs, otherDocument, needsDEA]);
+    }, [stateLicense, deaLicense, letterHead, taxExceptionDocs, otherDocument, needsDEA, needsFacilityRoster, facilityRoster]);
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -129,6 +135,9 @@ export default function Page() {
                 case "tax-excemption-documents":
                     setTaxExceptionDocs(fileData);
                     break;
+                case "facility-roster":
+                    setFacilityRoster(fileData);
+                    break;
                 case "other-document":
                     setOtherDocument(fileData);
                     break;
@@ -150,12 +159,17 @@ export default function Page() {
             notify('Missing DEA License')
             return;
         }
+        if (!facilityRoster && needsFacilityRoster) {
+            notify('Missing Facility Roster')
+            return;
+        }
         try {
             setIsSaving(true)
             await saveFormData({
                 stateLicense,
                 deaLicense,
                 letterHead,
+                facilityRoster,
                 taxExceptionDocs,
                 otherDocument
             })
@@ -175,6 +189,7 @@ export default function Page() {
                 deaLicense,
                 letterHead,
                 taxExceptionDocs,
+                facilityRoster,
                 otherDocument
             })
             notify('Data Saved!');
@@ -212,6 +227,12 @@ export default function Page() {
                         data: { pdfUrl: taxExceptionDocs?.data }
                     });
                     setTaxExceptionDocs(null)
+                    break;
+                case 'facilityRoster':
+                    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+                        data: { pdfUrl: facilityRoster?.data }
+                    });
+                    setFacilityRoster(null)
                     break;
                 case 'otherDocument':
                     await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
@@ -265,6 +286,7 @@ export default function Page() {
                         <span className="bg-gray-200 px-2 py-[2px] rounded-md mx-1">.jpg</span>
                         <span className="bg-gray-200 px-2 py-[2px] rounded-md mx-1">.png</span>
                         <span className="bg-gray-200 px-2 py-[2px] rounded-md mx-1">.pdf</span>
+                        <span className="bg-gray-200 px-2 py-[2px] rounded-md mx-1">.xlsx</span>
                     </p>
                     <p className='text-center text-[var(--company-gray)] mt-1 mb-0'>Maximum file size: 4mb</p>
                     {fileUploadFields?.map((fileOption, index) => (
@@ -298,7 +320,7 @@ export default function Page() {
                                     <input
                                         id={fileOption.id}
                                         type="file"
-                                        accept=".jpeg,.png,.jpg, .pdf"
+                                        accept=".jpeg,.png,.jpg, .pdf, .xls, .xlsx,"
                                         className="mt-5"
                                         hidden
                                         value={''}

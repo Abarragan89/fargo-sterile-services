@@ -5,37 +5,52 @@ import { Buffer } from 'buffer';
 import sgMail, { MailDataRequired } from '@sendgrid/mail';
 sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
-interface PDFdata {
+interface FileData {
+    documentName: string;
+    url: string;
+    displayName: string;
     documentType: string;
-    url: string
 }
 export async function POST(req: NextRequest) {
     try {
         const form = await req.formData();
         const pdfUrl = form.get('pdfUrls') as string;
-        const pdfUrls = await JSON.parse(pdfUrl) as PDFdata[] | []
+        const pdfUrls = await JSON.parse(pdfUrl) as FileData[] | []
         const salesPersonId = form.get('salesPersonId') as keyof typeof salesPersonDirectory;
         const facilityName = form.get('facilityName') as string
 
         if (!pdfUrls) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
-        const { name, email } = salesPersonDirectory[salesPersonId];
+
+        // Default to this email, else, send to salesperson
+        let name: string = 'Anthony';
+        let email: string = 'anthony.bar.89@gmail.com';
+        if (salesPersonId) {
+            const salesPersonData = salesPersonDirectory[salesPersonId];
+            name = salesPersonData.name;
+            email = salesPersonData.email
+        }
 
         // Fetch all PDFs and create attachments
         const attachments = await Promise.all(
-            pdfUrls.map(async (pdfData: PDFdata, index: number) => {
-                const pdfResponse = await axios.get(pdfData.url, { responseType: 'arraybuffer' });
-                const pdfBase64 = Buffer.from(pdfResponse.data).toString('base64');
+            pdfUrls.map(async (fileData: FileData, index: number) => {
+                const file = await axios.get(fileData.url, { responseType: 'arraybuffer' });
+                const pdfBase64 = Buffer.from(file.data).toString('base64');
+                let extension: string = 'pdf'
+                if (fileData.documentType !== 'application/pdf') {
+                    extension = 'xlsx'
+                }
+
+
                 return {
                     content: pdfBase64,
-                    filename: `${facilityName.replace(/ /g, '')}-${pdfData.documentType}.pdf`,
-                    type: 'application/pdf',
+                    filename: `${facilityName.replace(/ /g, '')}-${fileData.documentName}.${extension}`,
+                    type: fileData.documentType,
                     disposition: 'attachment',
                 };
             })
         );
-
 
         // Email message
         const message: MailDataRequired = {

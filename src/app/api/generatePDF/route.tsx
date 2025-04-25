@@ -24,13 +24,15 @@ export async function POST(request: NextRequest) {
         const NASUFpdf = await PDFDocument.load(NASUFarrayBuffer);
         const paymentContactPdf = await PDFDocument.load(paymentContactsArrayBuffer);
 
-        // Compress generated PDFs
-        const compressedNASUFpdf = await NASUFpdf.save({ useObjectStreams: false });
-        const compressedPaymentContactPdf = await paymentContactPdf.save({ useObjectStreams: false });
 
-        // Reload compressed PDFs
-        const compressedNASUF = await PDFDocument.load(compressedNASUFpdf);
-        const compressedPaymentContact = await PDFDocument.load(compressedPaymentContactPdf);
+        /////////// was trying to compress before loading to s3 ///////////////
+        // Compress generated PDFs
+        // const compressedNASUFpdf = await NASUFpdf.save({ useObjectStreams: false });
+        // const compressedPaymentContactPdf = await paymentContactPdf.save({ useObjectStreams: false });
+
+        // // Reload compressed PDFs
+        // const compressedNASUF = await PDFDocument.load(compressedNASUFpdf);
+        // const compressedPaymentContact = await PDFDocument.load(compressedPaymentContactPdf);
 
         let upLoadedDocuments = []
         const documentFields = [
@@ -38,6 +40,7 @@ export async function POST(request: NextRequest) {
             'deaLicense',
             'letterHead',
             'taxExceptionDocs',
+            'facilityRoster',
             'otherDocument'
         ]
 
@@ -46,6 +49,7 @@ export async function POST(request: NextRequest) {
                 if (clientInfo[item]?.data) {
                     let documentName = ''
                     let displayName = ''
+                    let documentType = clientInfo[item]?.type
                     switch (item) {
                         case 'stateLicense':
                             documentName = 'STATE';
@@ -63,15 +67,20 @@ export async function POST(request: NextRequest) {
                             documentName = 'TAXEXEMPT';
                             displayName = 'Tax Exemption Documents';
                             break;
+                        case 'facilityRoster':
+                            documentName = 'facilityRoster';
+                            displayName = 'Facility Roster';
+                            break;
                         case 'otherDocument':
                             documentName = 'OTHERDOCS';
                             displayName = 'Other Documents';
                             break;
                     }
                     upLoadedDocuments.push({
-                        documentType: documentName,
+                        documentName: documentName,
                         displayName: displayName,
-                        url: clientInfo[item]?.data
+                        url: clientInfo[item]?.data,
+                        documentType: documentType
                     }
                     )
                 }
@@ -210,7 +219,7 @@ export async function POST(request: NextRequest) {
         // Array to hold uploaded PDF URLs
         const pdfUrls = [...upLoadedDocuments];
 
-        // Upload each PDF individually to S3
+        // Upload each PDF that was generated in the route individually to S3 (some pdfs are already just url strings) 
         for (const pdfDocument of generatedPDFs) {
 
             // Serialize the PDF document to a Uint8Array
@@ -233,9 +242,8 @@ export async function POST(request: NextRequest) {
             if (!response.ok) {
                 return new NextResponse(JSON.stringify({ error: uploadResult.error }), { status: 500 });
             }
-
             // Add the uploaded PDF URL to the array
-            pdfUrls.unshift({ documentType: pdfDocument?.documentName as string, url: uploadResult.pdfUrl, displayName: pdfDocument.displayName });
+            pdfUrls.unshift({ documentName: pdfDocument?.documentName as string, url: uploadResult.pdfUrl, displayName: pdfDocument.displayName, documentType: 'application/pdf' });
         }
 
         return NextResponse.json({ urls: pdfUrls }, { status: 200 });

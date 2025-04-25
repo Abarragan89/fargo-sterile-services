@@ -65,7 +65,7 @@ export default function ReviewPage() {
                 },
             });
 
-            const indexedDBfieldsToDelete = ['stateLicense', 'deaLicense', 'letterHead', 'taxExceptionDocs', 'otherDocument']
+            const indexedDBfieldsToDelete = ['stateLicense', 'deaLicense', 'letterHead', 'taxExceptionDocs', 'otherDocument', 'facilityRoster']
             for (const item of indexedDBfieldsToDelete) {
                 await deleteField(item)
             }
@@ -83,7 +83,6 @@ export default function ReviewPage() {
         try {
             setIsLoading(true)
             const { data } = await axios.post('/api/generatePDF', { clientInfo });
-            // setPdfUrl(data.url)
             setPdfUrls(data.urls)
         } catch (error) {
             let message = error;  // Keep the entire error object
