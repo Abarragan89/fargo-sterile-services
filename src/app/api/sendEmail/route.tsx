@@ -24,13 +24,8 @@ export async function POST(req: NextRequest) {
         }
 
         // Default to this email, else, send to salesperson
-        let name: string = 'Anthony';
-        let email: string = 'anthony.bar.89@gmail.com';
-        if (salesPersonId) {
-            const salesPersonData = salesPersonDirectory[salesPersonId];
-            name = salesPersonData.name;
-            email = salesPersonData.email
-        }
+
+        const { name, email } = salesPersonDirectory[salesPersonId];
 
         // Fetch all PDFs and create attachments
         const attachments = await Promise.all(

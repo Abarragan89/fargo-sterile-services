@@ -72,7 +72,7 @@ export const GPOOptions = [
 
 
 export const salesPersonDirectory = {
-    '1': {
+    'null': {
         name: 'Anthony Barragan',
         email: 'anthony.bar.89@gmail.com'
     },
