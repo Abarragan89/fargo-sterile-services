@@ -157,15 +157,15 @@ export async function POST(request: NextRequest) {
                 color: rgb(0, 0, 0),
             });
 
-            for (let i = 0; i < clientInfo.otherFacilities.length; i++) {
-                yAxisForOtherFacilities = yAxisForOtherFacilities - 20
-                lastPage.drawText(`${i + 1}. ${clientInfo.otherFacilities[i].value}`, {
-                    x: 30,
-                    y: yAxisForOtherFacilities,
-                    size: 12,
-                    color: rgb(0, 0, 0),
-                });
-            }
+            // for (let i = 0; i < clientInfo.otherFacilities.length; i++) {
+            //     yAxisForOtherFacilities = yAxisForOtherFacilities - 20
+            //     lastPage.drawText(`${i + 1}. ${clientInfo.otherFacilities[i].value}`, {
+            //         x: 30,
+            //         y: yAxisForOtherFacilities,
+            //         size: 12,
+            //         color: rgb(0, 0, 0),
+            //     });
+            // }
         }
 
         //  Marking the X
