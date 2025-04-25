@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
                 if (clientInfo[item]?.data) {
                     let documentName = ''
                     let displayName = ''
-                    let documentType = clientInfo[item]?.type
+                    const documentType = clientInfo[item]?.type
                     switch (item) {
                         case 'stateLicense':
                             documentName = 'STATE';
