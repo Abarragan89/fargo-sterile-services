@@ -84,7 +84,7 @@ export default function ContactRequirements(
     const listItemsStyles = 'ml-7 my-1'
 
     return (
-        <div className="w-[360px] border border-[var(--company-gray)] rounded-sm px-6 pb-4 pt-2 mt-10 mx-2">
+        <div className="px-6 pb-4 pt-2 mt-10 mx-2 w-[375px]">
             <h3
                 className="text-center text-[1.05rem] font-bold text-[var(--company-gray)] mb-2"
             >Requirements</h3>

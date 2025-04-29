@@ -46,7 +46,7 @@ export default function ContactForm({ updateStateHandler }: Props) {
 
     return (
         <form
-            className="max-w-[360px] border border-[var(--company-gray)] rounded-sm p-5 pt-2 mt-10 mx-2"
+            className="w-[420px] border border-[var(--company-gray)] rounded-sm p-5 px-10 md:mt-10 mx-2"
             onSubmit={(e) => { updateStateHandler(e, currentContact, contactType, clearForm) }}>
             <legend
                 className="text-center text-[1.05rem] font-bold text-[var(--company-gray)] mb-2"

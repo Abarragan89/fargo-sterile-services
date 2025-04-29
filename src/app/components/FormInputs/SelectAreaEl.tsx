@@ -8,8 +8,11 @@ interface Props {
     totalSelectionOptionsArr: SelectItem[]
 }
 
-export default function SelectAreaEl({ chosenSelectionOptionsArr, setChosenSelectionOptionsArr, totalSelectionOptionsArr }: Props) {
-
+export default function SelectAreaEl({
+    chosenSelectionOptionsArr,
+    setChosenSelectionOptionsArr,
+    totalSelectionOptionsArr
+}: Props) {
     function handleSelectionToggle(inputId: string, isChecked: boolean, label: string) {
         // remove item from array
         if (!isChecked) {
@@ -21,10 +24,10 @@ export default function SelectAreaEl({ chosenSelectionOptionsArr, setChosenSelec
     }
 
     return (
-        <>
+        <div className="space-y-2">
             {totalSelectionOptionsArr.map((input: SelectItem) => {
                 return (
-                    <label htmlFor={input.id} className="flex items-center cursor-pointer p-[9px] text-[.9rem]" key={input.id}>
+                    <label htmlFor={input.id} className="flex items-center cursor-pointer text-[.9rem]" key={input.id}>
                         <div className="w-[20px] h-[20px] bg-white border border-gray-500 rounded-sm relative">
                             {chosenSelectionOptionsArr.some((category) => category.id === input.id) ?
                                 <GiCheckMark
@@ -46,6 +49,6 @@ export default function SelectAreaEl({ chosenSelectionOptionsArr, setChosenSelec
                     </label>
                 )
             })}
-        </>
+        </div>
     )
 }

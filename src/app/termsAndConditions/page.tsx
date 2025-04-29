@@ -96,7 +96,7 @@ export default function Page() {
                 <p className="mt-2 text-[.95rem] text-center font-bold">Acknowledgement</p>
                 <form
                     onSubmit={(e) => handleFormSubmit(e)}>
-                    <div className="w-full">
+                    <div className="w-full mt-2 mb-5">
                         <SelectAreaEl
                             totalSelectionOptionsArr={selectionArr}
                             chosenSelectionOptionsArr={chosenSelectionArr}

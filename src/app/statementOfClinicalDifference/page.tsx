@@ -9,7 +9,8 @@ import RadioInputSection from '../components/FormInputs/RadioInputSection';
 import { clinicalDifferenceRadioOptions } from '../../../data';
 import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
 import InputLabelEl from '../components/FormInputs/InputLabelEl';
-import { IoMdCloseCircle } from "react-icons/io";
+import SelectAreaEl from '../components/FormInputs/SelectAreaEl';
+import { SelectItem } from '../../../types/formInputs';
 
 export default function Page() {
 
@@ -23,42 +24,55 @@ export default function Page() {
         signatureDate: '',
         signature: ''
     }
+
+    const selectionArr = [{ id: '1', label: 'Check here if you are an HPG group' }]
     const [clinicalDifference, setClinicalDifference] = useState(originalFormState);
-    const [otherFacilities, setOtherFacilities] = useState<{ name: string, value: string }[]>([])
-    const [facilityName, setFacilityName] = useState('')
+    // const [otherFacilities, setOtherFacilities] = useState<{ name: string, value: string }[]>([])
+    const [facilityName, setFacilityName] = useState('');
+    // const [isHPG, setIsHPG] = useState<boolean>(false);
+    const [isHPG, setIsHPG] = useState<SelectItem[]>([])
+    const [isMultipleFacilities, setIsMultipleFacilities] = useState<boolean>(false)
 
-    function handleAddFacility() {
-        setOtherFacilities(prev => {
-            const currentLabelName = `facility${prev.length}`
-            return [
-                ...prev,
-                { name: currentLabelName, value: '' }
-            ]
-        })
-    }
 
-    function removeAdditionalFacility(inputName: string) {
-        setOtherFacilities(prev => ([...prev.filter(inputObj => inputObj.name !== inputName)]))
+    // function handleAddFacility() {
+    //     setOtherFacilities(prev => {
+    //         const currentLabelName = `facility${prev.length}`
+    //         return [
+    //             ...prev,
+    //             { name: currentLabelName, value: '' }
+    //         ]
+    //     })
+    // }
 
-    }
+    // function removeAdditionalFacility(inputName: string) {
+    //     setOtherFacilities(prev => ([...prev.filter(inputObj => inputObj.name !== inputName)]))
 
-    function handleAddFacilityChange(inputName: string, inputValue: string | undefined) {
-        setOtherFacilities(prev =>
-            prev.map(inputObj =>
-                inputObj.name === inputName
-                    ? { ...inputObj, value: inputValue as string }
-                    : inputObj
-            )
-        );
-    }
+    // }
+
+    // function handleAddFacilityChange(inputName: string, inputValue: string | undefined) {
+    //     setOtherFacilities(prev =>
+    //         prev.map(inputObj =>
+    //             inputObj.name === inputName
+    //                 ? { ...inputObj, value: inputValue as string }
+    //                 : inputObj
+    //         )
+    //     );
+    // }
 
     useEffect(() => {
         const fetchData = async () => {
             const savedData = await getFormData(); // Fetch saved data from IndexedDB or any source
             if (savedData) {
                 setClinicalDifference(savedData?.clinicalDifference || originalFormState);
-                setOtherFacilities(savedData?.otherFacilities || [])
+                // setOtherFacilities(savedData?.otherFacilities || [])
                 setFacilityName(savedData?.facilityInformation?.facilityName)
+                // setIsHPG(savedData?.facilityInformation?.primaryGPOName === 'HPG' ? true : false)
+                if (savedData?.facilityInformation?.primaryGPOName === 'HPG') {
+                    setIsHPG(prev => [...prev, { id: '1', label: 'hpg' }])
+                }
+                if (savedData?.clinicalDifference?.facilityAmount === 'multiple-facility') {
+                    setIsMultipleFacilities(true)
+                }
             }
         };
         fetchData();
@@ -68,7 +82,10 @@ export default function Page() {
         e.preventDefault();
         try {
             setIsSaving(true)
-            await saveFormData({ clinicalDifference, otherFacilities })
+            await saveFormData({
+                clinicalDifference,
+                // otherFacilities 
+            })
             router.push('/documentUploads')
         } catch (error) {
             console.log('error submitting form', error)
@@ -82,7 +99,7 @@ export default function Page() {
             setIsSaving(true)
             await saveFormData({
                 clinicalDifference,
-                otherFacilities
+                // otherFacilities
             })
             notify();
         } catch (error) {
@@ -92,11 +109,13 @@ export default function Page() {
         }
     }
 
+
+
     function handleFacilityInfoChange(inputName: string, inputValue: string | undefined) {
         if (inputName === 'facilityAmount' && inputValue === 'multiple-facility') {
-            handleAddFacility()
+            setIsMultipleFacilities(true)
         } else if (inputName === 'facilityAmount' && inputValue !== 'multiple-facility') {
-            setOtherFacilities(prev => [])
+            setIsMultipleFacilities(false)
         }
         setClinicalDifference(prev => ({ ...prev, [inputName]: inputValue }))
     }
@@ -129,6 +148,7 @@ export default function Page() {
                 <form onSubmit={(e) => handleFormSubmit(e)} className='mx-3'>
                     <p className='text-center py-4 my-4 border-b border-[var(--company-gray)] font-bold'>Please complete and sign below as acknowledgement and confirmation of the applicable statement of clinical difference corresponding to the above preparations.
                     </p>
+
                     {/*  Input fields */}
                     <div className="my-3">
                         <InputLabelEl
@@ -141,15 +161,80 @@ export default function Page() {
                         />
                     </div>
                     {/* Radio selection for the amount of facilities */}
-                    <div className="my-5">
+                    <div className="my-5 relative">
                         <RadioInputSection
                             category={clinicalDifference.facilityAmount}
                             setCategories={handleFacilityInfoChange}
                             radioOptions={clinicalDifferenceRadioOptions}
                         />
+                        {isMultipleFacilities && (
+                            <p
+                                className='text-[var(--company-red)] relative left-10 font-bold mr-5'
+                            >
+                                You will need to provide a Facility Roster in the Document Upload Section
+                            </p>
+                        )}
                     </div>
-                    {/* Hidden input to add other facilities */}
-                    {otherFacilities?.length > 0 &&
+                    {/* Hidden input to add other facilities This is to get ride of */}
+                    <div className="my-5">
+                        {/* CheckBox to set if  */}
+                        <SelectAreaEl
+                            totalSelectionOptionsArr={selectionArr}
+                            chosenSelectionOptionsArr={isHPG}
+                            setChosenSelectionOptionsArr={setIsHPG}
+                        />
+                    </div>
+                    <div className='h-[110px]'>
+                        {isHPG.length > 0 ? (
+                            <p className='text-[var(--company-red)] relative left-10 font-bold mr-5'>HPG Members will sign the Statement of Clinical Difference in the Web Shop when ordering.</p>
+                        ) : (
+                            <>
+                                <div className="flex justify-between mt-2mb-4">
+                                    <div className='w-full mr-2'>
+                                        <InputLabelEl
+                                            userText={clinicalDifference.signerName}
+                                            nameAndId='signerName'
+                                            handleStateChange={handleFacilityInfoChange}
+                                            labelText='Name'
+                                            required={true}
+                                        />
+                                    </div>
+                                    <div className='w-full ml-2'>
+                                        <InputLabelEl
+                                            userText={clinicalDifference.signerTitle}
+                                            nameAndId='signerTitle'
+                                            handleStateChange={handleFacilityInfoChange}
+                                            labelText='Title'
+                                            required={true}
+                                        />
+                                    </div>
+                                </div>
+                                <div className='flex mt-6'>
+                                    <div className='w-full mr-2'>
+                                        <InputLabelEl
+                                            userText={clinicalDifference.signerName}
+                                            nameAndId='signature'
+                                            handleStateChange={handleFacilityInfoChange}
+                                            labelText='Signature'
+                                            isSignature={true}
+                                            isDisabled={true}
+                                        />
+                                    </div>
+                                    <div className='w-full ml-2'>
+                                        <InputLabelEl
+                                            userText={clinicalDifference.signatureDate}
+                                            nameAndId='signatureDate'
+                                            handleStateChange={handleFacilityInfoChange}
+                                            labelText='Date'
+                                            required={true}
+                                            inputType='Date'
+                                        />
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                    {/* {otherFacilities?.length > 0 &&
                         <div className='mx-auto space-y-3'>
                             <p className='font-bold mb-2'>List additional facilities below:</p>
                             {otherFacilities.map((inputData, index) => (
@@ -184,49 +269,8 @@ export default function Page() {
                                 </button>
                             </div>
                         </div>
-                    }
-                    <div className="flex justify-between mt-2mb-4">
-                        <div className='w-full mr-2'>
-                            <InputLabelEl
-                                userText={clinicalDifference.signerName}
-                                nameAndId='signerName'
-                                handleStateChange={handleFacilityInfoChange}
-                                labelText='Name'
-                                required={true}
-                            />
-                        </div>
-                        <div className='w-full ml-2'>
-                            <InputLabelEl
-                                userText={clinicalDifference.signerTitle}
-                                nameAndId='signerTitle'
-                                handleStateChange={handleFacilityInfoChange}
-                                labelText='Title'
-                                required={true}
-                            />
-                        </div>
-                    </div>
-                    <div className='flex mt-6'>
-                        <div className='w-full mr-2'>
-                            <InputLabelEl
-                                userText={clinicalDifference.signerName}
-                                nameAndId='signature'
-                                handleStateChange={handleFacilityInfoChange}
-                                labelText='Signature'
-                                isSignature={true}
-                                isDisabled={true}
-                            />
-                        </div>
-                        <div className='w-full ml-2'>
-                            <InputLabelEl
-                                userText={clinicalDifference.signatureDate}
-                                nameAndId='signatureDate'
-                                handleStateChange={handleFacilityInfoChange}
-                                labelText='Date'
-                                required={true}
-                                inputType='Date'
-                            />
-                        </div>
-                    </div>
+                    } */}
+
                     {/* Save and Continue Btn section */}
                     <SaveAndContinueBtns
                         isSaving={isSaving}

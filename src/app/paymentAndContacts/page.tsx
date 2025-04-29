@@ -168,10 +168,9 @@ export default function Page() {
                     <FormBlockHeading headingText="Contacts" />
                     <div className="border-2 border-[var(--company-gray)] rounded-[3px] pt-0 px-5 pb-5 mx-5">
 
-                        <div className="flex flex-wrap justify-center">
+                        <div className="flex flex-col items-center justify-center md:flex-row md:items-start  mx-auto">
                             {/* Contact Requirements */}
                             <ContactRequirements contactInfo={contactInfo} setAllRequirementsMet={setIsAllRequirementsMet} />
-
                             {/* Contact input fields */}
                             <ContactForm
                                 updateStateHandler={handleSaveContact}
@@ -188,8 +187,6 @@ export default function Page() {
                                 <p className='text-center'>No Contacts Added</p>
                             }
                         </div>
-
-
                     </div>
 
                     {/* Form to save the payment and everything else on page. */}
