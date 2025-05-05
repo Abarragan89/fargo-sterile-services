@@ -145,16 +145,16 @@ export default function ReviewPage() {
                     <div className="w-full pb-[100px]">
                         <div className="mx-auto">
                             {pdfUrls?.map((pdfData) => {
-                                // if (pdfData.displayName === 'Facility Roster') return
+                                if (pdfData.displayName === 'Facility Roster') return
                                 return (
                                     <div key={pdfData.url}>
                                         <h3 className="text-center font-bold mt-3 mb-1 text-[1.2rem]">{pdfData.displayName}</h3>
-
-                                        <iframe
+                                        <iframe src={pdfData?.url} className="border-4 border-black h-[600px] w-10/12 mx-auto mb-10" />
+                                        {/* <iframe
                                             src={`https://docs.google.com/gview?url=${encodeURIComponent(pdfData.url)}&embedded=true`}
                                             className="border-4 border-black h-[600px] w-10/12 mx-auto mb-10"
                                             frameBorder="0"
-                                        />
+                                        /> */}
                                     </div>
                                 )
                             })}
