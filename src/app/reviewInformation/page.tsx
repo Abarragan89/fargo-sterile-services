@@ -150,11 +150,6 @@ export default function ReviewPage() {
                                     <div key={pdfData.url}>
                                         <h3 className="text-center font-bold mt-3 mb-1 text-[1.2rem]">{pdfData.displayName}</h3>
                                         <iframe src={pdfData?.url} className="border-4 border-black h-[600px] w-10/12 mx-auto mb-10" />
-                                        {/* <iframe
-                                            src={`https://docs.google.com/gview?url=${encodeURIComponent(pdfData.url)}&embedded=true`}
-                                            className="border-4 border-black h-[600px] w-10/12 mx-auto mb-10"
-                                            frameBorder="0"
-                                        /> */}
                                     </div>
                                 )
                             })}

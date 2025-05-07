@@ -65,9 +65,9 @@ export const united_states = [
 
 
 export const GPOOptions = [
-    "HPG", "Premier", "Advantus", "EyePro", "Cardinal Acuity",
+    "N/A", "HPG", "Premier", "Advantus", "EyePro", "Cardinal Acuity",
     "The Resource Group", "Intalere", "KP-T3", "MNS", "NY-Pres",
-    "PDM", "Sutter", "TJUH", "UMMS", "UPMC", "VHPC"
+    "PDM", "Sutter", "TJUH", "UMMS", "UPMC", "VHPC", "Vizient", 
 ];
 
 

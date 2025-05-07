@@ -286,6 +286,7 @@ export default function Home() {
                                     nameAndId="IDNGroup"
                                     userText={facilityInformation.IDNGroup}
                                     handleStateChange={handleFacilityInfoChange}
+                                    required={false}
                                 />
                             </div>
                         </div>

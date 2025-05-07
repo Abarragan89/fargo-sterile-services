@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
         width: 120,
     },
     section: {
-        marginBottom: 3,
+        marginBottom: 2,
     },
     accountType: {
         marginTop: 10,
@@ -183,10 +183,12 @@ const NASUFpdf
                                     <Text style={[styles.clientInfo, { textDecoration: 'none' }]}>{data?.facilityInformation?.fedExUpsNumber || 'N/A'}</Text>
                                 </View>
                             </View>
-
                         </View>
                     </View>
-
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3 }}>
+                        <Text style={styles.text}>Primary GPO Name: <Text style={styles.clientInfo}>{data?.facilityInformation?.primaryGPOName || ''}</Text></Text>
+                        <Text style={[styles.text, { flex: 2, textAlign: 'right' }]}>IDN Group: <Text style={styles.clientInfo}>{data?.facilityInformation?.IDNGroup || 'N/A'}</Text></Text>
+                    </View>
 
                     <View style={styles.section}>
                         <Text style={styles.heading}>Terms and Conditions</Text>
