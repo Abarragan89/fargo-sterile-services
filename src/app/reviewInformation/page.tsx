@@ -36,7 +36,7 @@ export default function ReviewPage() {
             const allClientInfo = await getFormData(); // Fetch saved data from IndexedDB or any source
             if (allClientInfo) {
                 setClientInfo(allClientInfo);
-                setSalesPersonId(allClientInfo.salesPersonId)
+                setSalesPersonId(allClientInfo?.salesPersonId || 'null')
                 setFacilityName(allClientInfo.facilityInformation.facilityName)
             }
         };

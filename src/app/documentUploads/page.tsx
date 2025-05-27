@@ -56,8 +56,6 @@ export default function Page() {
                 setOtherDocument(savedData?.otherDocument || '')
                 setFacilityRoster(savedData?.facilityRoster || '')
             }
-            // require DEA license if checked controlled substance
-            if (savedData?.facilityInformation?.isRequiringDEA === 'Yes') setNeedsDEA(true)
             if (savedData?.clinicalDifference?.facilityAmount === 'multiple-facility') setNeedsFacilityRoster(true)
         };
         fetchData();
@@ -67,7 +65,7 @@ export default function Page() {
     useEffect(() => {
         setFileUploadFields([
             { label: 'State License', id: 'state-license', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
-            { label: 'DEA License', id: 'dea-license', state: deaLicense, isRequired: needsDEA, dbFieldName: 'deaLicense' },
+            { label: 'DEA License', id: 'dea-license', state: deaLicense, isRequired: true, dbFieldName: 'deaLicense' },
             { label: 'Tax Exemption Documents', id: 'tax-excemption-documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocs' },
             { label: 'Physician Letter Head', id: 'letter-head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
             { label: 'Facility Roster', id: 'facility-roster', state: facilityRoster, isRequired: needsFacilityRoster, dbFieldName: 'facilityRoster' },
@@ -156,7 +154,7 @@ export default function Page() {
             notify('Missing State License')
             return;
         }
-        if (!deaLicense && needsDEA) {
+        if (!deaLicense) {
             notify('Missing DEA License')
             return;
         }

@@ -27,46 +27,18 @@ export default function Page() {
 
     const selectionArr = [{ id: '1', label: 'Check here if you are an HPG group' }]
     const [clinicalDifference, setClinicalDifference] = useState(originalFormState);
-    // const [otherFacilities, setOtherFacilities] = useState<{ name: string, value: string }[]>([])
     const [facilityName, setFacilityName] = useState('');
-    // const [isHPG, setIsHPG] = useState<boolean>(false);
     const [isHPG, setIsHPG] = useState<SelectItem[]>([])
     const [isMultipleFacilities, setIsMultipleFacilities] = useState<boolean>(false)
 
-
-    // function handleAddFacility() {
-    //     setOtherFacilities(prev => {
-    //         const currentLabelName = `facility${prev.length}`
-    //         return [
-    //             ...prev,
-    //             { name: currentLabelName, value: '' }
-    //         ]
-    //     })
-    // }
-
-    // function removeAdditionalFacility(inputName: string) {
-    //     setOtherFacilities(prev => ([...prev.filter(inputObj => inputObj.name !== inputName)]))
-
-    // }
-
-    // function handleAddFacilityChange(inputName: string, inputValue: string | undefined) {
-    //     setOtherFacilities(prev =>
-    //         prev.map(inputObj =>
-    //             inputObj.name === inputName
-    //                 ? { ...inputObj, value: inputValue as string }
-    //                 : inputObj
-    //         )
-    //     );
-    // }
 
     useEffect(() => {
         const fetchData = async () => {
             const savedData = await getFormData(); // Fetch saved data from IndexedDB or any source
             if (savedData) {
                 setClinicalDifference(savedData?.clinicalDifference || originalFormState);
-                // setOtherFacilities(savedData?.otherFacilities || [])
                 setFacilityName(savedData?.facilityInformation?.facilityName)
-                // setIsHPG(savedData?.facilityInformation?.primaryGPOName === 'HPG' ? true : false)
+                // automatically check HPG box is that is the facility type
                 if (savedData?.facilityInformation?.primaryGPOName === 'HPG') {
                     setIsHPG(prev => [...prev, { id: '1', label: 'hpg' }])
                 }
@@ -84,7 +56,6 @@ export default function Page() {
             setIsSaving(true)
             await saveFormData({
                 clinicalDifference,
-                // otherFacilities 
             })
             router.push('/documentUploads')
         } catch (error) {
@@ -99,7 +70,6 @@ export default function Page() {
             setIsSaving(true)
             await saveFormData({
                 clinicalDifference,
-                // otherFacilities
             })
             notify();
         } catch (error) {
@@ -156,7 +126,6 @@ export default function Page() {
                             nameAndId='facilityName'
                             handleStateChange={() => { }}
                             labelText='Facility Name'
-                            // required={true}
                             isDisabled={true}
                         />
                     </div>
@@ -234,42 +203,6 @@ export default function Page() {
                             </>
                         )}
                     </div>
-                    {/* {otherFacilities?.length > 0 &&
-                        <div className='mx-auto space-y-3'>
-                            <p className='font-bold mb-2'>List additional facilities below:</p>
-                            {otherFacilities.map((inputData, index) => (
-                                <div key={index} className='flex items-center'>
-                                    <InputLabelEl
-                                        userText={inputData.value}
-                                        nameAndId={inputData.name}
-                                        handleStateChange={handleAddFacilityChange}
-                                        labelText='Facility Name'
-                                        required={true}
-                                        inline={true}
-                                    />
-                                    {index > 0 ? (
-                                        <IoMdCloseCircle
-                                            onClick={() => removeAdditionalFacility(inputData.name)}
-                                            className='inline-block ml-3 text-[1.35rem] text-[var(--company-red)] hover:cursor-pointer hover:text-[var(--off-black)]'
-                                        />
-                                    ) : (
-                                        <IoMdCloseCircle
-                                            className='nline-block ml-3 text-[1.4rem] opacity-0'
-                                        />
-                                    )
-                                    }
-                                </div>
-                            ))}
-                            <div className="flex justify-center">
-                                <button
-                                    type='button'
-                                    className='custom-small-btn bg-[var(--off-black)] mt-2 mb-6'
-                                    onClick={handleAddFacility}
-                                >Add another facility
-                                </button>
-                            </div>
-                        </div>
-                    } */}
 
                     {/* Save and Continue Btn section */}
                     <SaveAndContinueBtns

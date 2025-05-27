@@ -292,16 +292,14 @@ export default function Home() {
                         </div>
                     </div>
                     {/* Opt into Controlled Substances */}
-                    <div className="mt-7">
-
+                    {/* <div className="mt-7">
                         <RadioInputSection
                             radioOptions={yesNoOptions}
                             category={facilityInformation.isRequiringDEA}
                             setCategories={handleFacilityInfoChange}
                             labelText="Will you be ordering controlled substances? If yes, you will need to provide a DEA license."
                         />
-
-                    </div>
+                    </div> */}
                 </div>
                 {/* Save and Continue Btn section */}
                 <SaveAndContinueBtns
