@@ -109,44 +109,39 @@ export async function POST(request: NextRequest) {
 
         //  Draw on clinical statement for user information
         lastPage.drawText(clientInfo.clinicalDifference.signerName, {
-            x: 110,
-            y: 335,
-            size: 18,
+            x: 100,
+            y: 472, // This is the signature
+            size: 16,
             font,
             color: rgb(0, 0, 0),
         });
         lastPage.drawText(clientInfo.clinicalDifference.signerName, {
-            x: 90,
-            y: 395,
-            size: 14,
+            x: 85,
+            y: 530,
+            size: 12,
             color: rgb(0, 0, 0),
         });
         lastPage.drawText(clientInfo.facilityInformation.facilityName, {
             x: 120,
-            y: 422,
-            size: 14,
+            y: 559,
+            size: 12,
             color: rgb(0, 0, 0),
         });
         lastPage.drawText(clientInfo.clinicalDifference.signerTitle, {
-            x: 80,
-            y: 365,
-            size: 14,
+            x: 75,
+            y: 502,
+            size: 12,
             color: rgb(0, 0, 0),
         });
         lastPage.drawText(formatDate(clientInfo.clinicalDifference.signatureDate), {
-            x: 355,
-            y: 335,
-            size: 14,
+            x: 350,
+            y: 473,
+            size: 12,
             color: rgb(0, 0, 0),
         });
 
         const form = clinicalDifferencePdf.getForm();
-        const radioGroup = form.getRadioGroup('Group5'); // Use the name of the radio button group
 
-        if (radioGroup) {
-            // Remove the radio button group field entirely
-            form.removeField(radioGroup);
-        }
         // Set all text fields to READ ONLY
         const fields = form.getFields();
         fields.forEach(field => {
@@ -163,7 +158,7 @@ export async function POST(request: NextRequest) {
         //  2. Mark the X
         lastPage.drawText('X', {
             x: clientInfo.clinicalDifference.facilityAmount === 'one-facility' ? 48 : 49,
-            y: clientInfo.clinicalDifference.facilityAmount === 'one-facility' ? 527 : 488,
+            y: clientInfo.clinicalDifference.facilityAmount === 'one-facility' ? 652 : 612,
             size: 17,
             color: rgb(0, 0, 0),
         });
@@ -196,7 +191,7 @@ export async function POST(request: NextRequest) {
         for (const pdfDocument of generatedPDFs) {
 
             // Serialize the PDF document to a Uint8Array
-            const pdfBytes = await pdfDocument!.data.save(); // This returns a Uint8Array
+            const pdfBytes = await pdfDocument!.data.save() as BlobPart; // This returns a Uint8Array Typing it into a BlobPart
 
             // Convert the Uint8Array to a Blob
             const blob = new Blob([pdfBytes], { type: 'application/pdf' });
