@@ -159,7 +159,7 @@ export default function ReviewPage() {
                         <form onSubmit={sendMail}
                             className="flex flex-col justify-center items-center mt-5 w-[700px] mx-auto"
                         >
-                            <div>
+                            <div className="mb-5">
                                 <SelectAreaEl
                                     totalSelectionOptionsArr={selectionArr}
                                     chosenSelectionOptionsArr={chosenSelectionArr}
