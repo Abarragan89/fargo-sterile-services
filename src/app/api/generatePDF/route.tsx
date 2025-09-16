@@ -110,32 +110,32 @@ export async function POST(request: NextRequest) {
         //  Draw on clinical statement for user information
         lastPage.drawText(clientInfo.clinicalDifference.signerName, {
             x: 100,
-            y: 472, // This is the signature
+            y: 272, // This is the signature
             size: 16,
             font,
             color: rgb(0, 0, 0),
         });
         lastPage.drawText(clientInfo.clinicalDifference.signerName, {
             x: 85,
-            y: 530,
+            y: 330,
             size: 12,
             color: rgb(0, 0, 0),
         });
         lastPage.drawText(clientInfo.facilityInformation.facilityName, {
             x: 120,
-            y: 559,
+            y: 359,
             size: 12,
             color: rgb(0, 0, 0),
         });
         lastPage.drawText(clientInfo.clinicalDifference.signerTitle, {
             x: 75,
-            y: 502,
+            y: 302,
             size: 12,
             color: rgb(0, 0, 0),
         });
         lastPage.drawText(formatDate(clientInfo.clinicalDifference.signatureDate), {
             x: 350,
-            y: 473,
+            y: 273,
             size: 12,
             color: rgb(0, 0, 0),
         });
@@ -158,7 +158,7 @@ export async function POST(request: NextRequest) {
         //  2. Mark the X
         lastPage.drawText('X', {
             x: clientInfo.clinicalDifference.facilityAmount === 'one-facility' ? 48 : 49,
-            y: clientInfo.clinicalDifference.facilityAmount === 'one-facility' ? 652 : 612,
+            y: clientInfo.clinicalDifference.facilityAmount === 'one-facility' ? 464 : 424,
             size: 17,
             color: rgb(0, 0, 0),
         });
