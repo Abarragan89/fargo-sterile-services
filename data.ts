@@ -15,9 +15,14 @@ export const clinicalDifferenceRadioOptions = [
     { id: 'one-facility', name: 'facilityAmount', value: 'one-facility', label: 'I am signing this statement of clinical difference on behalf of one facility, listed above.' },
     { id: 'multiple-facility', name: 'facilityAmount', value: 'multiple-facility', label: 'I am signing this statement of clinical difference on behalf of multiple facilities.' }
 ]
-export const yesNoOptions = [
+export const isRequiringDEAOptions = [
     { id: 'Yes', name: 'isRequiringDEA', value: 'Yes', label: 'Yes' },
     { id: 'No', name: 'isRequiringDEA', value: 'No', label: 'No' }
+]
+
+export const is501c3Options = [
+    { id: 'Yes', name: 'is501c3', value: 'Yes', label: 'Yes' },
+    { id: 'No', name: 'is501c3', value: 'No', label: 'No' }
 ]
 
 export const paymentOptions = [

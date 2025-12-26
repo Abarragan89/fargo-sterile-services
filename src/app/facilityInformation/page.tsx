@@ -6,7 +6,7 @@ import FormBlockHeading from "../components/Headings/FormBlockHeading";
 import DropDown from "../components/FormInputs/DropDown";
 import TextareaLabel from "../components/FormInputs/TextareaLabel";
 import { useRouter } from "next/navigation";
-import { accountTypeOptions, facilityTypeOptions, GPOOptions, yesNoOptions } from "../../../data";
+import { accountTypeOptions, facilityTypeOptions, GPOOptions, isRequiringDEAOptions, is501c3Options } from "../../../data";
 import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
 import ScrollToTop from "../components/ScrollToTop";
 import SaveAndContinueBtns from "../components/Buttons/SaveAndContinueBtns";
@@ -25,6 +25,7 @@ export default function Home() {
         phoneNumber: '',
         numberOfBeds: '',
         facilityType: '',
+        is501c3: '',
         accountType: '',
         primaryGPOName: '',
         fedExUpsNumber: '',
@@ -72,7 +73,7 @@ export default function Home() {
             })
             router.push('/termsAndConditions')
         } catch (error) {
-            console.log('error submitting form', error)
+            console.error('error submitting form', error)
         } finally {
             setIsSaving(false)
         }
@@ -86,7 +87,7 @@ export default function Home() {
             })
             notify();
         } catch (error) {
-            console.log('error saving data', error)
+            console.error('error saving data', error)
         } finally {
             setIsSaving(false)
         }
@@ -172,6 +173,15 @@ export default function Home() {
                             category={facilityInformation.facilityType}
                             setCategories={handleFacilityInfoChange}
                             labelText="Facility Type"
+                        />
+                    </div>
+                    {/* Tax Exception Status */}
+                    <div className="w-full mt-5">
+                        <RadioInputSection
+                            radioOptions={is501c3Options}
+                            category={facilityInformation.is501c3}
+                            setCategories={handleFacilityInfoChange}
+                            labelText="Are you a 501(c)(3) [not-for-profit] organization?"
                         />
                     </div>
                     {/* Facility Address */}
@@ -275,6 +285,7 @@ export default function Home() {
                                     labelText="Primary GPO Name"
                                     nameAndId="primaryGPOName"
                                     initialValue="Choose an option..."
+                                    isRequired={true}
                                     optionArr={GPOOptions}
                                     userChoice={facilityInformation.primaryGPOName}
                                     handleStateChange={handleFacilityInfoChange}
@@ -286,20 +297,11 @@ export default function Home() {
                                     nameAndId="IDNGroup"
                                     userText={facilityInformation.IDNGroup}
                                     handleStateChange={handleFacilityInfoChange}
-                                    required={false}
+                                    required={true}
                                 />
                             </div>
                         </div>
                     </div>
-                    {/* Opt into Controlled Substances */}
-                    {/* <div className="mt-7">
-                        <RadioInputSection
-                            radioOptions={yesNoOptions}
-                            category={facilityInformation.isRequiringDEA}
-                            setCategories={handleFacilityInfoChange}
-                            labelText="Will you be ordering controlled substances? If yes, you will need to provide a DEA license."
-                        />
-                    </div> */}
                 </div>
                 {/* Save and Continue Btn section */}
                 <SaveAndContinueBtns

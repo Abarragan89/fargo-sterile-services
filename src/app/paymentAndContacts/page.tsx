@@ -57,7 +57,7 @@ export default function Page() {
             }
             router.push('/statementOfClinicalDifference')
         } catch (error) {
-            console.log('error submitting form', error)
+            console.error('error submitting form', error)
         } finally {
             setIsSaving(false)
         }
@@ -72,7 +72,7 @@ export default function Page() {
             })
             notify("Data Saved!");
         } catch (error) {
-            console.log('error saving data', error)
+            console.error('error saving data', error)
         } finally {
             setIsSaving(false)
         }
@@ -110,7 +110,7 @@ export default function Page() {
             notify("Contact Added!");
             clearFormHandler();
         } catch (error) {
-            console.log('error saving data', error)
+            console.error('error saving data', error)
         } finally {
             setIsSaving(false)
         }
@@ -124,7 +124,7 @@ export default function Page() {
             setContactInfo(updatedContact)
             saveFormData({ contactInfo: updatedContact })
         } catch (error) {
-            console.log('error deleting contact ', error)
+            console.error('error deleting contact ', error)
         }
     }
 

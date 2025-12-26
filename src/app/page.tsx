@@ -15,7 +15,7 @@ export default function Home() {
           salesPersonId: id
         })
       } catch (error) {
-        console.log('error saving data', error)
+        console.error('error saving data', error)
       } 
     }
     saveSalesPersonId()

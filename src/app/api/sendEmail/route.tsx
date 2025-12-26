@@ -12,12 +12,21 @@ interface FileData {
     documentType: string;
 }
 export async function POST(req: NextRequest) {
+
+    const sanitizeFilename = (str: string): string => {
+        return str
+            .replace(/-/g, '') // Remove hyphens
+            .replace(/\s+/g, '') // Remove any remaining spaces
+            .trim();
+    };
+
     try {
         const form = await req.formData();
         const pdfUrl = form.get('pdfUrls') as string;
         const pdfUrls = await JSON.parse(pdfUrl) as FileData[] | []
         const salesPersonId = form.get('salesPersonId') as keyof typeof salesPersonDirectory;
         const facilityName = form.get('facilityName') as string
+
 
         if (!pdfUrls) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
@@ -40,7 +49,7 @@ export async function POST(req: NextRequest) {
 
                 return {
                     content: pdfBase64,
-                    filename: `${facilityName.replace(/ /g, '')}-${fileData.documentName}.${extension}`,
+                    filename: `${sanitizeFilename(facilityName)}-${fileData.documentName}.${extension}`,
                     type: fileData.documentType,
                     disposition: 'attachment',
                 };
@@ -62,8 +71,38 @@ export async function POST(req: NextRequest) {
             `,
             attachments,
         };
-
         await sgMail.send(message);
+
+        // Check for tax documents
+        let areTaxDocumentsPresent = null;
+        // Pull out tax doucments to send to tax department
+        for (const attachment of attachments) {
+            // Get extension document type after hyphen
+            const docType = attachment.filename.split("-")[1]
+            if (docType.includes("TAXEXEMPT")) {
+                areTaxDocumentsPresent = attachment
+                break; // Found one, no need to continue
+            }
+        }
+
+        // Only send tax email if tax documents are present
+        if (areTaxDocumentsPresent) {
+            const messageToFagronTax: MailDataRequired = {
+                from: process.env.GOOGLE_USER as string,
+                to: "fsstax@fagronsterile.com",
+                subject: 'Fagron Sterile Services Tax Documents',
+                html: `
+            <h3>Hi Tax Department,</h3>
+            <p>${facilityName} has submitted tax exemption documents as part of their onboarding.</p>
+            <p>Please review the attached tax documents.</p>
+            <p>Have a great day,</p>
+            <p>-Fagron Sterile Services</p>
+        `,
+                attachments: [areTaxDocumentsPresent],
+            };
+            await sgMail.send(messageToFagronTax);
+        }
+
 
         // Delete the PDF from the bucket: 
         for (const pdfUrl of pdfUrls) {

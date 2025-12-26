@@ -145,7 +145,41 @@ const NASUFpdf
 
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={styles.text}>Facility Type: <Text style={styles.clientInfo}>{data?.facilityInformation?.facilityType || ''}</Text></Text>
-                            <Text style={[styles.text, { flex: 2, textAlign: 'right' }]}>Number of Beds: <Text style={styles.clientInfo}>{data?.facilityInformation?.numberOfBeds || ''}</Text></Text>
+                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={styles.text}>501(c)(3) organization: </Text>
+                                <View style={[styles.checkBoxLabel, { marginRight: 10 }]}>
+                                    <Svg
+                                        viewBox='0 0 5 5'
+                                        width={12}
+                                        height={12}>
+                                        <Rect
+                                            width="5"
+                                            height="5"
+                                            strokeOpacity={1}
+                                            stroke='black'
+                                        />
+                                    </Svg>
+                                    {data?.facilityInformation?.is501c3 === 'Yes' && <Text style={styles.XMark}>X</Text>}
+                                    <Text style={{ marginLeft: 3 }}>Yes</Text>
+                                </View>
+                                <View style={styles.checkBoxLabel}>
+                                    <Svg
+                                        viewBox='0 0 5 5'
+                                        width={12}
+                                        height={12}>
+                                        <Rect
+                                            width="5"
+                                            height="5"
+                                            strokeOpacity={1}
+                                            stroke='black'
+                                        />
+                                    </Svg>
+                                    {data?.facilityInformation?.is501c3 === 'No' && <Text style={styles.XMark}>X</Text>}
+                                    <Text style={{ marginLeft: 3 }}>No</Text>
+                                </View>
+
+                            </View>
+                            <Text style={[styles.text, { textAlign: 'right' }]}>Number of Beds: <Text style={styles.clientInfo}>{data?.facilityInformation?.numberOfBeds || ''}</Text></Text>
                         </View>
                     </View>
                     <View style={styles.section}>

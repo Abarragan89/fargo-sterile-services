@@ -24,10 +24,11 @@ export default function Page() {
     const [taxExceptionDocs, setTaxExceptionDocs] = useState<PDFFile | null>(null);
     const [facilityRoster, setFacilityRoster] = useState<PDFFile | null>(null);
     const [otherDocument, setOtherDocument] = useState<PDFFile | null>(null);
+
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [isUpLoading, setIsUploading] = useState<boolean>(false)
-    const [needsDEA, setNeedsDEA] = useState<boolean>(false)
     const [needsFacilityRoster, setNeedsFacilityRoster] = useState<boolean>(false)
+    const [needsTaxDocuments, setNeedsTaxDocuments] = useState<boolean>(false)
 
 
     // Initial state for the Forms, Need to conditionally render false
@@ -57,6 +58,7 @@ export default function Page() {
                 setFacilityRoster(savedData?.facilityRoster || '')
             }
             if (savedData?.clinicalDifference?.facilityAmount === 'multiple-facility') setNeedsFacilityRoster(true)
+            if (savedData?.facilityInformation?.is501c3 === 'Yes') setNeedsTaxDocuments(true)
         };
         fetchData();
     }, [])
@@ -66,12 +68,13 @@ export default function Page() {
         setFileUploadFields([
             { label: 'State License', id: 'state-license', state: stateLicense, isRequired: true, dbFieldName: 'stateLicense' },
             { label: 'DEA License', id: 'dea-license', state: deaLicense, isRequired: true, dbFieldName: 'deaLicense' },
-            { label: 'Tax Exemption Documents', id: 'tax-excemption-documents', state: taxExceptionDocs, isRequired: false, dbFieldName: 'taxExceptionDocs' },
+            { label: 'Tax Exemption Documents', id: 'tax-excemption-documents', state: taxExceptionDocs, isRequired: needsTaxDocuments, dbFieldName: 'taxExceptionDocs' },
             { label: 'Physician Letter Head', id: 'letter-head', state: letterHead, isRequired: false, dbFieldName: 'letterHead' },
             { label: 'Facility Roster', id: 'facility-roster', state: facilityRoster, isRequired: needsFacilityRoster, dbFieldName: 'facilityRoster' },
             { label: 'Other Document', id: 'other-document', state: otherDocument, isRequired: false, dbFieldName: 'otherDocument' },
         ]);
-    }, [stateLicense, deaLicense, letterHead, taxExceptionDocs, otherDocument, needsDEA, needsFacilityRoster, facilityRoster]);
+
+    }, [stateLicense, deaLicense, letterHead, taxExceptionDocs, otherDocument, needsFacilityRoster, facilityRoster]);
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -96,7 +99,10 @@ export default function Page() {
 
                 // Compress image
                 const compressedFile = await imageCompression(file, options);
-                fileToUpload = new File([await convertImageToPdf(compressedFile)], fileName.replace(/\.[^.]+$/, ".pdf"), {
+                const pdfBytes = await convertImageToPdf(compressedFile);
+                // Convert to standard Uint8Array to fix type compatibility
+                const standardPdfBytes = new Uint8Array(pdfBytes);
+                fileToUpload = new File([standardPdfBytes], fileName.replace(/\.[^.]+$/, ".pdf"), {
                     type: "application/pdf",
                 });
                 fileType = "application/pdf";
@@ -162,6 +168,10 @@ export default function Page() {
             notify('Missing Facility Roster')
             return;
         }
+        if (needsTaxDocuments && !taxExceptionDocs) {
+            notify('Missing Tax Except Documents')
+            return;
+        }
         try {
             setIsSaving(true)
             await saveFormData({
@@ -174,7 +184,7 @@ export default function Page() {
             })
             router.push('/reviewInformation')
         } catch (error) {
-            console.log('error submitting form', error)
+            console.error('error submitting form', error)
         } finally {
             setIsSaving(false)
         }
@@ -193,7 +203,7 @@ export default function Page() {
             })
             notify('Data Saved!');
         } catch (error) {
-            console.log('error saving data', error)
+            console.error('error saving data', error)
         } finally {
             setIsSaving(false)
         }
@@ -241,9 +251,10 @@ export default function Page() {
                     break;
             }
         } catch (error) {
-            console.log('error deleting file ', error)
+            console.error('error deleting file ', error)
         }
     }
+
 
     return (
         <main className="h-[100vh] max-w-[900px] mx-auto">
@@ -291,16 +302,20 @@ export default function Page() {
                     {fileUploadFields?.map((fileOption, index) => (
                         <div key={index} className='mx-3 my-5 p-5 border border-gray-300 rounded-[3px] relative'>
 
-                            <p className='font-bold'>{fileOption.label}: {fileOption.isRequired && <span className='text-[.95rem] text-[var(--company-red)]'>(required)</span>}</p>
+                            <p className='font-bold'>{fileOption.label}: {fileOption.isRequired &&
+                                <span className='text-[.95rem] text-[var(--company-red)]'>(required)</span>}
+                            </p>
+
 
                             <div className="flex items-center mb-5">
-                                <p className='mr-5 text-[.95rem]'>File: {fileOption.state?.name ?
-                                    <span>
+                                <p className='mr-5 text-[.95rem] mt-1'>File: {fileOption?.state?.name ?
+                                    <span className='border p-1 rounded bg-slate-200'>
                                         <span className='italic'>{fileOption.state.name}</span>
                                         <span onClick={() => deleteFileHandler(fileOption.dbFieldName)}><IoMdCloseCircle className='inline-block ml-2 text-[1.1rem] text-[var(--company-red)] hover:cursor-pointer hover:text-[var(--off-black)]' /></span>
                                     </span>
                                     :
-                                    <span className='italic'>No File Selected</span>}</p>
+                                    <span className='italic'>No File Selected</span>}
+                                </p>
                                 <label
                                     className={`w-fit custom-small-btn bg-[var(--off-black)] absolute top-10 right-10`}
                                     htmlFor={fileOption.id}

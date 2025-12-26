@@ -217,7 +217,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ urls: pdfUrls }, { status: 200 });
 
     } catch (error) {
-        console.log('error generating pdf', error)
+        console.error('error generating pdf', error)
         if (error instanceof Error && error.message.includes("Request Entity Too Large")) {
             return new NextResponse(JSON.stringify({ error: "Some uploaded documents are too large to render. Please update your Document Uploads." }), { status: 413 });
         }

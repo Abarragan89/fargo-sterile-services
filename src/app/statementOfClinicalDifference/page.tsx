@@ -59,7 +59,7 @@ export default function Page() {
             })
             router.push('/documentUploads')
         } catch (error) {
-            console.log('error submitting form', error)
+            console.error('error submitting form', error)
         } finally {
             setIsSaving(false)
         }
@@ -73,7 +73,7 @@ export default function Page() {
             })
             notify();
         } catch (error) {
-            console.log('error saving data', error)
+            console.error('error saving data', error)
         } finally {
             setIsSaving(false)
         }
