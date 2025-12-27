@@ -34,7 +34,7 @@ export default function RadioInputSection({ category, setCategories, radioOption
                                 value={input.value}
                                 checked={category === input.value}
                                 onChange={(e) => setCategories(e.target.name, e.target.value)}
-                                className="opacity-0 relative top-[1px] left-[2px] w-[0px]"
+                                className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
                                 aria-label={`Select ${input.label}`}
                                 aria-describedby={labelText}
                             />

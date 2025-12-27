@@ -146,7 +146,7 @@ const NASUFpdf
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={styles.text}>Facility Type: <Text style={styles.clientInfo}>{data?.facilityInformation?.facilityType || ''}</Text></Text>
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={styles.text}>501(c)(3) organization: </Text>
+                                <Text style={styles.text}>501(c)(3) Organization: </Text>
                                 <View style={[styles.checkBoxLabel, { marginRight: 10 }]}>
                                     <Svg
                                         viewBox='0 0 5 5'
@@ -179,7 +179,7 @@ const NASUFpdf
                                 </View>
 
                             </View>
-                            <Text style={[styles.text, { textAlign: 'right' }]}>Number of Beds: <Text style={styles.clientInfo}>{data?.facilityInformation?.numberOfBeds || ''}</Text></Text>
+                            <Text style={[styles.text, { textAlign: 'right' }]}>Number of Beds: <Text style={styles.clientInfo}>{data?.facilityInformation?.numberOfBeds || 'N/A'}</Text></Text>
                         </View>
                     </View>
                     <View style={styles.section}>

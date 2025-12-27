@@ -6,7 +6,7 @@ import FormBlockHeading from "../components/Headings/FormBlockHeading";
 import DropDown from "../components/FormInputs/DropDown";
 import TextareaLabel from "../components/FormInputs/TextareaLabel";
 import { useRouter } from "next/navigation";
-import { accountTypeOptions, facilityTypeOptions, GPOOptions, isRequiringDEAOptions, is501c3Options } from "../../../data";
+import { accountTypeOptions, facilityTypeOptions, GPOOptions, is501c3Options } from "../../../data";
 import { saveFormData, getFormData } from "../../../utils/indexedDBActions";
 import ScrollToTop from "../components/ScrollToTop";
 import SaveAndContinueBtns from "../components/Buttons/SaveAndContinueBtns";

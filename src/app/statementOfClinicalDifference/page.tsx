@@ -144,6 +144,7 @@ export default function Page() {
                             </p>
                         )}
                     </div>
+                    <hr className='border-slate-400' />
                     {/* Hidden input to add other facilities This is to get ride of */}
                     <div className="my-5">
                         {/* CheckBox to set if  */}
@@ -155,7 +156,7 @@ export default function Page() {
                     </div>
                     <div className='h-[110px]'>
                         {isHPG.length > 0 ? (
-                            <p className='text-[var(--company-red)] relative left-10 font-bold mr-5'>HPG Members will sign the Statement of Clinical Difference in the Web Shop when ordering.</p>
+                            <p className='text-[var(--company-red)] text-center relative left-10 font-bold mr-5'>HPG Members will sign the Statement of Clinical Difference in the Web Shop when ordering.</p>
                         ) : (
                             <>
                                 <div className="flex justify-between mt-2mb-4">
