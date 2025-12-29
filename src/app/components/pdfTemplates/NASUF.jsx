@@ -146,7 +146,7 @@ const NASUFpdf
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={styles.text}>Facility Type: <Text style={styles.clientInfo}>{data?.facilityInformation?.facilityType || ''}</Text></Text>
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={styles.text}>501(c)(3) Organization: </Text>
+                                <Text style={styles.text}>501(c)(3): </Text>
                                 <View style={[styles.checkBoxLabel, { marginRight: 10 }]}>
                                     <Svg
                                         viewBox='0 0 5 5'

@@ -33,7 +33,6 @@ export async function POST(req: NextRequest) {
         }
 
         // Default to this email, else, send to salesperson
-
         const { name, email } = salesPersonDirectory[salesPersonId];
 
         // Fetch all PDFs and create attachments
