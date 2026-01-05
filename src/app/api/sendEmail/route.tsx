@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
         const message: MailDataRequired = {
             from: process.env.GOOGLE_USER as string,
             to: email,
+            // to: 'anthony.bar.89@gmail.com',
             subject: 'Fagron Sterile Services Confirmation',
             html: `
                 <h3>Hi ${name},</h3>
@@ -88,6 +89,7 @@ export async function POST(req: NextRequest) {
         if (areTaxDocumentsPresent) {
             const messageToFagronTax: MailDataRequired = {
                 from: process.env.GOOGLE_USER as string,
+                // to: 'anthony.bar.89@gmail.com',
                 to: "fsstax@fagronsterile.com",
                 subject: 'Fagron Sterile Services Tax Documents',
                 html: `
@@ -98,23 +100,23 @@ export async function POST(req: NextRequest) {
             <p>-Fagron Sterile Services</p>
         `,
                 attachments: [areTaxDocumentsPresent],
-            };
-            await sgMail.send(messageToFagronTax);
-        }
+        };
+        await sgMail.send(messageToFagronTax);
+    }
 
 
         // Delete the PDF from the bucket: 
         for (const pdfUrl of pdfUrls) {
-            await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
-                data: { pdfUrl: pdfUrl.url }
-            });
-        }
-
-        return NextResponse.json({ message: 'Email sent successfully' });
-    } catch (error) {
-        console.error('Error sending email:', error);
-        return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+        await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/s3-upload`, {
+            data: { pdfUrl: pdfUrl.url }
+        });
     }
+
+    return NextResponse.json({ message: 'Email sent successfully' });
+} catch (error) {
+    console.error('Error sending email:', error);
+    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+}
 }
 
 
