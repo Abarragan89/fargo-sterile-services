@@ -72,7 +72,7 @@ export const united_states = [
 export const GPOOptions = [
     "N/A", "HPG", "Premier", "Advantus", "EyePro", "Cardinal Acuity",
     "The Resource Group", "Intalere", "KP-T3", "MNS", "NY-Pres",
-    "PDM", "Sutter", "TJUH", "UMMS", "UPMC", "VHPC", "Vizient", 
+    "PDM", "Sutter", "TJUH", "UMMS", "UPMC", "VHPC", "Vizient",
 ];
 
 
@@ -86,8 +86,8 @@ export const salesPersonDirectory = {
         email: 'ben.diles@fagronsterile.com'
     },
     '10973': {
-        name: 'Shane McCarney',
-        email: 'shane.mccarney@fagronsterile.com'
+        name: 'Marianna Bertakis',
+        email: 'marianna.bertakis@fagronsterile.com'
     },
     '43892': {
         name: 'Justin Feagin',
