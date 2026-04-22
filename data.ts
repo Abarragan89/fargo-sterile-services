@@ -96,6 +96,10 @@ export const salesPersonDirectory = {
     '87462': {
         name: 'Rocky Brown',
         email: 'rocky.brown@fagronsterile.com'
+    },
+    '12345': {
+        name: 'testing',
+        email: 'anthony.bar.89@gmail.com',
     }
 }
 
