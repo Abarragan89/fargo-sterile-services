@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ScrollToTop from '../components/ScrollToTop'
 import FormProgressBar from '../components/FormProgressBar';
 import { useRouter } from "next/navigation";
@@ -9,38 +9,27 @@ import { ToastContainer, toast } from 'react-toastify';
 import FormBlockHeading from '../components/Headings/FormBlockHeading';
 import RadioInputSection from '../components/FormInputs/RadioInputSection';
 import { paymentOptions } from '../../../data';
-import { getFormData } from '../../../utils/indexedDBActions';
 import ContactForm from '../components/FormInputs/ContactForm';
 import { Contact } from '../../../types/Contact';
 import { SelectItem } from '../../../types/formInputs';
 import ContactView from '../components/ContactView';
 import ContactRequirements from '../components/ContactRequirements';
+import UseFormData from '../hooks/use-form-data';
 
 export default function Page() {
 
-    const paymentMethodInitialState = {
-        paymentMethod: '',
-    }
-    const contactInfoInitialState: Contact[] = []
 
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false)
-    const [paymentMethod, setPaymentMethod] = useState(paymentMethodInitialState)
-    const [contactInfo, setContactInfo] = useState(contactInfoInitialState)
     const [isAllRequirementsMet, setIsAllRequirementsMet] = useState(false)
-    const [isLoading, setIsLoading] = useState(true)
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const savedData = await getFormData(); // Fetch saved data from IndexedDB or any source
-            if (savedData) {
-                setPaymentMethod(savedData?.paymentMethod || paymentMethodInitialState);
-                setContactInfo(savedData?.contactInfo || contactInfoInitialState)
-            }
-            setIsLoading(false)
-        };
-        fetchData();
-    }, [])
+    const {
+        isLoading,
+        paymentMethod,
+        setPaymentMethod,
+        contactInfo,
+        setContactInfo
+    } = UseFormData();
 
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();

@@ -9,32 +9,15 @@ import { getFormData, saveFormData } from "../../../utils/indexedDBActions";
 import ScrollToTop from "../components/ScrollToTop";
 import { useRouter } from "next/navigation";
 import FormProgressBar from "../components/FormProgressBar";
+import UseFormData from "../hooks/use-form-data";
 
 export default function Page() {
 
     const router = useRouter();
     const selectionArr = [{ id: 'agreeToTerms', label: 'By clicking here, you agree to the Terms and Conditions above.' }]
-
     const [chosenSelectionArr, setChosenSelectionArr] = useState<SelectItem[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
-
-    const originalFormState = {
-        fullName: '',
-        jobTitle: '',
-        date: ''
-    }
-
-    const [termsAndConditionsInformation, setTermsAndConditionInformation] = useState(originalFormState)
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const { termsAndConditionsInformation } = await getFormData(); // Fetch saved data from IndexedDB or any source
-            if (termsAndConditionsInformation) {
-                setTermsAndConditionInformation(termsAndConditionsInformation || originalFormState);
-            }
-        };
-        fetchData();
-    }, [])
+    const { termsAndConditionsInformation, setTermsAndConditionInformation } = UseFormData();
 
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();

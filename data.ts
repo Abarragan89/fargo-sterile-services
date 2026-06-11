@@ -26,9 +26,11 @@ export const is501c3Options = [
 ]
 
 export const paymentOptions = [
-    { id: 'check', name: 'paymentMethod', value: 'check', label: 'Check - Mail to: PO Box: Dept CH 18048, Palatine, IL 60055-8048' },
+    // { id: 'check', name: 'paymentMethod', value: 'check', label: 'Check - Mail to: PO Box: Dept CH 18048, Palatine, IL 60055-8048' },
+    // { id: 'echeck', name: 'paymentMethod', value: 'echeck', label: 'eCheck - Scan and email to: ar@fagronsterile.com' },
+    { id: 'wire', name: 'paymentMethod', value: 'wire', label: 'Wire' },
     { id: 'ach', name: 'paymentMethod', value: 'ach', label: 'ACH - Email remittance to: ar@fagronsterile.com' },
-    { id: 'echeck', name: 'paymentMethod', value: 'echeck', label: 'eCheck - Scan and email to: ar@fagronsterile.com' }
+    { id: 'credit-card', name: 'paymentMethod', value: 'credit-card', label: 'Credit Card - A 3% processing fee applies to all credit card purchases.' },
 ]
 
 
@@ -71,8 +73,7 @@ export const united_states = [
 
 export const GPOOptions = [
     "N/A", "HPG", "Premier", "Advantus", "EyePro", "Cardinal Acuity",
-    "The Resource Group", "Intalere", "KP-T3", "MNS", "NY-Pres",
-    "PDM", "Sutter", "TJUH", "UMMS", "UPMC", "VHPC", "Vizient",
+    "The Resource Group", "PDM", "Vizient",
 ];
 
 

@@ -14,45 +14,14 @@ import FormProgressBar from "../components/FormProgressBar";
 import { ToastContainer, toast } from 'react-toastify';
 import { united_states } from "../../../data";
 import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
+import UseFormData from "../hooks/use-form-data";
 
 export default function Home() {
 
     const router = useRouter();
     const [isSaving, setIsSaving] = useState<boolean>(false)
 
-    const originalFacilityInfoState = {
-        facilityName: '',
-        phoneNumber: '',
-        numberOfBeds: '',
-        facilityType: '',
-        is501c3: '',
-        accountType: '',
-        primaryGPOName: '',
-        fedExUpsNumber: '',
-        accountNumber: '',
-        IDNGroup: '',
-        street: '',
-        suite: '',
-        attn: '',
-        city: '',
-        state: '',
-        zipCode: '',
-        alternativeSchedule: '',
-        isRequiringDEA: ''
-    }
-
-    const [facilityInformation, setFacilityInformation] = useState(originalFacilityInfoState);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const savedData = await getFormData(); // Fetch saved data from IndexedDB or any source
-            if (savedData) {
-                setFacilityInformation(savedData?.facilityInformation || originalFacilityInfoState);
-            }
-        };
-        fetchData();
-    }, [])
-
+    const { facilityInformation, setFacilityInformation } = UseFormData();
 
     function handleFacilityInfoChange(inputName: string, inputValue: string | undefined) {
         // only accept digits for phoneNumbers
@@ -85,7 +54,7 @@ export default function Home() {
             await saveFormData({
                 facilityInformation,
             })
-            notify();
+            toast("Data Saved!");
         } catch (error) {
             console.error('error saving data', error)
         } finally {
@@ -93,7 +62,6 @@ export default function Home() {
         }
     }
 
-    const notify = () => toast("Data Saved!");
     const listItemStyles = 'list-disc text-[.875rem] text-gray-500 py-1'
 
     return (
@@ -267,15 +235,6 @@ export default function Home() {
                                 />
                                 <li className={listItemStyles}>All orders are shipped via UPS or FedEx.</li>
                                 <li className={listItemStyles}>If shipping per customer&apos;s FedEx or UPS account is preferred, enter account number here:</li>
-                                <div className="">
-                                    <InputLabelEl
-                                        userText={facilityInformation.fedExUpsNumber}
-                                        handleStateChange={handleFacilityInfoChange}
-                                        labelText=""
-                                        required={false}
-                                        nameAndId='fedExUpsNumber'
-                                    />
-                                </div>
                             </ul>
                         </section>
                         {/* GOP and IDN Group */}
