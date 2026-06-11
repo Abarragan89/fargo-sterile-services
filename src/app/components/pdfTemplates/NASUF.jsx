@@ -101,7 +101,7 @@ const NASUFpdf
             <Document>
                 <Page style={styles.page}>
                     <Image style={styles.companyLogo}
-                        src="https://unfinished-pages.s3.us-east-2.amazonaws.com/companyLogo.png"
+                        src="https://unfinished-pages-photos.s3.us-east-2.amazonaws.com/companyLogo.png"
                     />
                     <View style={[styles.section, styles.accountType]}>
                         <View style={styles.checkBoxLabel}>
@@ -230,34 +230,30 @@ const NASUFpdf
                             1. Standard payment terms are Net 30 from invoice date.
                         </Text>
                         <Text style={styles.numberedPoints}>
-                            2. $7500 credit limit upon completion of Fagron&apos;s credit application; additional information may be required
-                            for higher limits. Completion of separate credit application is mandatory for account set up.
+                            2. All orders are considered final when product has left the Seller&apos;s facility. No refunds or returns after shipment.
                         </Text>
                         <Text style={styles.numberedPoints}>
-                            3. All orders are considered final when product has left the Seller&apos;s facility. No refunds or returns after shipment.
+                            3. Customer agrees to immediately notify Seller of any change in ownership, form or business name of the entity.
                         </Text>
                         <Text style={styles.numberedPoints}>
-                            4. Customer agrees to immediately notify Seller of any change in ownership, form or business name of the entity.
+                            4. This document will be as effective in photocopy or fax form as in the original.
                         </Text>
                         <Text style={styles.numberedPoints}>
-                            5. This document will be as effective in photocopy or fax form as in the original.
+                            5. Customer acknowledges and agrees that services may be provided by Fagron Sterile Services or an affiliate.
                         </Text>
                         <Text style={styles.numberedPoints}>
-                            6. Customer acknowledges and agrees that services may be provided by Fagron Sterile Services or an affiliate.
-                        </Text>
-                        <Text style={styles.numberedPoints}>
-                            7. Customer acknowledges that Seller may limit or discontinue credit at its sole discretion and that the continued
+                            6. Customer acknowledges that Seller may limit or discontinue credit at its sole discretion and that the continued
                             extension of credit may require additional information.
                         </Text>
                         <Text style={styles.numberedPoints}>
-                            8. Customer agrees that if any invoice is not paid when due, late charges will accrue at the rate of 1.5% per month
+                            7. Customer agrees that if any invoice is not paid when due, late charges will accrue at the rate of 1.5% per month
                             or the maximum rate allowed by law, whichever is less. If legal action is taken to pursue collection, jurisdiction
                             shall be the State of Texas and the venue shall be Travis County, Texas. The Customer agrees to reimburse
                             Seller for any attorney fees, court costs or other costs of collection which may be incurred in its efforts to
                             collect any past due debts.
                         </Text>
                         <Text style={styles.numberedPoints}>
-                            9. In the event of an effective contract with terms that differ from the above, the effective contract will govern.
+                            8. In the event of an effective contract with terms that differ from the above, the effective contract will govern.
                         </Text>
                     </View>
 

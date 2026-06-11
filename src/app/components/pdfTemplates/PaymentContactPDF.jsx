@@ -73,7 +73,7 @@ const PaymentContactPDF = ({ data }) => {
         <Document>
             <Page style={styles.page}>
                 <Image style={styles.companyLogo}
-                    src="https://unfinished-pages.s3.us-east-2.amazonaws.com/companyLogo.png"
+                    src="https://unfinished-pages-photos.s3.us-east-2.amazonaws.com/companyLogo.png"
                 />
                 {/* Payment Section */}
                 <View>
